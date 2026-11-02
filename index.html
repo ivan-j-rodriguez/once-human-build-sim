@@ -67,9 +67,9 @@ select { background:#080c12; color:var(--text); border:1px solid #243040; paddin
       <div class="field"><label>Tier</label><select id="wTier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
       <div class="field"><label>Enhancement Level</label><select id="wEnh" onchange="updateBuild()"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option></select></div>
     </div>
-    <div class="field"><label>Sight / Scope</label><select id="accSight" onchange="updateBuild()"><option value="">None</option><option>Red Dot</option><option>Holographic Sight</option><option>4x Scope</option><option>6x Scope</option><option>Advanced Sniper Sight</option></select></div>
-    <div class="field"><label>Magazine</label><select id="accMag" onchange="updateBuild()"><option value="">None</option><option>Extended Mag</option><option>Amended Rifle Mag</option><option>Light Mag</option></select></div>
-    <div class="field"><label>Muzzle</label><select id="accMuzzle" onchange="updateBuild()"><option value="">None</option><option>Short Suppressor</option><option>Long Suppressor</option><option>Tactical Suppressor</option><option>Compensator</option></select></div>
+    <div class="field"><label>Sight / Scope</label><select id="accSight" onchange="updateBuild()"><option value="">None</option><option>Red Dot</option><option>Holographic Sight</option><option>4x Scope</option><option>6x Scope</option><option>Advanced Sniper Sight</option><option>Thermal Scope</option><option>Compact Reflex</option></select></div>
+    <div class="field"><label>Magazine</label><select id="accMag" onchange="updateBuild()"><option value="">None</option><option>Extended Mag</option><option>Amended Rifle Mag</option><option>Light Mag</option><option>Drum Mag</option><option>Quick Reload Mag</option></select></div>
+    <div class="field"><label>Muzzle</label><select id="accMuzzle" onchange="updateBuild()"><option value="">None</option><option>Short Suppressor</option><option>Long Suppressor</option><option>Tactical Suppressor</option><option>Compensator</option><option>Muzzle Brake</option><option>Flash Hider</option></select></div>
     <h3 style="font-size:0.85rem;margin-top:14px;">Secondary Weapon</h3>
     <div class="field"><label>Weapon</label><select id="weapon2" onchange="updateBuild(); if(this.value) showWeaponDetail(this.value)"></select></div>
     <div class="pair">
@@ -193,8 +193,8 @@ const meleeWeapons = [
 ];
 
 const mods = [
-  {name:"Power of Striving", rarity:"Epic", category:"Armor Mods-Shoes", core:"Weapon and Status DMG +10.0%. Stamina loss grants an additional DMG boost, up to +20.0%.",
-    suffixes:[{name:"Phantasmal", attrs:["After switching weapons, Weapon DMG +2.0% for 10 seconds.","Switching weapons grants Crit DMG +5.0% for 10 seconds.","Non-player damage taken -2.0% when HP is below 50%.","Increases damage dealt to all DMG Boost by +1.5%"]},
+  {name:"Power of Striving", rarity:"Epic", category:"Armor Mods", core:"Weapon and Status DMG +10.0%. Stamina loss grants additional DMG boost up to +20.0%.",
+    suffixes:[{name:"Phantasmal", attrs:["After switching weapons, Weapon DMG +2.0% for 10s.","Switching weapons grants Crit DMG +5.0% for 10s.","Non-player damage taken -2.0% when HP below 50%.","Increases damage dealt to all DMG Boost by +1.5%"]},
               {name:"Battle", attrs:["Weapon DMG +1.5% after skill use.","Crit Rate +1.0% while in combat."]},
               {name:"Downstar", attrs:["Status DMG +2.0%.","Elemental Resist +3%."]}]},
   {name:"Crit Amplifier", rarity:"Epic", category:"Armor Mods", core:"Crit Rate +10%. Crit DMG +15%.",
@@ -213,6 +213,14 @@ const mods = [
     suffixes:[{name:"Violent", attrs:["Crit DMG +5% on first shot."]}]},
   {name:"Embers", rarity:"Epic", category:"Weapon Mods", core:"Burn stacks grant additional DMG.",
     suffixes:[{name:"General", attrs:["Burn DMG +3%."]},{name:"Violent", attrs:["Crit Rate +1% while burning."]},{name:"Burn", attrs:["Burn duration +1s."]}]},
+  {name:"Frost Vortex", rarity:"Epic", category:"Weapon Mods", core:"Frost effects apply additional control.",
+    suffixes:[{name:"General", attrs:["Frost DMG +3%."]},{name:"Violent", attrs:["Crit Rate +1% on frozen."]}]},
+  {name:"Unstable Bomber", rarity:"Legendary", category:"Weapon Mods", core:"Explosions deal increased DMG and apply status.",
+    suffixes:[{name:"General", attrs:["Blast DMG +4%."]},{name:"Violent", attrs:["Crit DMG +5% on explosion."]}]},
+  {name:"Power Surge", rarity:"Epic", category:"Weapon Mods", core:"Shock effects chain to nearby enemies.",
+    suffixes:[{name:"General", attrs:["Shock DMG +3%."]},{name:"Violent", attrs:["Crit Rate +1% on shocked."]}]},
+  {name:"Shrapnel", rarity:"Epic", category:"Weapon Mods", core:"Shrapnel hits apply additional fragments.",
+    suffixes:[{name:"General", attrs:["Shrapnel DMG +3%."]},{name:"Violent", attrs:["Crit Rate +1% on shrapnel."]}]},
   {name:"None", rarity:"Common", category:"", core:"", suffixes:[]}
 ];
 
