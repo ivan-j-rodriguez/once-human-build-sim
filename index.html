@@ -100,6 +100,14 @@ button.equip {
     </div>
   </div>
   <div id="armorSlots"></div>
+  <div class="slot-card">
+    <h3>Accessories</h3>
+    <div class="row">
+      <div class="field"><label>Sight / Scope</label><select id="accSight" onchange="updateBuild()"><option value="">None</option><option>Red Dot</option><option>Holographic Sight</option><option>4x Scope</option><option>6x Scope</option></select></div>
+      <div class="field"><label>Magazine</label><select id="accMag" onchange="updateBuild()"><option value="">None</option><option>Extended Mag</option><option>Amended Rifle Mag</option></select></div>
+      <div class="field"><label>Muzzle</label><select id="accMuzzle" onchange="updateBuild()"><option value="">None</option><option>Short Suppressor</option><option>Long Suppressor</option></select></div>
+    </div>
+  </div>
 </div>
 
 <div id="Deviations" class="tabcontent">
@@ -187,11 +195,11 @@ const meleeWeapons = [
 ];
 
 const mods = [
-  {name:"Crit Amplifier", rarity:"Epic", desc:"Crit Rate +8% / Crit DMG +15%", tier:"IV+"},
+  {name:"Crit Amplifier", rarity:"Epic", desc:"Crit Rate +8% / Crit DMG +15%. Higher tiers unlock additional Crit DMG.", tier:"IV+"},
   {name:"Targeted Strike", rarity:"Epic", desc:"Weakspot DMG +12%", tier:"IV+"},
   {name:"Healing Fortification", rarity:"Rare", desc:"Status DMG Reduction +10%", tier:"III+"},
   {name:"Momentum Up", rarity:"Epic", desc:"Reload Speed +12%", tier:"IV+"},
-  {name:"Bullet Siphon", rarity:"Legendary", desc:"Magazine Capacity +8%. Every 5 bullets consumed → +4% Weapon DMG (cap 20%)", tier:"V"},
+  {name:"Bullet Siphon", rarity:"Legendary", desc:"Magazine Capacity +8%. Every 5 bullets consumed → +4% Weapon DMG (cap 20%). Tier V unlocks the full stack cap.", tier:"V"},
   {name:"Precise Strike", rarity:"Epic", desc:"Weakspot hits grant +12% Weakspot DMG for 3s (max 3 stacks)", tier:"IV+"},
   {name:"First-Move Advantage", rarity:"Legendary", desc:"After reload: Crit Rate +10%, Crit DMG +20% for 2s", tier:"V"}
 ];
@@ -389,7 +397,7 @@ function updateBuild() {
     <div class="stat-tile" style="grid-column:1/-1;">
       <small>Estimated DPS</small>
       <div class="dps-main">${dps.toLocaleString()}</div>
-      <small>Without deviation: ${dpsNoDev.toLocaleString()}</small>
+      <small>Without deviation: ${dpsNoDev.toLocaleString()}</small><br><small style="color:#9ab;">Lonewolf stacks assumed at max when 3+ pieces equipped.</small>
     </div>`;
 
   const bonusDiv = document.getElementById("setBonuses");
