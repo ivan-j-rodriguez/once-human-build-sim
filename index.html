@@ -959,7 +959,7 @@ function updateBuild() {
 
   function tile(cls, label, val, unit, srcKey) {
     const note = (sources[srcKey] || []).join("\n") || "Base value only";
-    return `<div class="tile ${cls}" data-label="${label}" data-val="${val}" data-note="${note.replace(/"/g,""")}"><div class="v">${val}${unit}</div><div class="l">${label}</div></div>`;
+    return `<div class="tile ${cls}" data-label="${label}" data-val="${val}" data-note="${(note||'').replace(/\"/g,'"')}"><div class="v">${val}${unit}</div><div class="l">${label}</div></div>`;
   }
 
   const results = document.getElementById("results");
