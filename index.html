@@ -61,6 +61,41 @@ select { background:#080c12; color:var(--text); border:1px solid #243040; paddin
 
 <div id="Build" class="tabcontent" style="display:block;">
   <div class="slot-card">
+    <h3 style="font-size:0.85rem;">Deviation</h3>
+    <div class="field"><label>Deviation</label>
+      <select id="deviation" onchange="updateBuild()"><option value="">None</option></select>
+    </div>
+    <div class="pair">
+      <div class="field"><label>Skill Rating</label>
+        <select id="devSkill" onchange="updateBuild()">
+          <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5" selected>5</option>
+        </select>
+      </div>
+      <div class="field"><label>Ability Rating</label>
+        <select id="devAbility" onchange="updateBuild()">
+          <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5" selected>5</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="slot-card">
+    <h3 style="font-size:0.85rem;">Cradle Overrides</h3>
+    <div class="pair">
+      <div class="field"><label>Weapon DMG %</label><input type="number" id="cradleWeapon" value="0" step="0.1" onchange="updateBuild()" style="width:100%;background:#080c12;color:var(--text);border:1px solid #243040;padding:9px;border-radius:6px;"></div>
+      <div class="field"><label>Crit Rate %</label><input type="number" id="cradleCrit" value="0" step="0.1" onchange="updateBuild()" style="width:100%;background:#080c12;color:var(--text);border:1px solid #243040;padding:9px;border-radius:6px;"></div>
+    </div>
+    <div class="pair">
+      <div class="field"><label>Crit DMG %</label><input type="number" id="cradleCritDmg" value="0" step="0.1" onchange="updateBuild()" style="width:100%;background:#080c12;color:var(--text);border:1px solid #243040;padding:9px;border-radius:6px;"></div>
+      <div class="field"><label>Weakspot DMG %</label><input type="number" id="cradleWeak" value="0" step="0.1" onchange="updateBuild()" style="width:100%;background:#080c12;color:var(--text);border:1px solid #243040;padding:9px;border-radius:6px;"></div>
+    </div>
+    <div class="pair">
+      <div class="field"><label>Elemental DMG %</label><input type="number" id="cradleElem" value="0" step="0.1" onchange="updateBuild()" style="width:100%;background:#080c12;color:var(--text);border:1px solid #243040;padding:9px;border-radius:6px;"></div>
+      <div class="field"><label>Status DMG %</label><input type="number" id="cradleStatus" value="0" step="0.1" onchange="updateBuild()" style="width:100%;background:#080c12;color:var(--text);border:1px solid #243040;padding:9px;border-radius:6px;"></div>
+    </div>
+  </div>
+
+  <div class="slot-card">
     <h3 style="font-size:0.85rem;">Primary Weapon</h3>
     <div class="field"><label>Weapon</label><select id="weapon" onchange="updateBuild(); if(this.value) showWeaponDetail(this.value)"></select></div>
     <div class="pair">
@@ -380,6 +415,17 @@ function populate() {
     devSel.appendChild(opt);
   });
 
+  const devSel = document.getElementById("deviation");
+  if (devSel) {
+    deviations.forEach(d => {
+      const opt = document.createElement("option");
+      opt.value = d.name;
+      opt.textContent = d.name;
+      opt.className = "rarity-" + d.rarity.toLowerCase();
+      devSel.appendChild(opt);
+    });
+  }
+
   const dlist = document.getElementById("devList");
   deviations.forEach(d => {
     const div = document.createElement("div"); div.className = "dev-card";
@@ -538,34 +584,63 @@ function updateBuild() {
     showHidePreview(slot);
   });
   const counts = getSetCounts();
-  const rating = parseInt(document.getElementById("devRating")?.value || 5);
-  const ratingMult = 1 + (rating - 1) * 0.15;
+  const skill = parseInt(document.getElementById("devSkill")?.value || 5);
+  const ability = parseInt(document.getElementById("devAbility")?.value || 5);
+  const skillMult = 1 + (skill - 1) * 0.12;
+  const abilityMult = 1 + (ability - 1) * 0.08;
+
+  // Cradle overrides
+  const cWeapon = parseFloat(document.getElementById("cradleWeapon")?.value || 0);
+  const cCrit = parseFloat(document.getElementById("cradleCrit")?.value || 0);
+  const cCritDmg = parseFloat(document.getElementById("cradleCritDmg")?.value || 0);
+  const cWeak = parseFloat(document.getElementById("cradleWeak")?.value || 0);
+  const cElem = parseFloat(document.getElementById("cradleElem")?.value || 0);
+  const cStatus = parseFloat(document.getElementById("cradleStatus")?.value || 0);
 
   let base = 1000;
-  const primary = document.getElementById("primary")?.value;
+  const primary = document.getElementById("weapon")?.value;
+  let fireRate = 300;
   if (primary && weaponDetails[primary]) {
     const wd = weaponDetails[primary];
-    base = (wd.dmg || 100) * (wd.fire || 300) / 60;
+    base = wd.dmg || 100;
+    fireRate = wd.fire || 300;
   }
+  // Simple tier/enhancement scaling (structured, not perfect)
+  const tier = document.getElementById("wTier")?.value || "IV";
+  const enh = parseInt(document.getElementById("wEnh")?.value || 4);
+  const tierMult = {I:0.7, II:0.8, III:0.9, IV:1.0, V:1.15}[tier] || 1;
+  const enhMult = 1 + (enh - 1) * 0.06;
+  base = base * tierMult * enhMult * (fireRate / 60);
 
-  let crit = 5, weak = 15, elem = 0, weaponDmg = 0;
+  let crit = 5 + cCrit, weak = 15 + cWeak, elem = 0 + cElem, weaponDmg = 0 + cWeapon, status = 0 + cStatus, critDmg = 0 + cCritDmg;
   Object.keys(counts).forEach(set => {
     const n = counts[set];
     if (set === "Lonewolf") { if (n>=1) crit += 3; if (n>=2) weaponDmg += 15; if (n>=3) crit += 6; if (n>=4) crit += 8; }
-    if (set === "Falcon") { if (n>=2) crit += 12; if (n>=3) crit += 5; }
+    if (set === "Falcon") { if (n>=2) critDmg += 12; if (n>=3) crit += 5; }
     if (set === "Renegade") { if (n>=1) weak += 8; if (n>=2) crit += 4; if (n>=3) weak += 15; }
     if (set === "Shelterer") { if (n>=2) elem += 8; if (n>=3) elem += 18; }
   });
 
+  // Selected mods (core effects where we can parse simple bonuses)
+  slots.forEach(slot => {
+    const modName = document.getElementById(slot + "Mod")?.value;
+    if (!modName) return;
+    const m = mods.find(x => x.name === modName);
+    if (!m) return;
+    if (m.name === "Bullet Siphon") weaponDmg += 5;
+    if (m.name === "Crit Amplifier") critDmg += 30;
+    if (m.name === "Power of Striving") weaponDmg += 10;
+  });
+
   const dev = document.getElementById("deviation")?.value;
   if (dev === "Lonewolf's Whisper") {
-    weaponDmg += 21.6 * ratingMult;
+    weaponDmg += 21.6 * skillMult * abilityMult;
   }
 
-  const dps = Math.round(base * (1 + weaponDmg/100) * (1 + crit/100) * (1 + weak/100) * (1 + elem/100) * ratingMult);
+  const dps = Math.round(base * (1 + weaponDmg/100) * (1 + crit/100) * (1 + weak/100) * (1 + elem/100) * (1 + status/100) * skillMult * abilityMult);
   const results = document.getElementById("results");
   results.innerHTML = `
-    <div class="tile" oncontextmenu="event.preventDefault();showBreakdown('DPS',${dps},'Base × weapon × crit × weakspot × rating')"><div class="v">${dps}</div><div class="l">DPS Total</div></div>
+    <div class="tile" oncontextmenu="event.preventDefault();showBreakdown('DPS',${dps},'Base × tier/enh × sets × mods × cradle × skill × ability')"><div class="v">${dps}</div><div class="l">DPS Total</div></div>
     <div class="tile" oncontextmenu="event.preventDefault();showBreakdown('Crit',${crit},'From set bonuses')"><div class="v">${crit}%</div><div class="l">Crit</div></div>
     <div class="tile" oncontextmenu="event.preventDefault();showBreakdown('Weakspot',${weak},'From Renegade / other')"><div class="v">${weak}%</div><div class="l">Weakspot</div></div>
     <div class="tile"><div class="v">${elem}%</div><div class="l">Elemental</div></div>`;
