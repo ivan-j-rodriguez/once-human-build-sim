@@ -73,10 +73,18 @@ select, input {
 
 <div id="Build" class="tabcontent" style="display:block;">
   <div class="slot-card">
-    <h3>Weapon</h3>
+    <h3>Weapons</h3>
     <div class="row">
       <div style="flex:2"><label>Primary</label><select id="weapon" onchange="updateBuild()"></select></div>
       <div><label>Tier</label><select id="wTier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
+    </div>
+    <div class="row">
+      <div style="flex:2"><label>Secondary</label><select id="weapon2" onchange="updateBuild()"></select></div>
+      <div><label>Tier</label><select id="w2Tier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
+    </div>
+    <div class="row">
+      <div style="flex:2"><label>Melee</label><select id="melee" onchange="updateBuild()"></select></div>
+      <div><label>Tier</label><select id="mTier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
     </div>
   </div>
   <div id="armorSlots"></div>
@@ -148,6 +156,7 @@ const sets = {
 };
 
 const weapons = ["SOCR - The Last Valor","KVD - Boom! Boom!","DE.50 - Jaws","ACS12 - Corrosion","MPS7 - Outer Space","AWS.338 - Bullseye"];
+const meleeWeapons = ["Long Axe","Northern Pike","Wrench","Baseball Bat","Compound Bow","Recurve Crossbow"];
 const mods = [
   {name:"Crit Amplifier", desc:"Crit Rate +8% / Crit DMG +15%"},
   {name:"Targeted Strike", desc:"Weakspot DMG +12%"},
@@ -199,7 +208,10 @@ function buildArmorUI() {
 function populate() {
   // weapons
   const wsel = document.getElementById("weapon");
-  weapons.forEach(w => { const o = document.createElement("option"); o.value = w; o.textContent = w; wsel.appendChild(o); });
+  const w2sel = document.getElementById("weapon2");
+  const msel = document.getElementById("melee");
+  weapons.forEach(w => { const o = document.createElement("option"); o.value = w; o.textContent = w; wsel.appendChild(o); w2sel.appendChild(o.cloneNode(true)); });
+  meleeWeapons.forEach(w => { const o = document.createElement("option"); o.value = w; o.textContent = w; msel.appendChild(o); });
   // armor pieces
   slots.forEach(slot => {
     const sel = document.getElementById(slot);
