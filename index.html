@@ -123,12 +123,12 @@ select { background:#080c12; color:var(--text); border:1px solid #243040; paddin
     <div>
       <div class="section-header">Gear</div>
       <div class="gear-grid">
-        <div class="slot-tile empty" onclick="openSlotModal('helmet')"><div class="slot-num" id="helmetNum">—</div><div class="slot-item" id="helmetDisplay">None</div><div class="slot-name">Helmet</div></div>
-        <div class="slot-tile empty" onclick="openSlotModal('mask')"><div class="slot-num" id="maskNum">—</div><div class="slot-item" id="maskDisplay">None</div><div class="slot-name">Mask</div></div>
-        <div class="slot-tile empty" onclick="openSlotModal('gloves')"><div class="slot-num" id="glovesNum">—</div><div class="slot-item" id="glovesDisplay">None</div><div class="slot-name">Gloves</div></div>
-        <div class="slot-tile empty" onclick="openSlotModal('shoes')"><div class="slot-num" id="shoesNum">—</div><div class="slot-item" id="shoesDisplay">None</div><div class="slot-name">Shoes</div></div>
-        <div class="slot-tile empty" onclick="openSlotModal('top')"><div class="slot-num" id="topNum">—</div><div class="slot-item" id="topDisplay">None</div><div class="slot-name">Top</div></div>
-        <div class="slot-tile empty" onclick="openSlotModal('bottom')"><div class="slot-num" id="bottomNum">—</div><div class="slot-item" id="bottomDisplay">None</div><div class="slot-name">Bottom</div></div>
+        <div class="slot-tile empty" onclick="openSlotModal('helmet')" ontouchstart="slotLongPressStart('helmet')" ontouchend="clearTimeout(window.slp)"><div class="slot-num" id="helmetNum">—</div><div class="slot-item" id="helmetDisplay">None</div><div class="slot-name">Helmet</div><div class="indicators"><div class="ind" id="helmetModInd"></div></div></div>
+        <div class="slot-tile empty" onclick="openSlotModal('mask')" ontouchstart="slotLongPressStart('mask')" ontouchend="clearTimeout(window.slp)"><div class="slot-num" id="maskNum">—</div><div class="slot-item" id="maskDisplay">None</div><div class="slot-name">Mask</div><div class="indicators"><div class="ind" id="maskModInd"></div></div></div>
+        <div class="slot-tile empty" onclick="openSlotModal('gloves')" ontouchstart="slotLongPressStart('gloves')" ontouchend="clearTimeout(window.slp)"><div class="slot-num" id="glovesNum">—</div><div class="slot-item" id="glovesDisplay">None</div><div class="slot-name">Gloves</div><div class="indicators"><div class="ind" id="glovesModInd"></div></div></div>
+        <div class="slot-tile empty" onclick="openSlotModal('shoes')" ontouchstart="slotLongPressStart('shoes')" ontouchend="clearTimeout(window.slp)"><div class="slot-num" id="shoesNum">—</div><div class="slot-item" id="shoesDisplay">None</div><div class="slot-name">Shoes</div><div class="indicators"><div class="ind" id="shoesModInd"></div></div></div>
+        <div class="slot-tile empty" onclick="openSlotModal('top')" ontouchstart="slotLongPressStart('top')" ontouchend="clearTimeout(window.slp)"><div class="slot-num" id="topNum">—</div><div class="slot-item" id="topDisplay">None</div><div class="slot-name">Top</div><div class="indicators"><div class="ind" id="topModInd"></div></div></div>
+        <div class="slot-tile empty" onclick="openSlotModal('bottom')" ontouchstart="slotLongPressStart('bottom')" ontouchend="clearTimeout(window.slp)"><div class="slot-num" id="bottomNum">—</div><div class="slot-item" id="bottomDisplay">None</div><div class="slot-name">Bottom</div><div class="indicators"><div class="ind" id="bottomModInd"></div></div></div>
       </div>
     </div>
   </div>
@@ -452,6 +452,13 @@ function sortByRarity(arr) {
 
 
 let currentModalSlot = null;
+function slotLongPressStart(slot) {
+  window.slp = setTimeout(() => {
+    const piece = document.getElementById(slot)?.value || "None";
+    const mod = document.getElementById(slot+"Mod")?.value || "None";
+    alert(slot.toUpperCase() + "\nPiece: " + piece + "\nMod: " + mod);
+  }, 550);
+}
 function weaponLongPressStart(slot) {
   window.wlp = setTimeout(() => {
     const w = document.getElementById(slot)?.value || "None";
@@ -646,6 +653,8 @@ function selectMod(name) {
   }
   closeSlotModal();
   updateBuild();
+  const ind = document.getElementById(slot+"ModInd");
+  if (ind) ind.classList.toggle("on", !!name);
   if (["weapon","weapon2"].includes(slot) && name) {
     setTimeout(() => openAccessoryModal(slot), 80);
   }
@@ -674,7 +683,7 @@ function toggleCradle(name) {
   if (!opt) { opt = document.createElement("option"); opt.value = name; opt.textContent = name; sel.appendChild(opt); }
   opt.selected = !opt.selected;
   const selected = Array.from(sel.selectedOptions).map(o => o.value);
-  document.getElementById("cradleBox").textContent = selected.length ? selected.join(", ") : "None selected";
+  document.getElementById("cradleBox").innerHTML = selected.length ? selected.join("<br>") : "None selected";
   updateBuild();
   openCradlePicker();
 }
@@ -757,15 +766,16 @@ function populate() {
 
   const devSel = document.getElementById("deviation");
   if (devSel) {
-    const existing = Array.from(devSel.options).map(o => o.value);
+    const current = devSel.value;
+    devSel.innerHTML = '<option value="">None</option>';
     sortByRarity(deviations).forEach(d => {
-      if (existing.includes(d.name)) return;
       const opt = document.createElement("option");
       opt.value = d.name;
       opt.textContent = d.name;
       opt.className = "rarity-" + d.rarity.toLowerCase();
       devSel.appendChild(opt);
     });
+    if (current) devSel.value = current;
   }
 
   const dlist = document.getElementById("deviationList");
@@ -969,7 +979,7 @@ function updateBuild() {
   });
   // Preview
   const prev = document.getElementById("cradlePreview");
-  if (prev) prev.textContent = selected.length ? selected.length + " active: " + selected.join(", ") : "None selected";
+  if (prev) prev.textContent = "";
 
   let base = 1000;
   const primary = document.getElementById("weapon")?.value;
