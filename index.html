@@ -1194,7 +1194,8 @@ function updateBuild() {
 
   function tile(cls, label, val, unit, srcKey) {
     const note = Array.isArray(srcKey) ? srcKey.join("\n") : ((sources[srcKey] || []).join("\n") || "Base / no additional sources");
-    return `<div class="tile ${cls}" data-label="${label}" data-val="${val}" data-note="${(note||'').replace(/\"/g,'"')}"><div class="v">${val}${unit}</div><div class="l">${label}</div></div>`;
+    const safeNote = (note||'').replace(/"/g, '"').replace(/\n/g, '&#10;');
+    return `<div class="tile ${cls}" data-label="${label}" data-val="${val}" data-note="${safeNote}"><div class="v">${val}${unit}</div><div class="l">${label}</div></div>`;
   }
 
   const results = document.getElementById("results");
@@ -1207,11 +1208,16 @@ function updateBuild() {
     tile("status","Status DMG",status,"%","status") +
     tile("elem","Elemental DMG",elem,"%","elem");
   document.querySelectorAll("#results .tile").forEach(tile => {
-  const note = tile.dataset.note || "Base value";
-  tile.ontouchstart = (e) => { e.preventDefault(); window.rtp = setTimeout(() => alert(tile.dataset.label + ": " + tile.dataset.val + "\n\n" + note), 500); };
+  const raw = tile.dataset.note || "Base value";
+  const note = raw.replace(/&#10;/g, "\n").replace(/"/g, '"');
+  const show = () => alert(tile.dataset.label + ": " + tile.dataset.val + "\n\n" + note);
+  tile.ontouchstart = (e) => { e.preventDefault(); window.rtp = setTimeout(show, 500); };
   tile.ontouchend = () => clearTimeout(window.rtp);
   tile.ontouchcancel = () => clearTimeout(window.rtp);
-  tile.oncontextmenu = (e) => { e.preventDefault(); alert(tile.dataset.label + ": " + tile.dataset.val + "\n\n" + note); };
+  tile.oncontextmenu = (e) => { e.preventDefault(); show(); };
+  tile.onmousedown = (e) => { if (e.button === 0) window.rtp = setTimeout(show, 500); };
+  tile.onmouseup = () => clearTimeout(window.rtp);
+  tile.onmouseleave = () => clearTimeout(window.rtp);
 });
   const out = document.getElementById("setBonusOut");
   if (out) out.innerHTML = "";
