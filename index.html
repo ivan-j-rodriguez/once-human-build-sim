@@ -62,7 +62,7 @@ select { background:#080c12; color:var(--text); border:1px solid #243040; paddin
 <div id="Build" class="tabcontent" style="display:block;">
   <div class="slot-card">
     <h3 style="font-size:0.85rem;">Primary Weapon</h3>
-    <div class="field"><label>Weapon</label><select id="weapon" onchange="updateBuild()"></select></div>
+    <div class="field"><label>Weapon</label><select id="weapon" onchange="updateBuild(); if(this.value) showWeaponDetail(this.value)"></select></div>
     <div class="pair">
       <div class="field"><label>Tier</label><select id="wTier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
       <div class="field"><label>Enhancement Level</label><select id="wEnh" onchange="updateBuild()"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option></select></div>
@@ -71,7 +71,7 @@ select { background:#080c12; color:var(--text); border:1px solid #243040; paddin
     <div class="field"><label>Magazine</label><select id="accMag" onchange="updateBuild()"><option value="">None</option><option>Extended Mag</option><option>Amended Rifle Mag</option><option>Light Mag</option></select></div>
     <div class="field"><label>Muzzle</label><select id="accMuzzle" onchange="updateBuild()"><option value="">None</option><option>Short Suppressor</option><option>Long Suppressor</option><option>Tactical Suppressor</option><option>Compensator</option></select></div>
     <h3 style="font-size:0.85rem;margin-top:14px;">Secondary Weapon</h3>
-    <div class="field"><label>Weapon</label><select id="weapon2" onchange="updateBuild()"></select></div>
+    <div class="field"><label>Weapon</label><select id="weapon2" onchange="updateBuild(); if(this.value) showWeaponDetail(this.value)"></select></div>
     <div class="pair">
       <div class="field"><label>Tier</label><select id="w2Tier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
       <div class="field"><label>Enhancement Level</label><select id="w2Enh" onchange="updateBuild()"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option></select></div>
@@ -105,24 +105,44 @@ const slots = ["helmet","mask","top","bottom","gloves","shoes"];
 const slotLabels = {helmet:"Helmet", mask:"Mask", top:"Top", bottom:"Bottom", gloves:"Gloves", shoes:"Shoes"};
 
 const sets = {
-  "Lonewolf": { rarity:"Legendary", pieces:["Lonewolf Helmet","Lonewolf Mask","Lonewolf Top","Lonewolf Bottom","Lonewolf Gloves","Lonewolf Shoes"],
-    bonuses:["1pc: Magazine Capacity +10%","2pc: Crit Rate +5%","3pc: Lone Shadow stacks (Crit DMG +6% each, up to 8)","4pc: After reload Crit Rate +8% for 2s, max stacks 10"] },
-  "Shelterer": { rarity:"Legendary", pieces:["Shelterer Helmet","Shelterer Mask","Shelterer Top","Shelterer Bottom","Shelterer Gloves","Shelterer Shoes"],
-    bonuses:["1pc: Max HP +8%","2pc: Elemental DMG +6%","3pc: Status DMG +10%","4pc: Elemental Resist +8%"] },
-  "Falcon": { rarity:"Epic", pieces:["Falcon Cap","Falcon Mask","Falcon Top","Falcon Bottom","Falcon Gloves","Falcon Shoes"],
-    bonuses:["1pc: Rolling Stamina Cost -20%","2pc: Crit DMG +12%","3pc: Above 90% Stamina: Crit Rate +5%, Crit DMG +20%","4pc: Kill restores 30 Stamina + 20% Movement Speed for 2s"] },
-  "Renegade": { rarity:"Legendary", pieces:["Renegade Helmet","Renegade Mask","Renegade Top","Renegade Bottom","Renegade Gloves","Renegade Shoes"],
-    bonuses:["1pc: Weakspot DMG +8%","2pc: Crit Rate +4%","3pc: Weakspot Crit DMG +15%","4pc: After weakspot hit, next shot +12% DMG"] },
-  "Blackstone": { rarity:"Legendary", pieces:["Blackstone Helmet","Blackstone Mask","Blackstone Tops","Blackstone Pants","Blackstone Gloves","Blackstone Boots"],
-    bonuses:["1pc: Max HP +6%","2pc: Pollution Resist +10%","3pc: Elemental DMG +8%","4pc: DMG Reduction +5%"] },
-  "Heavy Duty": { rarity:"Epic", pieces:["Heavy Duty Helmet","Heavy Duty Mask","Heavy Duty Top","Heavy Duty Bottom","Heavy Duty Gloves","Heavy Duty Shoes"],
-    bonuses:["1pc: HP Bonus 10%","2pc: Reload Speed +15%","3pc: Within 5m each enemy grants 4% DMG Reduction (up to 4 stacks)","4pc: Elemental DMG +8%"] },
-  "Stormweaver": { rarity:"Epic", pieces:["Stormweaver Helmet","Stormweaver Mask","Stormweaver Top","Stormweaver Bottom","Stormweaver Gloves","Stormweaver Shoes"],
-    bonuses:["1pc: Status DMG +6%","2pc: Elemental DMG +8%","3pc: After status proc, next hit +12% DMG","4pc: Status Duration +10%"] },
+  "Agent": { rarity:"Legendary", pieces:["Agent Helmet","Agent Mask","Agent Top","Agent Bottom","Agent Gloves","Agent Shoes"],
+    bonuses:["1pc: Head DMG Reduction 10%","2pc: Weakspot DMG 10%","3pc: Bullet Saver on precise kill, Weakspot DMG +15% for 8s (up to 3 stacks)","4pc: Reload Efficiency +20% after defeat; Fire Rate +10% on weakspot kill"] },
+  "Bastille": { rarity:"Legendary", pieces:["Bastille Hood","Bastille Mask","Bastille Top","Bastille Bottom","Bastille Gloves","Bastille Shoes"],
+    bonuses:["1pc: Weapon DMG +10% when HP >70%","2pc: Reload Speed +15%","3pc: Crouch still 0.5s → Bastille state (Weapon DMG +40%)","4pc: Armor stacks while in Bastille (shield = 1% max HP per stack)"] },
+  "Blackstone": { rarity:"Legendary", pieces:["Blackstone Hood","Blackstone Mask","Blackstone Tops","Blackstone Pants","Blackstone Gloves","Blackstone Boots"],
+    bonuses:["1pc: Cold/Heat Resist +2.5%","2pc: Warm Sensation stacks on Elemental DMG","3pc: Warm status when temp 10-30°C (Elemental DMG +18%)","4pc: Extra Elemental DMG at high Warm stacks"] },
   "Blast": { rarity:"Rare", pieces:["Blast Helmet","Blast Mask","Blast Top","Blast Bottom","Blast Gloves","Blast Shoes"],
-    bonuses:["1pc: Heavy Melee DMG +20%","2pc: Torso DMG Reduction +12%","3pc: Next Melee DMG +20% after kill + 5 Prime Energy"] },
+    bonuses:["1pc: Heavy Melee DMG +20%","2pc: Torso DMG Reduction +12%","3pc: After melee kill, next melee +25% DMG + Swing Speed +15%","4pc: Melee kill recovers 30 Stamina + 20% Movement Speed"] },
+  "Dark Resonance": { rarity:"Legendary", pieces:["Dark Resonance Helmet","Dark Resonance Mask","Dark Resonance Vest","Dark Resonance Bottom","Dark Resonance Gloves","Dark Resonance Shoes"],
+    bonuses:["1pc: Ultimate grants 10% temporary Shield","2pc: When Deviant Power not full, Weapon/Status DMG +12%","3pc: Per Energy consumed, Gun/Status DMG +0.6% (up to 30%)","4pc: Battle Skill consumes 30 Deviant Power, cooldown -50%"] },
+  "Falcon": { rarity:"Epic", pieces:["Falcon Cap","Falcon Mask","Falcon Jacket Top","Falcon Bottom","Falcon Gloves","Falcon Shoes"],
+    bonuses:["1pc: Roll Stamina Cost -20%","2pc: Crit DMG +12%","3pc: Stamina >90%: Crit Rate +5%, Crit DMG +20%","4pc: Max Stamina +25; kill recovers 30 Stamina"] },
+  "Ghost Link": { rarity:"Legendary", pieces:["Ghost Link Hood","Ghost Link Mask","Ghost Link Top","Ghost Link Bottom","Ghost Link Gloves","Ghost Link Shoes"],
+    bonuses:["1pc: Crit Rate +3%","2pc: Reload Efficiency +15","3pc: On hit, Sync stacks (Weapon DMG +3%, up to 10)","4pc: At 10 Sync, apply Overload (Status DMG AoE)"] },
+  "Gravity Tide": { rarity:"Legendary", pieces:["Gravity Tide Helmet","Gravity Tide Mask","Gravity Tide Top","Gravity Tide Bottom","Gravity Tide Gloves","Gravity Tide Shoes"],
+    bonuses:["1pc: Jump Height +10%","2pc: Magazine Capacity +15%","3pc: Airborne DMG Reduction +20%; Upper Hand stacks","4pc: High Upper Hand: Weapon/Status DMG +15%"] },
+  "Heavy Duty": { rarity:"Epic", pieces:["Heavy Duty Helmet","Heavy Duty Mask","Heavy Duty Top","Heavy Duty Bottom","Heavy Duty Gloves","Heavy Duty Shoes"],
+    bonuses:["1pc: HP Bonus +10%","2pc: Elemental DMG +8%","3pc: After kill, Movement Speed +20% and Elemental DMG +40% (decays)","4pc: Within 5m each enemy grants 4% DMG Reduction (up to 4)"] },
+  "Lonewolf": { rarity:"Legendary", pieces:["Lonewolf Helmet","Lonewolf Mask","Lonewolf Top","Lonewolf Bottom","Lonewolf Gloves","Lonewolf Shoes"],
+    bonuses:["1pc: Magazine Capacity +10%","2pc: Crit Rate +5%","3pc: 2 crits → Lone Shadow (Crit DMG +6% each, up to 8)","4pc: Max stacks 10; after reload Crit Rate +8% for 2s"] },
+  "Raid": { rarity:"Rare", pieces:["Raid Helmet","Raid Mask","Raid Top","Raid Bottom","Raid Gloves","Raid Shoes"],
+    bonuses:["1pc: Gathering Speed +15%","2pc: Max Load +20","3pc: Load >80: DMG taken -10%, Weapon/Tactical DMG +20%","4pc: Stamina cost -30% when gliding/rolling"] },
+  "Renegade": { rarity:"Legendary", pieces:["Renegade Helmet","Renegade Mask","Renegade Top","Renegade Bottom","Renegade Gloves","Renegade Shoes"],
+    bonuses:["1pc: Reload Speed +15%","2pc: Weakspot DMG +10%","3pc: Consecutive hits → Archer's Focus (Weakspot DMG +4% up to 10)","4pc: After reload, extra bullets based on prior weakspot hits"] },
+  "Rustic": { rarity:"Fine", pieces:["Rustic Hat","Rustic Mask","Rustic Top","Rustic Bottom","Rustic Gloves","Rustic Shoes"],
+    bonuses:["1pc: Movement Speed +8%","2pc: Melee DMG +15%","3pc: HP +600","4pc: Gathering Speed +20%"] },
+  "Savior": { rarity:"Epic", pieces:["Savior Helmet","Savior Mask","Savior Top","Savior Bottom","Savior Gloves","Savior Shoes"],
+    bonuses:["1pc: Medicine Cooldown Haste +0.2","2pc: While shielded, Weapon/Status DMG +10%","3pc: Hit consumes HP to generate temporary shield","4pc: Auto-use healing syringe when HP <30%"] },
   "Scout": { rarity:"Fine", pieces:["Scout Helmet","Scout Mask","Scout Top","Scout Bottom","Scout Gloves","Scout Shoes"],
-    bonuses:["1pc: Movement Speed +4%","2pc: Reload Speed +8%","3pc: Sprint Stamina Cost -10%"] }
+    bonuses:["1pc: HP Bonus +10%","2pc: Weapon DMG +8%","3pc: Weapon/Tactical DMG +20% when unspotted","4pc: Movement Speed +12%, Stamina Recovery +20% when HP <50%"] },
+  "Shelterer": { rarity:"Legendary", pieces:["Shelterer Helmet","Shelterer Mask","Shelterer Top","Shelterer Bottom","Shelterer Gloves","Shelterer Shoes"],
+    bonuses:["1pc: Status DMG Reduction +15%","2pc: Elemental DMG +8%","3pc: Hits grant Deviant Energy stacks (+1% Elemental DMG each)","4pc: Max stacks +10; weakspot grants 2 stacks"] },
+  "Snow Panther": { rarity:"Epic", pieces:["Snow Panther Hat","Snow Panther Mask","Snow Panther Tops","Snow Panther Pants","Snow Panther Gloves","Snow Panther Shoes"],
+    bonuses:["1pc: Torso DMG Reduction +10%","2pc: Melee/Status/Weapon DMG +8% near ally or in territory","3pc: In territory help defeat → +8% DMG for 10s (up to 3)","4pc: In territory, nearby turrets +50% DMG"] },
+  "Stormweaver": { rarity:"Epic", pieces:["Stormweaver Helmet","Stormweaver Mask","Stormweaver Top","Stormweaver Bottom","Stormweaver Gloves","Stormweaver Shoes"],
+    bonuses:["1pc: Roll Stamina Cost -20%","2pc: Magazine Capacity +15%","3pc: Taking DMG grants Powered Armor stacks (DMG Reduction +4%)","4pc: Rolling consumes stacks for knockback explosion"] },
+  "Treacherous Tides": { rarity:"Legendary", pieces:["Treacherous Tides Helmet","Treacherous Tides Mask","Treacherous Tides Top","Treacherous Tides Bottom","Treacherous Tides Gloves","Treacherous Tides Shoes"],
+    bonuses:["1pc: Weapon DMG Reduction +10%","2pc: HP <70%: Weapon/Status DMG +12%","3pc: Low Sanity HP loss reduced; DMG scales with Sanity drop","4pc: Shield 20% Max HP when HP <40% (8s cooldown)"] }
 };
 
 const weapons = [
@@ -184,13 +204,29 @@ const hides = [
 ];
 
 const keyArmor = [
-  {name:"Fire Rune Boots", slot:"shoes", rarity:"Legendary", effect:"Key effect placeholder"},
-  {name:"Snow Camo Gloves", slot:"gloves", rarity:"Legendary", effect:"Key effect placeholder"},
-  {name:"Gas Mask Hood", slot:"helmet", rarity:"Legendary", effect:"Key effect placeholder"},
-  {name:"Cage Helmet", slot:"helmet", rarity:"Legendary", effect:"Key effect placeholder"},
-  {name:"Gas-tight Helmet", slot:"helmet", rarity:"Legendary", effect:"Key effect placeholder"},
-  {name:"Gilded Gauntlets", slot:"gloves", rarity:"Legendary", effect:"Enables Burn to deal Crit DMG."},
-  {name:"Pivot-Step Boots", slot:"shoes", rarity:"Legendary", effect:"Resets Battle Skill cooldown after using Deviation Ultimate."}
+  {name:"Ankh Mask", slot:"mask", rarity:"Legendary", effect:"When magazine emptied, 40% chance to refill 20% bullets from reserve."},
+  {name:"BBQ Gloves", slot:"gloves", rarity:"Legendary", effect:"Burn frequency increases based on Burn stacks, up to 100%."},
+  {name:"Beret", slot:"helmet", rarity:"Legendary", effect:"Shrapnel hit parts +1."},
+  {name:"Bloodstained Tracker Boots", slot:"shoes", rarity:"Legendary", effect:"Re-applying Bull's Eye: Attack +20% for 5s and spreads."},
+  {name:"Cage Helmet", slot:"helmet", rarity:"Legendary", effect:"Shrapnel Trigger additionally triggers +1."},
+  {name:"Charmed Mag Top", slot:"top", rarity:"Legendary", effect:"In Fast Gunner, lower ammo → higher chance of extra bullet (max 40%)."},
+  {name:"Cowboy Boots", slot:"shoes", rarity:"Legendary", effect:"Fortress Warfare only affects self; Attack +25% while active."},
+  {name:"Dust Mask", slot:"mask", rarity:"Legendary", effect:"Fast Gunner trigger: 70% chance to auto-reload 1 bullet + Attack +20%."},
+  {name:"Earthly Boots", slot:"shoes", rarity:"Legendary", effect:"Additional DMG +30% to enemies under The Bull's Eye."},
+  {name:"Fire Rune Boots", slot:"shoes", rarity:"Legendary", effect:"Nearby Burn: 50% chance to spawn Deviant Particle (Blaze DMG +30% for 15s)."},
+  {name:"Gas Mask Hood", slot:"helmet", rarity:"Legendary", effect:"After Power Surge: Crit Rate +35%, Power Surge DMG +15% for 6s."},
+  {name:"Gas-Tight Helmet", slot:"helmet", rarity:"Legendary", effect:"Shrapnel max hit parts limited to 1; Shrapnel DMG Coefficient +150%."},
+  {name:"Gilded Gloves", slot:"gloves", rarity:"Legendary", effect:"Burn can crit; Burn Crit Rate and Crit DMG +20%."},
+  {name:"Hardy Gloves", slot:"gloves", rarity:"Legendary", effect:"At max Burn stacks, explode for 300% Hyper-sensitive Blaze DMG."},
+  {name:"Mayfly Goggles", slot:"helmet", rarity:"Legendary", effect:"Power Surge additionally triggers once; DMG Coefficient -30%."},
+  {name:"Oasis Mask", slot:"mask", rarity:"Legendary", effect:"Fast Gunner max stacks 10; Attack +1% per stack."},
+  {name:"Old Huntsman Boots", slot:"shoes", rarity:"Legendary", effect:"After Bull's Eye, next bullet counts as weakspot; Weakspot DMG +30% to marked."},
+  {name:"Pivot Step Leather Boots", slot:"shoes", rarity:"Legendary", effect:"Resets Battle Skill cooldown after using Deviation Ultimate."},
+  {name:"Snow Camo Gloves", slot:"gloves", rarity:"Legendary", effect:"Ice Crystal shatter launches 4 ice missiles."},
+  {name:"Tactical Combat Shoes", slot:"shoes", rarity:"Legendary", effect:"Hit marked target: 40% chance to refill 1 bullet and restore 1% lost HP."},
+  {name:"Viper Mask", slot:"mask", rarity:"Legendary", effect:"Unstable Bomber range +50%; DMG scales with range bonus."},
+  {name:"Yellow Paint Mask", slot:"helmet", rarity:"Legendary", effect:"Defeating enemies generates EMP that applies Power Surge."},
+  {name:"Wind Interpreter Cap", slot:"helmet", rarity:"Legendary", effect:"Unstable Bomber trigger: auto-load 1 bullet; DMG +25%."}
 ];
 
 const deviations = [
@@ -294,6 +330,23 @@ function populate() {
       <div class="slot-row">${row}</div>` + s.bonuses.map(b=>`<div class="set-bonus">${b}</div>`).join("");
     slist.appendChild(div);
   });
+}
+
+const weaponDetails = {
+  "AWS.338 - Bingo": {type:"Sniper Rifle", dmg:2125, fire:40, mag:5, crit:2, critDmg:26, weak:95, features:["[The Bull's Eye] Marks the target and inflicts Vulnerability.","70% chance to apply The Bull's Eye on weakspot hit.","After switching weapons, first hit applies The Bull's Eye.","After hitting non-Meta-Human, Weakspot DMG +25% for 10s (up to 4 stacks).","After defeating non-Meta-Human with weakspot, Attack +15% for 20s."]},
+  "SOCR - The Last Valor": {type:"Assault Rifle", dmg:0, fire:0, mag:0, crit:0, critDmg:0, weak:0, features:["Weapon features vary by blueprint and calibration."]},
+  "DE.50 - Jaws": {type:"Pistol", dmg:0, fire:0, mag:0, crit:0, critDmg:0, weak:0, features:["Status DMG can crit under certain conditions."]}
+};
+
+function showWeaponDetail(name) {
+  const d = weaponDetails[name];
+  if (!d) return;
+  const box = document.getElementById("modalBox");
+  box.innerHTML = `<h2>${name}</h2><div class="sub">${d.type}</div>
+    <div class="core"><strong>Basic Stats</strong><br>DMG: ${d.dmg||"TBA"} | Fire Rate: ${d.fire||"TBA"} | MAG: ${d.mag||"TBA"}<br>Crit Rate: ${d.crit}% | Crit DMG: ${d.critDmg}% | Weakspot DMG: ${d.weak}%</div>
+    <div class="suffix"><strong>Weapon Features</strong><div style="font-size:0.8rem;margin-top:6px;">${d.features.map(f=>"• "+f).join("<br>")}</div></div>
+    <button class="equip" onclick="closeModal()">Close</button>`;
+  document.getElementById("modal").classList.add("show");
 }
 
 function equipOne(setName, slot, idx) {
