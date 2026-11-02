@@ -36,6 +36,14 @@ select { background:#080c12; color:var(--text); border:1px solid #243040; paddin
 .tile.elem { border-color:#66bb6a; } .tile.elem .v { color:#66bb6a; }
 .tile.dps { border-color:#29b6f6; } .tile.dps .v { color:#29b6f6; }
 .tile .l { font-size:0.62rem; color:var(--dim); margin-top:2px; }
+
+.tile, .slot-card, .dev-card, select, button, .tablinks {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+.tile { touch-action: manipulation; }
+
 .set-bonus { font-size:0.72rem; color:#b8c8d8; margin:3px 0; }
 .equip { background:var(--accent); color:#041016; border:none; padding:7px 12px; border-radius:6px; font-weight:700; cursor:pointer; font-size:0.75rem; margin-top:6px; }
 .slot-row { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin:10px 0; }
@@ -744,7 +752,7 @@ function updateBuild() {
 
   function tile(cls, label, val, unit, srcKey) {
     const note = (sources[srcKey] || []).join("\n") || "No additional sources";
-    return `<div class="tile ${cls}" oncontextmenu="event.preventDefault();showBreakdown('${label}',${val},'${note.replace(/'/g,"\\'")}')" ontouchstart="longPressStart(event,'${label}',${val},'${note.replace(/'/g,"\\'")}')" ontouchend="longPressEnd()"><div class="v">${val}${unit}</div><div class="l">${label}</div></div>`;
+    return `<div class="tile ${cls}" oncontextmenu="event.preventDefault();event.stopPropagation();showBreakdown('${label}',${val},'${note.replace(/'/g,"\\'")}')" ontouchstart="longPressStart(event,'${label}',${val},'${note.replace(/'/g,"\\'")}')" ontouchend="longPressEnd()"><div class="v">${val}${unit}</div><div class="l">${label}</div></div>`;
   }
 
   const results = document.getElementById("results");
@@ -762,6 +770,7 @@ function updateBuild() {
 
 let lpTimer = null;
 function longPressStart(e, label, val, note) {
+  e.preventDefault();
   lpTimer = setTimeout(() => showBreakdown(label, val, note), 600);
 }
 function longPressEnd() { clearTimeout(lpTimer); }
