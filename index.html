@@ -530,15 +530,31 @@ function updateBuild() {
     showHidePreview(slot);
   });
   const counts = getSetCounts();
-  let dps = 1000;
-  let crit = 0, weak = 0, elem = 0;
+  const rating = parseInt(document.getElementById("devRating")?.value || 5);
+  const ratingMult = 1 + (rating - 1) * 0.15;
+
+  let base = 1000;
+  const primary = document.getElementById("primary")?.value;
+  if (primary && weaponDetails[primary]) {
+    const wd = weaponDetails[primary];
+    base = (wd.dmg || 100) * (wd.fire || 300) / 60;
+  }
+
+  let crit = 5, weak = 15, elem = 0, weaponDmg = 0;
   Object.keys(counts).forEach(set => {
     const n = counts[set];
-    if (set === "Lonewolf") { if (n>=2) crit += 5; if (n>=3) crit += 6*Math.min(n,8); if (n>=4) crit += 8; }
+    if (set === "Lonewolf") { if (n>=1) crit += 3; if (n>=2) weaponDmg += 15; if (n>=3) crit += 6; if (n>=4) crit += 8; }
     if (set === "Falcon") { if (n>=2) crit += 12; if (n>=3) crit += 5; }
     if (set === "Renegade") { if (n>=1) weak += 8; if (n>=2) crit += 4; if (n>=3) weak += 15; }
+    if (set === "Shelterer") { if (n>=2) elem += 8; if (n>=3) elem += 18; }
   });
-  dps = Math.round(dps * (1 + crit/100) * (1 + weak/100) * (1 + elem/100));
+
+  const dev = document.getElementById("deviation")?.value;
+  if (dev === "Lonewolf's Whisper") {
+    weaponDmg += 21.6 * ratingMult;
+  }
+
+  const dps = Math.round(base * (1 + weaponDmg/100) * (1 + crit/100) * (1 + weak/100) * (1 + elem/100) * ratingMult);
   const results = document.getElementById("results");
   results.innerHTML = `
     <div class="tile" oncontextmenu="event.preventDefault();showBreakdown('DPS',${dps},'Base × weapon × crit × weakspot × rating')"><div class="v">${dps}</div><div class="l">DPS Total</div></div>
