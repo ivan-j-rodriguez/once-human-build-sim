@@ -235,8 +235,10 @@ function buildArmorUI() {
       <h3>${slotLabels[slot]}</h3>
       <div class="row">
         <div class="field"><label>Piece</label><select id="${slot}" onchange="updateBuild()"><option value="">None</option></select></div>
-        <div class="field" style="max-width:75px;"><label>Tier</label><select id="${slot}Tier" onchange="updateBuild()">${roman.slice(1).map(r=>`<option>${r}</option>`).join("")}</select></div>
-        <div class="field" style="max-width:75px;"><label>Stars</label><select id="${slot}Stars" onchange="updateBuild()"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option></select></div>
+      </div>
+      <div class="row">
+        <div class="field" style="max-width:100px;"><label>Tier</label><select id="${slot}Tier" onchange="updateBuild()">${roman.slice(1).map(r=>`<option>${r}</option>`).join("")}</select></div>
+        <div class="field" style="max-width:140px;"><label>Enhancement Level</label><select id="${slot}Enh" onchange="updateBuild()"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option></select></div>
       </div>
       <div class="row">
         <div class="field"><label>Mod</label><select id="${slot}Mod" onchange="updateBuild()"><option value="">None</option></select><div class="desc" id="${slot}ModDesc"></div></div>
