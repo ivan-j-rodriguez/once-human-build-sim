@@ -115,7 +115,7 @@ select { background:#080c12; color:var(--text); border:1px solid #243040; paddin
     <div>
       <div class="section-header">Weapon</div>
       <div class="weapon-row">
-        <div class="slot-tile empty" onclick="openSlotModal('weapon')"><div class="slot-num" id="weaponNum">—</div><div class="slot-item" id="weaponDisplay">None</div><div class="slot-name">Primary</div><div class="indicators"><div class="ind" id="weaponModInd"></div><div class="ind" id="weaponAccInd"></div></div></div>
+        <div class="slot-tile empty" onclick="openSlotModal('weapon')" ontouchstart="weaponLongPressStart('weapon')" ontouchend="clearTimeout(window.wlp)"><div class="slot-num" id="weaponNum">—</div><div class="slot-item" id="weaponDisplay">None</div><div class="slot-name">Primary</div><div class="indicators"><div class="ind" id="weaponModInd"></div><div class="ind" id="weaponAccInd"></div></div></div>
         <div class="slot-tile empty" onclick="openSlotModal('weapon2')"><div class="slot-num" id="weapon2Num">—</div><div class="slot-item" id="weapon2Display">None</div><div class="slot-name">Secondary</div><div class="indicators"><div class="ind" id="weapon2ModInd"></div><div class="ind" id="weapon2AccInd"></div></div></div>
         <div class="slot-tile empty" onclick="openSlotModal('melee')"><div class="slot-num" id="meleeNum">—</div><div class="slot-item" id="meleeDisplay">None</div><div class="slot-name">Melee</div></div>
       </div>
@@ -150,7 +150,8 @@ select { background:#080c12; color:var(--text); border:1px solid #243040; paddin
 
   <div class="slot-card">
     <h3 style="font-size:0.85rem;">Cradle Overrides</h3>
-    <select id="cradleSelect" multiple size="6" onchange="updateBuild()" style="width:100%;background:#080c12;color:var(--text);border:1px solid #243040;padding:6px;border-radius:6px;height:140px;"></select>
+    <div id="cradleBox" onclick="openCradlePicker()" style="width:100%;min-height:60px;background:#080c12;color:var(--text);border:1px solid #243040;padding:8px;border-radius:6px;cursor:pointer;font-size:0.75rem;">None selected</div>
+<select id="cradleSelect" multiple style="display:none;"></select>
     <div id="cradlePreview" class="desc" style="margin-top:6px;">Selected overrides apply their effects to the calculation.</div>
   </div>
 
@@ -451,6 +452,14 @@ function sortByRarity(arr) {
 
 
 let currentModalSlot = null;
+function weaponLongPressStart(slot) {
+  window.wlp = setTimeout(() => {
+    const w = document.getElementById(slot)?.value || "None";
+    const m = document.getElementById(slot+"Mod")?.value || "None";
+    const a = document.getElementById(slot+"Acc")?.value || "None";
+    alert(slot.toUpperCase() + "\nWeapon: " + w + "\nMod: " + m + "\nAccessory: " + a);
+  }, 550);
+}
 function openSlotModal(slot) {
   currentModalSlot = slot;
   const titles = {weapon:"Primary Weapon", weapon2:"Secondary Weapon", melee:"Melee Weapon", helmet:"Helmet", mask:"Mask", top:"Top", gloves:"Gloves", bottom:"Bottom", shoes:"Shoes"};
@@ -643,6 +652,32 @@ function selectMod(name) {
 }
 
 
+function openCradlePicker() {
+  document.getElementById("modalTitle").textContent = "Cradle Overrides";
+  const list = document.getElementById("modalList");
+  list.innerHTML = "";
+  const sel = document.getElementById("cradleSelect");
+  const selected = sel ? Array.from(sel.selectedOptions).map(o => o.value) : [];
+  cradleOverrides.forEach(c => {
+    const el = document.createElement("div");
+    el.className = "modal-item";
+    el.textContent = (selected.includes(c.name) ? "✓ " : "") + c.name;
+    el.onclick = () => toggleCradle(c.name);
+    list.appendChild(el);
+  });
+  document.getElementById("slotModal").classList.add("open");
+}
+function toggleCradle(name) {
+  const sel = document.getElementById("cradleSelect");
+  if (!sel) return;
+  let opt = Array.from(sel.options).find(o => o.value === name);
+  if (!opt) { opt = document.createElement("option"); opt.value = name; opt.textContent = name; sel.appendChild(opt); }
+  opt.selected = !opt.selected;
+  const selected = Array.from(sel.selectedOptions).map(o => o.value);
+  document.getElementById("cradleBox").textContent = selected.length ? selected.join(", ") : "None selected";
+  updateBuild();
+  openCradlePicker();
+}
 function fillCradle() {
   const sel = document.getElementById("cradleSelect");
   if (!sel) return;
@@ -722,8 +757,9 @@ function populate() {
 
   const devSel = document.getElementById("deviation");
   if (devSel) {
-    if (devSel.options.length <= 1) {
+    const existing = Array.from(devSel.options).map(o => o.value);
     sortByRarity(deviations).forEach(d => {
+      if (existing.includes(d.name)) return;
       const opt = document.createElement("option");
       opt.value = d.name;
       opt.textContent = d.name;
@@ -1027,7 +1063,9 @@ function updateBuild() {
     tile("elem","Elemental DMG",elem,"%","elem");
   document.querySelectorAll("#results .tile").forEach(tile => {
   const note = tile.dataset.note || "Base value";
-  attachLongPress(tile, () => alert(tile.dataset.label + ": " + tile.dataset.val + "\n\n" + note));
+  tile.ontouchstart = () => { window.rtp = setTimeout(() => alert(tile.dataset.label + ": " + tile.dataset.val + "\n\n" + note), 550); };
+  tile.ontouchend = () => clearTimeout(window.rtp);
+  tile.oncontextmenu = (e) => { e.preventDefault(); alert(tile.dataset.label + ": " + tile.dataset.val + "\n\n" + note); };
 });
   const out = document.getElementById("setBonusOut");
   if (out) out.innerHTML = "";
