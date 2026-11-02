@@ -788,19 +788,25 @@ function openModPopup(slot, piece) {
 }
 
 function showModPreview(slot) {
-  const name = document.getElementById(slot+"Mod").value;
+  const sel = document.getElementById(slot+"Mod");
+  if (!sel) return;
+  const name = sel.value;
   const m = mods.find(x => x.name === name);
   const el = document.getElementById(slot+"ModDesc");
+  if (!el) return;
   if (m && m.core) {
-    el.innerHTML = m.core + (m.suffixes.length ? " <span style='color:#e8b86d'>[tap for full]</span>" : "");
+    el.innerHTML = m.core + (m.suffixes && m.suffixes.length ? " <span style='color:#e8b86d'>[tap for full]</span>" : "");
     el.onclick = () => showModFull(m);
   } else el.textContent = "";
 }
 
 function showHidePreview(slot) {
-  const name = document.getElementById(slot+"Hide").value;
+  const sel = document.getElementById(slot+"Hide");
+  if (!sel) return;
+  const name = sel.value;
   const h = hides.find(x => x.name === name);
-  document.getElementById(slot+"HideDesc").textContent = h ? h.desc : "";
+  const el = document.getElementById(slot+"HideDesc");
+  if (el) el.textContent = h ? h.desc : "";
 }
 
 function showModFull(m) {
