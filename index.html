@@ -53,10 +53,10 @@ select { background:#080c12; color:var(--text); border:1px solid #243040; paddin
 <body>
 <div class="header"><img src="logo.png" alt="Once Human" style="height:64px;max-width:100%;object-fit:contain;"></div>
 <div class="tabs">
-  <button class="tablinks active" onclick="switchTab('Build')">Build</button>
-  <button class="tablinks" onclick="switchTab('Deviations')">Deviations</button>
-  <button class="tablinks" onclick="switchTab('Armor')">Armor</button>
-  <button class="tablinks" onclick="switchTab('Results')">Results</button>
+  <button class="tablinks active" onclick="switchTab('Build', this)">Build</button>
+  <button class="tablinks" onclick="switchTab('Deviations', this)">Deviations</button>
+  <button class="tablinks" onclick="switchTab('Armor', this)">Armor</button>
+  <button class="tablinks" onclick="switchTab('Results', this)">Results</button>
 </div>
 
 <div id="Build" class="tabcontent" style="display:block;">
@@ -383,11 +383,13 @@ const deviations = [
   {name:"Duet", rarity:"Legendary", icon:"", desc:"Isles of the Abyss deviation. Modifies weather effects within the Territory in real-time. Obtained from The Sunken Lord.", skills:["Weather Control"]}
 ];
 
-function switchTab(id) {
+function switchTab(id, el) {
   document.querySelectorAll(".tabcontent").forEach(t => t.style.display = "none");
   document.querySelectorAll(".tablinks").forEach(b => b.classList.remove("active"));
-  document.getElementById(id).style.display = "block";
-  event.target.classList.add("active");
+  const tab = document.getElementById(id);
+  if (tab) tab.style.display = "block";
+  const btn = el || document.querySelector(`.tablinks[onclick*="${id}"]`);
+  if (btn) btn.classList.add("active");
 }
 
 function populate() {
