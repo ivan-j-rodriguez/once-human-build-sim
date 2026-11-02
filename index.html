@@ -165,8 +165,8 @@ select { background:#080c12; color:var(--text); border:1px solid #243040; paddin
   </div>
 </div>
 
-<div id="Deviations" class="tabcontent"><div id="devList"></div></div>
-<div id="Armor" class="tabcontent"><div id="setList"></div></div>
+<div id="Deviations" class="tabcontent"><div id="deviationList"></div><div id="devList"></div></div>
+<div id="Armor" class="tabcontent"><div id="setsList"></div><div id="setList"></div></div>
 <div id="Results" class="tabcontent">
   <div class="results" id="results"></div>
   <div id="setBonusOut" style="margin-top:12px;"></div>
@@ -451,7 +451,7 @@ function openSlotModal(slot) {
   const list = document.getElementById("modalList");
   list.innerHTML = "";
   let items = [];
-  if (slot === "weapon" || slot === "weapon2") items = sortByRarity(weapons);
+  if (slot === "weapon" || slot === "weapon2") items = sortByRarity(weapons.filter(w => !["Baseball Bat","Broken Bottle","Camping Knife","Crowbar","Frozen Northern Pike","Kukri","Long Axe","Military Dagger","Military Shovel","Rusted Blade","Steel Pipe","Stun Baton","Scourge","The Fabled Masamune","Warning Sign","Wrench","Northern Pike","Torch"].includes(w.name)));
   else if (slot === "melee") items = sortByRarity(meleeWeapons);
   else {
     // armor pieces for that slot from all sets
@@ -533,8 +533,8 @@ function populate() {
     msel.appendChild(o);
   });
 
-  const armor = document.getElementById("armorSlots");
-  slots.forEach(slot => {
+  const armor = document.getElementById("setsList");
+  if (armor) slots.forEach(slot => {
     const card = document.createElement("div"); card.className = "slot-card";
     card.innerHTML = `<h3>${slotLabels[slot]}</h3>
       <div class="field"><label>Piece</label><select id="${slot}" onchange="updateBuild()"><option value="">None</option></select></div>
@@ -595,7 +595,7 @@ function populate() {
     });
   }
 
-  const dlist = document.getElementById("devList");
+  const dlist = document.getElementById("deviationList");
   sortByRarity(deviations).forEach(d => {
     const div = document.createElement("div"); div.className = "dev-card";
     div.style.cursor = "pointer";
