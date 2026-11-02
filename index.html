@@ -37,6 +37,23 @@ select { background:#080c12; color:var(--text); border:1px solid #243040; paddin
 .tile.dps { border-color:#29b6f6; } .tile.dps .v { color:#29b6f6; }
 .tile .l { font-size:0.62rem; color:var(--dim); margin-top:2px; }
 
+.gear-layout { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+.weapon-slots { display:flex; flex-direction:column; gap:8px; }
+.gear-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.slot-tile { background:#121820; border:1px solid #2a3a50; border-radius:8px; padding:10px 6px; text-align:center; cursor:pointer; min-height:72px; display:flex; flex-direction:column; justify-content:center; }
+.slot-tile:active { background:#1a2430; }
+.slot-tile .slot-name { font-size:0.65rem; color:#8aa; margin-bottom:4px; }
+.slot-tile .slot-item { font-size:0.75rem; font-weight:600; color:#e8eef6; }
+.slot-tile.empty .slot-item { color:#556; font-weight:400; }
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:1000; display:none; align-items:center; justify-content:center; }
+.modal-overlay.open { display:flex; }
+.modal-box { background:#0e141c; border:1px solid #2a3a50; border-radius:10px; width:90%; max-width:420px; max-height:80vh; overflow:auto; padding:14px; }
+.modal-box h3 { margin:0 0 10px; font-size:0.95rem; }
+.modal-list { display:flex; flex-direction:column; gap:6px; }
+.modal-item { padding:8px 10px; background:#161e28; border-radius:6px; cursor:pointer; font-size:0.8rem; }
+.modal-item:hover { background:#1e2a38; }
+
+
 .tile, .slot-card, .dev-card, select, button, .tablinks {
   -webkit-user-select: none;
   user-select: none;
@@ -75,6 +92,31 @@ select { background:#080c12; color:var(--text); border:1px solid #243040; paddin
 </div>
 
 <div id="Build" class="tabcontent" style="display:block;">
+  <div class="gear-layout">
+    <div class="weapon-slots">
+      <div class="slot-tile" onclick="openSlotModal('weapon')">
+        <div class="slot-name">PRIMARY WEAPON</div>
+        <div class="slot-item" id="weaponDisplay">None</div>
+      </div>
+      <div class="slot-tile" onclick="openSlotModal('weapon2')">
+        <div class="slot-name">SECONDARY WEAPON</div>
+        <div class="slot-item" id="weapon2Display">None</div>
+      </div>
+      <div class="slot-tile" onclick="openSlotModal('melee')">
+        <div class="slot-name">MELEE WEAPON</div>
+        <div class="slot-item" id="meleeDisplay">None</div>
+      </div>
+    </div>
+    <div class="gear-grid">
+      <div class="slot-tile" onclick="openSlotModal('helmet')"><div class="slot-name">HELMET</div><div class="slot-item" id="helmetDisplay">None</div></div>
+      <div class="slot-tile" onclick="openSlotModal('mask')"><div class="slot-name">MASK</div><div class="slot-item" id="maskDisplay">None</div></div>
+      <div class="slot-tile" onclick="openSlotModal('top')"><div class="slot-name">TOP</div><div class="slot-item" id="topDisplay">None</div></div>
+      <div class="slot-tile" onclick="openSlotModal('gloves')"><div class="slot-name">GLOVES</div><div class="slot-item" id="glovesDisplay">None</div></div>
+      <div class="slot-tile" onclick="openSlotModal('bottom')"><div class="slot-name">BOTTOM</div><div class="slot-item" id="bottomDisplay">None</div></div>
+      <div class="slot-tile" onclick="openSlotModal('shoes')"><div class="slot-name">SHOES</div><div class="slot-item" id="shoesDisplay">None</div></div>
+    </div>
+  </div>
+
   <div class="slot-card">
     <h3 style="font-size:0.85rem;">Deviation</h3>
     <div class="field"><label>Deviation</label>
@@ -82,64 +124,36 @@ select { background:#080c12; color:var(--text); border:1px solid #243040; paddin
     </div>
     <div class="pair">
       <div class="field"><label>Skill Rating</label>
-        <select id="devSkill" onchange="updateBuild()">
-          <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5" selected>5</option>
-        </select>
+        <select id="devSkill" onchange="updateBuild()"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5" selected>5</option></select>
       </div>
       <div class="field"><label>Ability Rating</label>
-        <select id="devAbility" onchange="updateBuild()">
-          <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5" selected>5</option>
-        </select>
+        <select id="devAbility" onchange="updateBuild()"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5" selected>5</option></select>
       </div>
     </div>
   </div>
 
   <div class="slot-card">
     <h3 style="font-size:0.85rem;">Cradle Overrides</h3>
-    <div class="field"><label>Select Active Overrides (up to 8)</label>
-      <select id="cradleSelect" multiple size="8" onchange="updateBuild()" style="width:100%;background:#080c12;color:var(--text);border:1px solid #243040;padding:6px;border-radius:6px;height:180px;">
-        <option value="auto">Automatic Weapon Enhancement (+20% DMG SMG/Rifle/LMG)</option>
-        <option value="long">Long-Range Enhancement (+20% DMG Sniper/Crossbow)</option>
-        <option value="hand">Handgun Enhancement (+20% DMG Pistol/Shotgun)</option>
-        <option value="melee">Melee Enhancement (+20% DMG Melee)</option>
-        <option value="tactical">Tactical Combo (+25% Weapon DMG for 4s after switch/reload)</option>
-        <option value="steady">Steady Hand (+40% Weakspot DMG in Fast Gunner/Fortress)</option>
-        <option value="devmaster">Deviation Master (+50% vs Great Ones/Elites while Deviation present)</option>
-        <option value="status">Status Enhancement (+25% Status DMG for 3s after weakspot)</option>
-        <option value="first">First Round Blast (+25% Instant DMG for 4s after reload)</option>
-        <option value="bounty">Bounty Hunter (+25% Weapon / +35% Weakspot for 15s after marked kill)</option>
-      </select>
-    </div>
+    <select id="cradleSelect" multiple size="6" onchange="updateBuild()" style="width:100%;background:#080c12;color:var(--text);border:1px solid #243040;padding:6px;border-radius:6px;height:140px;"></select>
     <div id="cradlePreview" class="desc" style="margin-top:6px;">Selected overrides apply their effects to the calculation.</div>
   </div>
 
-  <div class="slot-card">
-    <h3 style="font-size:0.85rem;">Primary Weapon</h3>
-    <div class="field"><label>Weapon</label><select id="weapon" onchange="updateBuild(); if(this.value) showWeaponDetail(this.value)"></select></div>
-    <div class="pair">
-      <div class="field"><label>Tier</label><select id="wTier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
-      <div class="field"><label>Enhancement Level</label><select id="wEnh" onchange="updateBuild()"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option></select></div>
-    </div>
-    <div class="field"><label>Sight / Scope</label><select id="accSight" onchange="updateBuild()"><option value="">None</option><option>Red Dot</option><option>Holographic Sight</option><option>4x Scope</option><option>6x Scope</option><option>Advanced Sniper Sight</option><option>Thermal Scope</option><option>Compact Reflex</option></select></div>
-    <div class="field"><label>Magazine</label><select id="accMag" onchange="updateBuild()"><option value="">None</option><option>Extended Mag</option><option>Amended Rifle Mag</option><option>Light Mag</option><option>Drum Mag</option><option>Quick Reload Mag</option></select></div>
-    <div class="field"><label>Muzzle</label><select id="accMuzzle" onchange="updateBuild()"><option value="">None</option><option>Short Suppressor</option><option>Long Suppressor</option><option>Tactical Suppressor</option><option>Compensator</option><option>Muzzle Brake</option><option>Flash Hider</option></select></div>
-    <h3 style="font-size:0.85rem;margin-top:14px;">Secondary Weapon</h3>
-    <div class="field"><label>Weapon</label><select id="weapon2" onchange="updateBuild(); if(this.value) showWeaponDetail(this.value)"></select></div>
-    <div class="pair">
-      <div class="field"><label>Tier</label><select id="w2Tier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
-      <div class="field"><label>Enhancement Level</label><select id="w2Enh" onchange="updateBuild()"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option></select></div>
-    </div>
-    <div class="field"><label>Sight / Scope</label><select id="acc2Sight" onchange="updateBuild()"><option value="">None</option><option>Red Dot</option><option>Holographic Sight</option><option>4x Scope</option><option>6x Scope</option></select></div>
-    <div class="field"><label>Magazine</label><select id="acc2Mag" onchange="updateBuild()"><option value="">None</option><option>Extended Mag</option><option>Amended Rifle Mag</option></select></div>
-    <div class="field"><label>Muzzle</label><select id="acc2Muzzle" onchange="updateBuild()"><option value="">None</option><option>Short Suppressor</option><option>Long Suppressor</option><option>Tactical Suppressor</option></select></div>
-    <h3 style="font-size:0.85rem;margin-top:14px;">Melee Weapon</h3>
-    <div class="field"><label>Weapon</label><select id="melee" onchange="updateBuild()"></select></div>
-    <div class="pair">
-      <div class="field"><label>Tier</label><select id="mTier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
-      <div class="field"><label>Enhancement Level</label><select id="mEnh" onchange="updateBuild()"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option></select></div>
-    </div>
+  <!-- Hidden selects kept for calculation compatibility -->
+  <div style="display:none;">
+    <select id="weapon"></select><select id="wTier"><option>IV</option></select><select id="wEnh"><option>4</option></select>
+    <select id="weapon2"></select><select id="w2Tier"><option>IV</option></select><select id="w2Enh"><option>4</option></select>
+    <select id="melee"></select><select id="mTier"><option>IV</option></select><select id="mEnh"><option>4</option></select>
+    <select id="helmet"></select><select id="mask"></select><select id="top"></select>
+    <select id="gloves"></select><select id="bottom"></select><select id="shoes"></select>
   </div>
-  <div id="armorSlots"></div>
+</div>
+
+<div id="slotModal" class="modal-overlay" onclick="if(event.target===this)closeSlotModal()">
+  <div class="modal-box">
+    <h3 id="modalTitle">Select</h3>
+    <div id="modalList" class="modal-list"></div>
+    <button onclick="closeSlotModal()" style="margin-top:10px;width:100%;padding:8px;background:#1a2430;border:1px solid #2a3a50;border-radius:6px;color:#ccc;">Close</button>
+  </div>
 </div>
 
 <div id="Deviations" class="tabcontent"><div id="devList"></div></div>
@@ -416,6 +430,63 @@ function sortByRarity(arr) {
     if (ra !== rb) return ra - rb;
     return (a.name || "").localeCompare(b.name || "");
   });
+}
+
+
+let currentModalSlot = null;
+function openSlotModal(slot) {
+  currentModalSlot = slot;
+  const titles = {weapon:"Primary Weapon", weapon2:"Secondary Weapon", melee:"Melee Weapon", helmet:"Helmet", mask:"Mask", top:"Top", gloves:"Gloves", bottom:"Bottom", shoes:"Shoes"};
+  document.getElementById("modalTitle").textContent = titles[slot] || slot;
+  const list = document.getElementById("modalList");
+  list.innerHTML = "";
+  let items = [];
+  if (slot === "weapon" || slot === "weapon2") items = sortByRarity(weapons);
+  else if (slot === "melee") items = sortByRarity(meleeWeapons);
+  else {
+    // armor pieces for that slot from all sets
+    items = [];
+    Object.keys(sets).forEach(setName => {
+      const s = sets[setName];
+      const idx = ["helmet","mask","top","bottom","gloves","shoes"].indexOf(slot);
+      if (idx >= 0 && s.pieces[idx]) items.push({name: s.pieces[idx], rarity: s.rarity, set: setName});
+    });
+    items = sortByRarity(items);
+  }
+  const none = document.createElement("div");
+  none.className = "modal-item";
+  none.textContent = "None";
+  none.onclick = () => selectSlotItem("");
+  list.appendChild(none);
+  items.forEach(it => {
+    const el = document.createElement("div");
+    el.className = "modal-item rarity-" + (it.rarity||"").toLowerCase();
+    el.textContent = it.name + (it.set ? " (" + it.set + ")" : "");
+    el.onclick = () => selectSlotItem(it.name);
+    list.appendChild(el);
+  });
+  document.getElementById("slotModal").classList.add("open");
+}
+function selectSlotItem(name) {
+  const sel = document.getElementById(currentModalSlot);
+  if (sel) {
+    // ensure option exists
+    let opt = Array.from(sel.options).find(o => o.value === name);
+    if (!opt && name) {
+      opt = document.createElement("option");
+      opt.value = name; opt.textContent = name;
+      sel.appendChild(opt);
+    }
+    sel.value = name || "";
+  }
+  const disp = document.getElementById(currentModalSlot + "Display");
+  if (disp) disp.textContent = name || "None";
+  closeSlotModal();
+  updateBuild();
+}
+function closeSlotModal() {
+  document.getElementById("slotModal").classList.remove("open");
+  currentModalSlot = null;
 }
 
 function populate() {
