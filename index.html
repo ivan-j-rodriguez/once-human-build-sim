@@ -520,6 +520,22 @@ function closeSlotModal() {
   currentModalSlot = null;
 }
 
+
+function renderSets() {
+  const list = document.getElementById("setsList");
+  if (!list) return;
+  list.innerHTML = "";
+  Object.keys(sets).sort((a,b) => (rarityOrder[sets[a].rarity]??99) - (rarityOrder[sets[b].rarity]??99) || a.localeCompare(b)).forEach(setName => {
+    const s = sets[setName];
+    const card = document.createElement("div");
+    card.className = "slot-card";
+    card.innerHTML = `<h3 class="rarity-${s.rarity.toLowerCase()}">${setName}</h3>
+      <div class="desc">${s.bonuses ? s.bonuses.join("<br>") : ""}</div>
+      <div style="font-size:0.65rem;color:#668;margin-top:4px;">${s.pieces.filter(Boolean).join(" · ")}</div>`;
+    list.appendChild(card);
+  });
+}
+
 function populate() {
   const wsel = document.getElementById("weapon");
   const w2sel = document.getElementById("weapon2");
@@ -533,7 +549,7 @@ function populate() {
     msel.appendChild(o);
   });
 
-  const armor = document.getElementById("setsList");
+  const armor = document.getElementById("armorSlots");
   if (armor) slots.forEach(slot => {
     const card = document.createElement("div"); card.className = "slot-card";
     card.innerHTML = `<h3>${slotLabels[slot]}</h3>
@@ -888,6 +904,7 @@ function showBreakdown(label, val, note) {
 }
 
 populate();
+renderSets();
 updateBuild();
 </script>
 </body>
