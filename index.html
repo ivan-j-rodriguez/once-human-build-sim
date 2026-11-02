@@ -581,7 +581,7 @@ function openModModal(slot) {
   none.textContent = "None";
   none.onclick = () => selectMod("");
   list.appendChild(none);
-  sortByRarity(mods).forEach(m => {
+  sortByRarity(mods.filter(m => m.name !== 'None')).forEach(m => {
     const el = document.createElement("div");
     el.className = "modal-item rarity-" + (m.rarity||"").toLowerCase();
     el.textContent = m.name;
@@ -672,7 +672,7 @@ function populate() {
 
   slots.forEach(slot => {
     const msel = document.getElementById(slot+"Mod");
-    sortByRarity(mods).forEach(m => {
+    sortByRarity(mods.filter(m => m.name !== 'None')).forEach(m => {
       const o = document.createElement("option"); o.value = m.name; o.textContent = m.name; o.className = "rarity-"+m.rarity.toLowerCase();
       msel.appendChild(o);
     });
@@ -752,13 +752,10 @@ function showWeaponDetail(name) {
 }
 
 function showDevDetail(d) {
-  const box = document.getElementById("modalBox");
-  box.innerHTML = `<h2 class="rarity-${d.rarity.toLowerCase()}">${d.name}</h2>
-    <div class="sub">${d.rarity}</div>
-    <div class="core">${d.desc}</div>
-    <div class="suffix"><strong>Skills / Abilities</strong><div style="font-size:0.8rem;margin-top:6px;">${(d.skills||[]).map(s=>"• "+s).join("<br>")}</div></div>
-    <button class="equip" onclick="closeModal()">Close</button>`;
-  document.getElementById("modal").classList.add("show");
+  document.getElementById("modalTitle").textContent = d.name;
+  const list = document.getElementById("modalList");
+  list.innerHTML = `<div style="padding:8px;"><div class="rarity-${(d.rarity||"").toLowerCase()}" style="font-size:0.7rem;margin-bottom:6px;">${d.rarity}</div><div style="font-size:0.8rem;line-height:1.4;margin-bottom:8px;">${d.desc||""}</div><div style="font-size:0.75rem;"><strong>Skills:</strong><br>${(d.skills||[]).map(s=>"• "+s).join("<br>")}</div></div>`;
+  document.getElementById("slotModal").classList.add("open");
 }
 
 function equipOne(setName, slot, idx) {
@@ -837,7 +834,7 @@ function updateBuild() {
       if (opt?.dataset?.key === "1") keyCount++;
     }
   });
-  if (keyCount > 1 && window._userAction) {
+  if (keyCount > 1 && window._userAction === true) {
     alert("Only one Key Armor item can be equipped.");
     slots.forEach(slot => {
       const sel = document.getElementById(slot);
@@ -1015,7 +1012,7 @@ try {
     sortByRarity(deviations).forEach(d => {
       const div = document.createElement("div"); div.className = "dev-card";
       div.innerHTML = `<strong class="rarity-${(d.rarity||"").toLowerCase()}">${d.name}</strong><div class="desc">${d.desc||""}</div>`;
-      div.oncontextmenu = (e) => { e.preventDefault(); showDevDetail(d); };
+      attachLongPress(div, () => showDevDetail(d));
       dlist.appendChild(div);
     });
   }
