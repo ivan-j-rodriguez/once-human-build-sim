@@ -49,6 +49,13 @@ select { background:#080c12; color:var(--text); border:1px solid #243040; paddin
 .slot-tile .slot-item { font-size:0.72rem; font-weight:600; color:#e8eef6; line-height:1.2; }
 .slot-tile.empty .slot-item { color:#556; font-weight:400; }
 .slot-tile.melee { grid-row:span 2; }
+
+.slot-tile.rarity-common { background:linear-gradient(180deg,#2a2a2a 0%,#1a1a1a 100%); border-color:#555; }
+.slot-tile.rarity-fine { background:linear-gradient(180deg,#1a2a3a 0%,#0e1a28 100%); border-color:#4a6a8a; }
+.slot-tile.rarity-rare { background:linear-gradient(180deg,#1a2a4a 0%,#0e1a30 100%); border-color:#4a6aaa; }
+.slot-tile.rarity-epic { background:linear-gradient(180deg,#2a1a40 0%,#1a0e28 100%); border-color:#6a4aaa; }
+.slot-tile.rarity-legendary { background:linear-gradient(180deg,#3a2a10 0%,#2a1a08 100%); border-color:#aa8a40; }
+
 .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:1000; display:none; align-items:center; justify-content:center; }
 .modal-overlay.open { display:flex; }
 .modal-box { background:#0e141c; border:1px solid #2a3a50; border-radius:10px; width:90%; max-width:420px; max-height:80vh; overflow:auto; padding:14px; }
@@ -149,7 +156,7 @@ select { background:#080c12; color:var(--text); border:1px solid #243040; paddin
   </div>
 </div>
 
-<div id="slotModal" class="modal-overlay" onclick="if(event.target===this)closeSlotModal()">
+<div id="slotModal" class="modal-overlay" onclick="if(event.target===this)closeSlotModal()" style="pointer-events:auto;">
   <div class="modal-box">
     <h3 id="modalTitle">Select</h3>
     <div id="modalList" class="modal-list"></div>
@@ -414,6 +421,7 @@ const deviations = [
 ];
 
 function switchTab(id, el) {
+  closeSlotModal();
   document.querySelectorAll(".tabcontent").forEach(t => t.style.display = "none");
   document.querySelectorAll(".tablinks").forEach(b => b.classList.remove("active"));
   const tab = document.getElementById(id);
@@ -471,7 +479,6 @@ function openSlotModal(slot) {
 function selectSlotItem(name) {
   const sel = document.getElementById(currentModalSlot);
   if (sel) {
-    // ensure option exists
     let opt = Array.from(sel.options).find(o => o.value === name);
     if (!opt && name) {
       opt = document.createElement("option");
@@ -482,6 +489,28 @@ function selectSlotItem(name) {
   }
   const disp = document.getElementById(currentModalSlot + "Display");
   if (disp) disp.textContent = name || "None";
+  // Apply rarity color to the tile
+  const tile = document.querySelector(`.slot-tile[onclick*="${currentModalSlot}"]`);
+  if (tile) {
+    tile.classList.remove("rarity-common","rarity-fine","rarity-rare","rarity-epic","rarity-legendary","empty");
+    if (!name) { tile.classList.add("empty"); }
+    else {
+      let rarity = "common";
+      if (currentModalSlot === "weapon" || currentModalSlot === "weapon2") {
+        const w = weapons.find(x => x.name === name);
+        if (w) rarity = (w.rarity || "common").toLowerCase();
+      } else if (currentModalSlot === "melee") {
+        const w = meleeWeapons.find(x => x.name === name);
+        if (w) rarity = (w.rarity || "common").toLowerCase();
+      } else {
+        // armor - find set rarity
+        Object.keys(sets).forEach(setName => {
+          if (sets[setName].pieces.includes(name)) rarity = (sets[setName].rarity || "common").toLowerCase();
+        });
+      }
+      tile.classList.add("rarity-" + rarity);
+    }
+  }
   closeSlotModal();
   updateBuild();
 }
