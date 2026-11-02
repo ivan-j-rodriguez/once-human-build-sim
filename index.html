@@ -522,6 +522,9 @@ function selectSlotItem(name) {
   if (["helmet","mask","top","bottom","gloves","shoes"].includes(slot) && name) {
     setTimeout(() => openModModal(slot), 80);
   }
+  if (["weapon","weapon2"].includes(slot) && name) {
+    setTimeout(() => openAccessoryModal(slot), 80);
+  }
 }
 function closeSlotModal() {
   document.getElementById("slotModal").classList.remove("open");
@@ -552,6 +555,8 @@ function renderSets() {
 }
 function equipPiece(setName, slot, piece) {
   window._userAction = true;
+  document.querySelectorAll(".slot-btn").forEach(b => b.style.borderColor = "");
+  document.querySelectorAll(`[onclick*="equipPiece('${setName}','${slot}'"]`).forEach(b => b.style.borderColor = "#6cf");
   if (!piece) return;
   const sel = document.getElementById(slot);
   if (sel) {
@@ -574,6 +579,27 @@ function equipPiece(setName, slot, piece) {
   // Open mod selection for that slot
   openModModal(slot);
   updateBuild();
+}
+function openAccessoryModal(slot) {
+  currentModalSlot = slot + "Acc";
+  document.getElementById("modalTitle").textContent = slot === "weapon" ? "Primary Accessories" : "Secondary Accessories";
+  const list = document.getElementById("modalList");
+  list.innerHTML = "";
+  const accs = [
+    {name:"None", rarity:"Common"},
+    {name:"Red Dot", rarity:"Fine"},{name:"Holographic Sight", rarity:"Epic"},{name:"4x Scope", rarity:"Epic"},{name:"6x Scope", rarity:"Legendary"},
+    {name:"Extended Mag", rarity:"Epic"},{name:"Amended Rifle Mag", rarity:"Legendary"},{name:"Light Mag", rarity:"Rare"},
+    {name:"Short Suppressor", rarity:"Rare"},{name:"Long Suppressor", rarity:"Epic"},{name:"Tactical Suppressor", rarity:"Legendary"},
+    {name:"Compensator", rarity:"Epic"},{name:"Muzzle Brake", rarity:"Rare"}
+  ];
+  accs.forEach(a => {
+    const el = document.createElement("div");
+    el.className = "modal-item rarity-" + a.rarity.toLowerCase();
+    el.textContent = a.name;
+    el.onclick = () => { closeSlotModal(); updateBuild(); };
+    list.appendChild(el);
+  });
+  document.getElementById("slotModal").classList.add("open");
 }
 function openModModal(slot) {
   currentModalSlot = slot + "Mod";
@@ -688,7 +714,8 @@ function populate() {
   });
 
   const devSel = document.getElementById("deviation");
-  if (devSel && devSel.options.length <= 1) {
+  if (devSel) {
+    if (devSel.options.length <= 1) {
     sortByRarity(deviations).forEach(d => {
       const opt = document.createElement("option");
       opt.value = d.name;
@@ -696,6 +723,7 @@ function populate() {
       opt.className = "rarity-" + d.rarity.toLowerCase();
       devSel.appendChild(opt);
     });
+    }
   }
 
   const dlist = document.getElementById("deviationList");
@@ -758,8 +786,20 @@ function showWeaponDetail(name) {
 function showDevDetail(d) {
   document.getElementById("modalTitle").textContent = d.name;
   const list = document.getElementById("modalList");
-  list.innerHTML = `<div style="padding:8px;"><div class="rarity-${(d.rarity||"").toLowerCase()}" style="font-size:0.7rem;margin-bottom:6px;">${d.rarity}</div><div style="font-size:0.8rem;line-height:1.4;margin-bottom:8px;">${d.desc||""}</div><div style="font-size:0.75rem;"><strong>Skills:</strong><br>${(d.skills||[]).map(s=>"• "+s).join("<br>")}</div></div>`;
+  list.innerHTML = `<div style="padding:8px;"><div class="rarity-${(d.rarity||"").toLowerCase()}" style="font-size:0.7rem;margin-bottom:6px;">${d.rarity}</div>
+    <div style="font-size:0.8rem;line-height:1.45;margin-bottom:10px;">${d.desc||"No description available."}</div>
+    <div style="font-size:0.75rem;margin-bottom:10px;"><strong>Skills / Abilities</strong><br>${(d.skills||["None listed"]).map(s=>"• "+s).join("<br>")}</div>
+    <button onclick="equipDeviation('${d.name.replace(/'/g,"\\'")}');closeSlotModal();" style="width:100%;padding:8px;background:#1a2430;border:1px solid #2a3a50;border-radius:6px;color:#ccc;">Equip</button></div>`;
   document.getElementById("slotModal").classList.add("open");
+}
+function equipDeviation(name) {
+  const sel = document.getElementById("deviation");
+  if (sel) {
+    let opt = Array.from(sel.options).find(o => o.value === name);
+    if (!opt) { opt = document.createElement("option"); opt.value = name; opt.textContent = name; sel.appendChild(opt); }
+    sel.value = name;
+  }
+  updateBuild();
 }
 
 function equipOne(setName, slot, idx) {
@@ -887,7 +927,7 @@ function updateBuild() {
   });
   // Preview
   const prev = document.getElementById("cradlePreview");
-  if (prev) prev.textContent = selected.length ? selected.length + " override(s) active: " + selected.slice(0,3).join(", ") : "No overrides selected";
+  if (prev) prev.textContent = selected.length ? selected.length + " active: " + selected.join(", ") : "None selected";
 
   let base = 1000;
   const primary = document.getElementById("weapon")?.value;
@@ -982,7 +1022,7 @@ function updateBuild() {
   attachLongPress(tile, () => showBreakdown(tile.dataset.label, tile.dataset.val, tile.dataset.note || ""));
 });
   const out = document.getElementById("setBonusOut");
-  if (out) out.innerHTML = Object.keys(counts).map(s => `<div class="set-bonus">${s}: ${counts[s]}pc</div>`).join("");
+  if (out) out.innerHTML = "";
 }
 
 let lpTimer = null;
