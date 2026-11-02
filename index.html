@@ -632,7 +632,7 @@ function populate() {
     }, {passive:true});
     div.addEventListener("touchend", () => clearTimeout(timer));
     div.addEventListener("touchcancel", () => clearTimeout(timer));
-    dlist.appendChild(div);
+    if (dlist) dlist.appendChild(div);
   });
 
   const slist = document.getElementById("setList");
@@ -643,7 +643,7 @@ function populate() {
     div.innerHTML = `<h3 class="rarity-${s.rarity.toLowerCase()}">${name}</h3>
       <div style="font-size:0.72rem;margin:4px 0;">Tap a slot to equip only that piece:</div>
       <div class="slot-row">${row}</div>` + s.bonuses.map(b=>`<div class="set-bonus">${b}</div>`).join("");
-    slist.appendChild(div);
+    if (slist) slist.appendChild(div);
   });
 }
 
@@ -903,9 +903,32 @@ function showBreakdown(label, val, note) {
   alert(label + ": " + val + "\n\nSources:\n" + note.replace(/\\n/g, "\n"));
 }
 
-populate();
-renderSets();
-updateBuild();
+try {
+  populate();
+  renderSets();
+  updateBuild();
+} catch(e) { console.error(e); }
+// Force-fill visible lists in case populate failed partway
+(function forceLists(){
+  const dlist = document.getElementById("deviationList");
+  if (dlist && dlist.children.length === 0 && typeof deviations !== "undefined") {
+    sortByRarity(deviations).forEach(d => {
+      const div = document.createElement("div"); div.className = "dev-card";
+      div.innerHTML = `<strong class="rarity-${(d.rarity||"").toLowerCase()}">${d.name}</strong><div class="desc">${d.desc||""}</div>`;
+      div.oncontextmenu = (e) => { e.preventDefault(); showDevDetail(d); };
+      dlist.appendChild(div);
+    });
+  }
+  const slist = document.getElementById("setsList");
+  if (slist && slist.children.length === 0 && typeof sets !== "undefined") {
+    Object.keys(sets).sort((a,b)=>(rarityOrder[sets[a].rarity]??99)-(rarityOrder[sets[b].rarity]??99)||a.localeCompare(b)).forEach(name => {
+      const s = sets[name];
+      const div = document.createElement("div"); div.className = "slot-card";
+      div.innerHTML = `<h3 class="rarity-${s.rarity.toLowerCase()}">${name}</h3><div class="desc">${(s.bonuses||[]).join("<br>")}</div>`;
+      slist.appendChild(div);
+    });
+  }
+})();
 </script>
 </body>
 </html>
