@@ -95,7 +95,12 @@ button.equip {
       <div class="field" style="max-width:85px;"><label>Tier</label><select id="w2Tier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
     </div>
     <div class="row">
-      <div class="field"><label>Melee</label><select id="melee" onchange="updateBuild()"></select></div>
+      <div class="field"><label>Melee</label>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <img id="meleeIcon" style="width:36px;height:36px;object-fit:contain;background:#080c12;border-radius:4px;display:none;" />
+        <select id="melee" onchange="updateBuild()" style="flex:1;"></select>
+      </div>
+    </div>
       <div class="field" style="max-width:85px;"><label>Tier</label><select id="mTier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
     </div>
   </div>
@@ -176,6 +181,13 @@ const sets = {
 };
 
 const weapons = ["SOCR - The Last Valor","KVD - Boom! Boom!","DE.50 - Jaws","ACS12 - Corrosion","MPS7 - Outer Space","AWS.338 - Bullseye"];
+
+const icons = {
+  "Stun Baton": "https://static.wikia.nocookie.net/once-human/images/4/4a/Stun_baton.png/revision/latest",
+  "Long Axe": "https://static.wikia.nocookie.net/once-human/images/5/57/LongAxeBP.png/revision/latest",
+  "Baseball Bat": "https://static.wikia.nocookie.net/once-human/images/a/a9/Baseball_bat1.png/revision/latest"
+};
+
 const meleeWeapons = [
   {name:"Stun Baton", rarity:"Epic"},
   {name:"Long Axe", rarity:"Epic"},
@@ -336,6 +348,17 @@ function getSetCounts() {
 }
 
 function updateBuild() {
+  const meleeSel = document.getElementById("melee");
+  const meleeIcon = document.getElementById("meleeIcon");
+  if (meleeSel && meleeIcon) {
+    const name = meleeSel.value;
+    if (icons[name]) {
+      meleeIcon.src = icons[name];
+      meleeIcon.style.display = "block";
+    } else {
+      meleeIcon.style.display = "none";
+    }
+  }
   slots.forEach(slot => {
     const m = document.getElementById(slot+"Mod");
     const md = document.getElementById(slot+"ModDesc");
