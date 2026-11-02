@@ -5,77 +5,53 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Once Human</title>
 <style>
-:root {
-  --bg: #07090d;
-  --panel: #101820;
-  --border: #1e2a38;
-  --accent: #24C2C2;
-  --gold: #e8b86d;
-  --epic: #b07cff;
-  --rare: #4da6ff;
-  --common: #6fbf73;
-  --text: #e8edf5;
-  --dim: #8a96a8;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(36,194,194,0.08), transparent 60%), #07090d;
-  color: var(--text);
-  padding: 18px 14px 40px;
-  min-height: 100vh;
-}
-.header { text-align: center; margin-bottom: 22px; }
-.logo { font-size: 1.55rem; font-weight: 900; letter-spacing: 3px; color: var(--accent); text-shadow: 0 0 18px rgba(36,194,194,0.45); }
-.tabs { display: flex; gap: 2px; margin-bottom: 16px; border-bottom: 1px solid #1a2530; }
-.tablinks {
-  background: transparent; border: none; color: var(--dim);
-  padding: 11px 16px; cursor: pointer; font-size: 0.76rem;
-  letter-spacing: 1.4px; text-transform: uppercase; font-weight: 600;
-  border-bottom: 2px solid transparent;
-}
-.tablinks.active { color: var(--accent); border-bottom-color: var(--accent); }
-.tabcontent { display: none; }
-.slot-card {
-  background: var(--panel); border: 1px solid var(--border);
-  border-radius: 10px; padding: 14px 16px; margin: 10px 0;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.35);
-}
-.slot-card h3 { font-size: 0.68rem; color: var(--accent); letter-spacing: 2px; margin-bottom: 8px; text-transform: uppercase; font-weight: 600; }
-.row { display: flex; gap: 8px; flex-wrap: wrap; margin: 6px 0; align-items: flex-end; }
-.field { flex: 1; min-width: 130px; }
-label { font-size: 0.6rem; color: var(--dim); display: block; margin-bottom: 3px; letter-spacing: 0.6px; text-transform: uppercase; }
-select {
-  background: #080c12; color: var(--text); border: 1px solid #243040;
-  padding: 8px 10px; border-radius: 6px; font-size: 0.84rem; width: 100%;
-}
-select:focus { outline: none; border-color: var(--accent); }
-.desc { font-size: 0.7rem; color: #9ab4c8; margin-top: 4px; line-height: 1.35; }
-.rarity-legendary { color: var(--gold); font-weight: 600; }
-.rarity-epic { color: var(--epic); font-weight: 600; }
-.rarity-rare { color: var(--rare); font-weight: 600; }
-.rarity-fine { color: #7ec8e3; }
-.rarity-common { color: var(--common); }
-.results { display: grid; grid-template-columns: repeat(auto-fit, minmax(125px, 1fr)); gap: 8px; margin-top: 12px; }
-.stat-tile {
-  background: linear-gradient(180deg, #121a24 0%, #0c1218 100%);
-  border: 1px solid #1c2a3a; border-radius: 8px; padding: 12px 8px; text-align: center;
-}
-.stat-tile strong { display: block; font-size: 1.2rem; color: var(--accent); }
-.stat-tile small { color: var(--dim); font-size: 0.62rem; letter-spacing: 0.4px; }
-.dps-main { font-size: 1.7rem; color: var(--gold); font-weight: 700; }
-.set-bonus { background: #0a1018; border-left: 3px solid var(--accent); padding: 7px 10px; margin: 5px 0; font-size: 0.78rem; border-radius: 0 5px 5px 0; }
-.dev-card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin: 8px 0; }
-button.equip {
-  background: var(--accent); color: #07090d; border: none; padding: 7px 12px;
-  border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.78rem; margin-top: 6px;
-}
+:root { --bg:#07090d; --panel:#101820; --border:#1e2a38; --accent:#24C2C2; --gold:#e8b86d; --epic:#b07cff; --rare:#4da6ff; --common:#6fbf73; --text:#e8edf5; --dim:#8a96a8; }
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:system-ui,-apple-system,sans-serif; background:#07090d; color:var(--text); padding:16px 12px 40px; }
+.header { text-align:center; margin-bottom:18px; }
+.logo { font-size:1.5rem; font-weight:900; letter-spacing:3px; color:var(--accent); }
+.tabs { display:flex; gap:2px; margin-bottom:14px; border-bottom:1px solid #1a2530; }
+.tablinks { background:transparent; border:none; color:var(--dim); padding:10px 14px; cursor:pointer; font-size:0.74rem; letter-spacing:1.2px; text-transform:uppercase; font-weight:600; border-bottom:2px solid transparent; }
+.tablinks.active { color:var(--accent); border-bottom-color:var(--accent); }
+.tabcontent { display:none; }
+.slot-card { background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:14px; margin:10px 0; }
+.slot-card h3 { font-size:0.66rem; color:var(--accent); letter-spacing:2px; margin-bottom:8px; text-transform:uppercase; }
+.field { margin:8px 0; }
+label { font-size:0.58rem; color:var(--dim); display:block; margin-bottom:3px; letter-spacing:0.5px; text-transform:uppercase; }
+select { background:#080c12; color:var(--text); border:1px solid #243040; padding:9px 10px; border-radius:6px; font-size:0.86rem; width:100%; }
+.desc { font-size:0.7rem; color:#9ab4c8; margin-top:4px; line-height:1.35; }
+.rarity-legendary { color:var(--gold); font-weight:600; }
+.rarity-epic { color:var(--epic); font-weight:600; }
+.rarity-rare { color:var(--rare); font-weight:600; }
+.rarity-fine { color:#7ec8e3; }
+.rarity-common { color:var(--common); }
+.results { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.tile { background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:12px; text-align:center; }
+.tile .v { font-size:1.15rem; font-weight:700; color:var(--accent); }
+.tile .l { font-size:0.62rem; color:var(--dim); margin-top:2px; }
+.set-bonus { font-size:0.72rem; color:#b8c8d8; margin:3px 0; }
+.equip { background:var(--accent); color:#041016; border:none; padding:7px 12px; border-radius:6px; font-weight:700; cursor:pointer; font-size:0.75rem; margin-top:6px; }
+.slot-row { display:flex; gap:6px; flex-wrap:wrap; margin:10px 0; }
+.slot-btn { flex:1; min-width:70px; background:#0c1218; border:1px solid #2a3a4a; color:var(--text); padding:8px 4px; border-radius:6px; font-size:0.68rem; cursor:pointer; text-align:center; }
+.slot-btn:hover { border-color:var(--accent); }
+.pair { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.pair .field { margin:0; }
+.modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:100; align-items:center; justify-content:center; }
+.modal.show { display:flex; }
+.modal-box { background:#161e28; border:1px solid #2a3a4a; border-radius:12px; padding:18px; max-width:380px; width:90%; max-height:80vh; overflow-y:auto; }
+.modal-box h2 { font-size:1.05rem; margin-bottom:4px; }
+.modal-box .sub { font-size:0.75rem; color:var(--dim); margin-bottom:10px; }
+.modal-box .locked { color:#e85a8a; font-size:0.8rem; margin:6px 0; }
+.modal-box .core { background:#0e141c; padding:10px; border-radius:8px; margin:8px 0; font-size:0.82rem; }
+.modal-box .suffix { background:#1a2430; padding:10px; border-radius:8px; margin:8px 0; }
+.modal-box .note { color:#e8b86d; font-size:0.75rem; margin-top:10px; }
+.modal-box button { margin-top:10px; }
+.dev-card { display:flex; gap:10px; background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:12px; margin:8px 0; }
+.dev-card img { width:48px; height:48px; object-fit:contain; background:#080c12; border-radius:6px; }
 </style>
 </head>
 <body>
-<div class="header">
-  <div class="logo">ONCE HUMAN</div>
-</div>
+<div class="header"><div class="logo">ONCE HUMAN</div></div>
 <div class="tabs">
   <button class="tablinks active" onclick="switchTab('Build')">Build</button>
   <button class="tablinks" onclick="switchTab('Deviations')">Deviations</button>
@@ -86,253 +62,242 @@ button.equip {
 <div id="Build" class="tabcontent" style="display:block;">
   <div class="slot-card">
     <h3>Weapons</h3>
-    <div class="row">
-      <div class="field"><label>Primary</label><select id="weapon" onchange="updateBuild()"></select></div>
-      <div class="field" style="max-width:85px;"><label>Tier</label><select id="wTier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
+    <div class="field"><label>Primary</label><select id="weapon" onchange="updateBuild()"></select></div>
+    <div class="pair">
+      <div class="field"><label>Tier</label><select id="wTier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
+      <div class="field"><label>Enhancement Level</label><select id="wEnh" onchange="updateBuild()"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option></select></div>
     </div>
-    <div class="row">
-      <div class="field"><label>Secondary</label><select id="weapon2" onchange="updateBuild()"></select></div>
-      <div class="field" style="max-width:85px;"><label>Tier</label><select id="w2Tier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
+    <div class="field"><label>Secondary</label><select id="weapon2" onchange="updateBuild()"></select></div>
+    <div class="pair">
+      <div class="field"><label>Tier</label><select id="w2Tier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
+      <div class="field"><label>Enhancement Level</label><select id="w2Enh" onchange="updateBuild()"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option></select></div>
     </div>
-    <div class="row">
-      <div class="field"><label>Melee</label><select id="melee" onchange="updateBuild()"></select></div>
-      <div class="field" style="max-width:85px;"><label>Tier</label><select id="mTier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
+    <div class="field"><label>Melee</label><select id="melee" onchange="updateBuild()"></select></div>
+    <div class="pair">
+      <div class="field"><label>Tier</label><select id="mTier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
+      <div class="field"><label>Enhancement Level</label><select id="mEnh" onchange="updateBuild()"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option></select></div>
     </div>
   </div>
   <div id="armorSlots"></div>
   <div class="slot-card">
     <h3>Accessories</h3>
-    <div class="row">
-      <div class="field"><label>Sight / Scope</label><select id="accSight" onchange="updateBuild()"><option value="">None</option><option>Red Dot</option><option>Holographic Sight</option><option>4x Scope</option><option>6x Scope</option></select></div>
-      <div class="field"><label>Magazine</label><select id="accMag" onchange="updateBuild()"><option value="">None</option><option>Extended Mag</option><option>Amended Rifle Mag</option></select></div>
-      <div class="field"><label>Muzzle</label><select id="accMuzzle" onchange="updateBuild()"><option value="">None</option><option>Short Suppressor</option><option>Long Suppressor</option></select></div>
-    </div>
+    <div class="field"><label>Sight / Scope</label><select id="accSight" onchange="updateBuild()"><option value="">None</option><option>Red Dot</option><option>Holographic Sight</option><option>4x Scope</option><option>6x Scope</option></select></div>
+    <div class="field"><label>Magazine</label><select id="accMag" onchange="updateBuild()"><option value="">None</option><option>Extended Mag</option><option>Amended Rifle Mag</option></select></div>
+    <div class="field"><label>Muzzle</label><select id="accMuzzle" onchange="updateBuild()"><option value="">None</option><option>Short Suppressor</option><option>Long Suppressor</option></select></div>
   </div>
 </div>
 
-<div id="Deviations" class="tabcontent">
-  <div id="devList"></div>
-</div>
-
-<div id="Armor" class="tabcontent">
-  <div id="setList"></div>
-</div>
-
+<div id="Deviations" class="tabcontent"><div id="devList"></div></div>
+<div id="Armor" class="tabcontent"><div id="setList"></div></div>
 <div id="Results" class="tabcontent">
-  <div style="margin-bottom:12px;">
-    <label style="font-size:0.8rem;"><input type="checkbox" id="devToggle" onchange="updateBuild()" checked> Deviation Summoned</label>
-  </div>
-  <div id="dpsDisplay"></div>
-  <div id="setBonuses"></div>
-  <div class="results" id="statTiles"></div>
+  <div class="results" id="results"></div>
+  <div id="setBonusOut" style="margin-top:12px;"></div>
+</div>
+
+<div id="modal" class="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box" id="modalBox"></div>
 </div>
 
 <script>
-const roman = ["", "I", "II", "III", "IV", "V"];
-const slots = ["helmet","mask","top","gloves","pants","shoes"];
-const slotLabels = {helmet:"Helmet", mask:"Mask", top:"Top", gloves:"Gloves", pants:"Pants", shoes:"Shoes"};
+const slots = ["helmet","mask","top","bottom","gloves","shoes"];
+const slotLabels = {helmet:"Helmet", mask:"Mask", top:"Top", bottom:"Bottom", gloves:"Gloves", shoes:"Shoes"};
 
 const sets = {
-  Lonewolf: {
-    rarity: "Legendary",
-    pieces: ["Lonewolf Hood","Lonewolf Mask","Lonewolf Jacket","Lonewolf Gloves","Lonewolf Pants","Lonewolf Shoes"],
-    bonuses: [
-      "1pc: Magazine Capacity +10%",
-      "2pc: Crit Rate +5%",
-      "3pc: Every 2 weapon crit hits → 1 stack Lone Shadow (+6% Crit DMG, max 8, 30s)",
-      "4pc: Max Lone Shadow stacks to 10. Crit Rate +8% for 2s after reload"
-    ]
-  },
-  Shelterer: {
-    rarity: "Legendary",
-    pieces: ["Shelterer Hood","Shelterer Mask","Shelterer Jacket","Shelterer Gloves","Shelterer Pants","Shelterer Shoes"],
-    bonuses: [
-      "1pc: Status DMG Reduction +15%",
-      "2pc: Elemental DMG +8%",
-      "3pc: Each hit → +1% Elemental DMG (max 20). Reload halves stacks.",
-      "4pc: Max stacks +10 (to 30). +2 stacks on weakspot hits."
-    ]
-  },
-  Renegade: {
-    rarity: "Legendary",
-    pieces: ["Renegade Hood","Renegade Mask","Renegade Jacket","Renegade Gloves","Renegade Pants","Renegade Shoes"],
-    bonuses: [
-      "1pc: Reload Speed +15%",
-      "2pc: Weakspot DMG +10%",
-      "3pc: Consecutive hits → Archer's Focus (+4% Weakspot DMG/stack, max 10)",
-      "4pc: On reload, extra ammo based on previous mag weakspot rate"
-    ]
-  },
-  Falcon: {
-    rarity: "Epic",
-    pieces: ["Falcon Hood","Falcon Mask","Falcon Jacket","Falcon Gloves","Falcon Pants","Falcon Shoes"],
-    bonuses: [
-      "1pc: Rolling Stamina Cost -20%",
-      "2pc: Crit DMG +12%",
-      "3pc: Stamina >90%: Crit Rate +5%, Crit DMG +20%",
-      "4pc: Max Stamina +25. Recover 30 Stamina on kill."
-    ]
-  }
+  "Lonewolf": { rarity:"Legendary", pieces:["Lonewolf Helmet","Lonewolf Mask","Lonewolf Top","Lonewolf Bottom","Lonewolf Gloves","Lonewolf Shoes"],
+    bonuses:["1pc: Magazine Capacity +10%","2pc: Crit Rate +5%","3pc: Lone Shadow stacks (Crit DMG +6% each, up to 8)","4pc: After reload Crit Rate +8% for 2s, max stacks 10"] },
+  "Shelterer": { rarity:"Legendary", pieces:["Shelterer Helmet","Shelterer Mask","Shelterer Top","Shelterer Bottom","Shelterer Gloves","Shelterer Shoes"],
+    bonuses:["1pc: Max HP +8%","2pc: Elemental DMG +6%","3pc: Status DMG +10%","4pc: Elemental Resist +8%"] },
+  "Falcon": { rarity:"Epic", pieces:["Falcon Cap","Falcon Mask","Falcon Top","Falcon Bottom","Falcon Gloves","Falcon Shoes"],
+    bonuses:["1pc: Rolling Stamina Cost -20%","2pc: Crit DMG +12%","3pc: Above 90% Stamina: Crit Rate +5%, Crit DMG +20%","4pc: Kill restores 30 Stamina + 20% Movement Speed for 2s"] },
+  "Renegade": { rarity:"Legendary", pieces:["Renegade Helmet","Renegade Mask","Renegade Top","Renegade Bottom","Renegade Gloves","Renegade Shoes"],
+    bonuses:["1pc: Weakspot DMG +8%","2pc: Crit Rate +4%","3pc: Weakspot Crit DMG +15%","4pc: After weakspot hit, next shot +12% DMG"] }
 };
 
-const weapons = ["SOCR - The Last Valor","KVD - Boom! Boom!","DE.50 - Jaws","ACS12 - Corrosion","MPS7 - Outer Space","AWS.338 - Bullseye"];
-
-const icons = {
-  "Stun Baton": "https://static.wikia.nocookie.net/once-human/images/4/4a/Stun_baton.png/revision/latest",
-  "Long Axe": "https://static.wikia.nocookie.net/once-human/images/5/57/LongAxeBP.png/revision/latest",
-  "Baseball Bat": "https://static.wikia.nocookie.net/once-human/images/a/a9/Baseball_bat1.png/revision/latest",
-  "Military Dagger": "https://static.wikia.nocookie.net/once-human/images/placeholder/Military_Dagger.png"
-};
+const weapons = [
+  {name:"SOCR - The Last Valor", rarity:"Legendary"},
+  {name:"KVD - Boom Boom", rarity:"Legendary"},
+  {name:"DE.50 - Jaws", rarity:"Legendary"},
+  {name:"ACS12 - Corrosion", rarity:"Legendary"},
+  {name:"MPS7 - Outer Space", rarity:"Legendary"},
+  {name:"AWS.338 - Bingo", rarity:"Legendary"},
+  {name:"None", rarity:"Common"}
+];
 
 const meleeWeapons = [
-  {name:"Stun Baton", rarity:"Epic"},
-  {name:"Long Axe", rarity:"Epic"},
-  {name:"The Fabled Masamune", rarity:"Legendary"},
-  {name:"Frozen Northern Pike", rarity:"Epic"},
-  {name:"Crowbar", rarity:"Epic"},
-  {name:"Warning Sign", rarity:"Epic"},
-  {name:"Baseball Bat", rarity:"Fine"},
-  {name:"Wrench", rarity:"Fine"},
-  {name:"Camping Knife", rarity:"Fine"},
-  {name:"Northern Pike", rarity:"Fine"},
-  {name:"Military Shovel", rarity:"Fine"},
-  {name:"Military Dagger", rarity:"Fine"},
-  {name:"Torch", rarity:"Common"},
-  {name:"Broken Bottle", rarity:"Common"},
-  {name:"Steel Pipe", rarity:"Common"}
+  {name:"Stun Baton", rarity:"Epic"},{name:"Long Axe", rarity:"Epic"},{name:"The Fabled Masamune", rarity:"Legendary"},
+  {name:"Frozen Northern Pike", rarity:"Epic"},{name:"Crowbar", rarity:"Epic"},{name:"Warning Sign", rarity:"Epic"},
+  {name:"Baseball Bat", rarity:"Fine"},{name:"Wrench", rarity:"Fine"},{name:"Camping Knife", rarity:"Fine"},
+  {name:"Northern Pike", rarity:"Fine"},{name:"Military Shovel", rarity:"Fine"},{name:"Military Dagger", rarity:"Fine"},
+  {name:"Torch", rarity:"Common"},{name:"Broken Bottle", rarity:"Common"},{name:"Steel Pipe", rarity:"Common"},{name:"None", rarity:"Common"}
 ];
 
 const mods = [
-  {name:"Crit Amplifier", rarity:"Epic", desc:"Crit Rate +10%. Crit DMG +15%. Higher tiers unlock additional Crit DMG.", tier:"IV+"},
-  {name:"Targeted Strike", rarity:"Epic", desc:"Weakspot DMG +12%", tier:"IV+"},
-  {name:"Healing Fortification", rarity:"Rare", desc:"Status DMG Reduction +10%", tier:"III+"},
-  {name:"Momentum Up", rarity:"Epic", desc:"Reload Speed +12%", tier:"IV+"},
-  {name:"Bullet Siphon", rarity:"Legendary", desc:"Weapon DMG +5%. Every 5 bullets consumed → +4% Weapon DMG (cap 20%). Tier unlocks: Elemental DMG, Great Ones DMG, normal enemy DMG, Reload Speed.", tier:"V"},
-  {name:"Precise Strike", rarity:"Epic", desc:"Weakspot hits grant +12% Weakspot DMG for 3s (max 3 stacks)", tier:"IV+"},
-  {name:"First-Move Advantage", rarity:"Legendary", desc:"After reload: Crit Rate +10%, Crit DMG +20% for 2s", tier:"V"}
+  {name:"Power of Striving", rarity:"Epic", category:"Armor Mods-Shoes", core:"Weapon and Status DMG +10.0%. Stamina loss grants an additional DMG boost, up to +20.0%.",
+    suffixes:[{name:"Phantasmal", attrs:["After switching weapons, Weapon DMG +2.0% for 10 seconds.","Switching weapons grants Crit DMG +5.0% for 10 seconds.","Non-player damage taken -2.0% when HP is below 50%.","Increases damage dealt to all DMG Boost by +1.5%"]},
+              {name:"Battle", attrs:["Weapon DMG +1.5% after skill use.","Crit Rate +1.0% while in combat."]},
+              {name:"Downstar", attrs:["Status DMG +2.0%.","Elemental Resist +3%."]}]},
+  {name:"Crit Amplifier", rarity:"Epic", category:"Armor Mods", core:"Crit Rate +10%. Crit DMG +15%.",
+    suffixes:[{name:"Violent", attrs:["Crit DMG +5% on crit.","Crit Rate +2% after reload."]},{name:"Precision", attrs:["Weakspot DMG +4%."]}]},
+  {name:"Bullet Siphon", rarity:"Legendary", category:"Armor Mods", core:"Weapon DMG +5%. Every 5 bullets consumed → +4% Weapon DMG (cap 20%).",
+    suffixes:[{name:"Violent", attrs:["Elemental DMG +1.6%.","DMG against Great Ones +2.4%.","DMG against normal enemies +4.0%.","Reload Speed +2.4%."]}]},
+  {name:"Targeted Strike", rarity:"Epic", category:"Armor Mods", core:"When attacking enemies with The Bull's Eye, Crit Rate +10%, Crit DMG +25%.",
+    suffixes:[{name:"The Bull's Eye", attrs:["Weakspot DMG +6%."]},{name:"Violent", attrs:["Crit Rate +2%."]}]},
+  {name:"None", rarity:"Common", category:"", core:"", suffixes:[]}
 ];
 
 const hides = [
-  {name:"None", desc:"No hide"},
-  {name:"Wolf Hide", desc:"Cold/Frost Resist +10, Sprint Speed +5%"},
-  {name:"Deer Hide", desc:"Cold Resist +5"},
-  {name:"Highland Deer Hide", desc:"Cold/Frost Resist +10, Sprint Speed +5%"},
-  {name:"Crocodile Skin", desc:"Heat/Burn Resist +15 (extra while Soaked)"}
+  {name:"Wolf Hide", rarity:"Fine", desc:"Cold/Frost Resist +10, Sprint Speed +5%"},
+  {name:"Grassland Wolf Skin", rarity:"Rare", desc:"Weakspot DMG Reduction +8% when in a team with more than 1 player."},
+  {name:"Wasteland Wolf Skin", rarity:"Epic", desc:"Weakspot DMG Reduction +7% while moving."},
+  {name:"Jungle Wolf Skin", rarity:"Rare", desc:"Movement Speed +30% while crouched."},
+  {name:"Lunar Wolf Skin", rarity:"Legendary", desc:"Weakspot DMG Reduction +6%. Effect doubles if HP is below 30%."},
+  {name:"Deer Hide", rarity:"Fine", desc:"Max Stamina +10"},
+  {name:"Bear Skin", rarity:"Epic", desc:"Max HP +5%"},
+  {name:"None", rarity:"Common", desc:""}
 ];
 
 const deviations = [
   {name:"Lonewolf's Whisper", rarity:"Rare", icon:"https://static.wikia.nocookie.net/once-human/images/8/8c/Lonewolf%27s_Whisper.png/revision/latest", desc:"Pulls aggro, deals damage, increases Weapon DMG received by its target. Strong synergy with Shrapnel builds."},
   {name:"Dr. Teddy", rarity:"Rare", icon:"https://static.wikia.nocookie.net/once-human/images/b/b0/Dr._Teddy.png/revision/latest", desc:"Healer deviation. Provides healing support in combat."},
-  {name:"By-the-Wind", rarity:"Rare", icon:"https://static.wikia.nocookie.net/once-human/images/c/c8/By-The-Wind.png/revision/latest", desc:"Creates wind walls that block bullets."}
+  {name:"By-the-Wind", rarity:"Rare", icon:"https://static.wikia.nocookie.net/once-human/images/c/c8/By-The-Wind.png/revision/latest", desc:"Creates wind walls that block bullets."},
+  {name:"Festering Gel", rarity:"Epic", icon:"", desc:"Applies corrosion and slows enemies."},
+  {name:"Zeno-Purifier", rarity:"Legendary", icon:"", desc:"High damage support deviation with cleansing effects."},
+  {name:"Mini Wonder", rarity:"Epic", icon:"", desc:"Provides utility and minor damage boosts."}
 ];
 
-function switchTab(name) {
+function switchTab(id) {
   document.querySelectorAll(".tabcontent").forEach(t => t.style.display = "none");
   document.querySelectorAll(".tablinks").forEach(b => b.classList.remove("active"));
-  document.getElementById(name).style.display = "block";
-  if (event && event.target) event.target.classList.add("active");
-}
-
-function buildArmorUI() {
-  const container = document.getElementById("armorSlots");
-  container.innerHTML = "";
-  slots.forEach(slot => {
-    const card = document.createElement("div");
-    card.className = "slot-card";
-    card.innerHTML = `
-      <h3>${slotLabels[slot]}</h3>
-      <div class="row">
-        <div class="field"><label>Piece</label><select id="${slot}" onchange="updateBuild()"><option value="">None</option></select></div>
-      </div>
-      <div class="row">
-        <div class="field" style="max-width:100px;"><label>Tier</label><select id="${slot}Tier" onchange="updateBuild()">${roman.slice(1).map(r=>`<option>${r}</option>`).join("")}</select></div>
-        <div class="field" style="max-width:140px;"><label>Enhancement Level</label><select id="${slot}Enh" onchange="updateBuild()"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option></select></div>
-      </div>
-      <div class="row">
-        <div class="field"><label>Mod</label><select id="${slot}Mod" onchange="updateBuild()"><option value="">None</option></select><div class="desc" id="${slot}ModDesc"></div></div>
-        <div class="field"><label>Hide</label><select id="${slot}Hide" onchange="updateBuild()"><option value="">None</option></select><div class="desc" id="${slot}HideDesc"></div></div>
-      </div>
-    `;
-    container.appendChild(card);
-  });
+  document.getElementById(id).style.display = "block";
+  event.target.classList.add("active");
 }
 
 function populate() {
   const wsel = document.getElementById("weapon");
   const w2sel = document.getElementById("weapon2");
+  const msel = document.getElementById("melee");
   weapons.forEach(w => {
-    const o = document.createElement("option"); o.value = w; o.textContent = w;
+    const o = document.createElement("option"); o.value = w.name; o.textContent = w.name; o.className = "rarity-"+w.rarity.toLowerCase();
     wsel.appendChild(o); w2sel.appendChild(o.cloneNode(true));
   });
-  const msel = document.getElementById("melee");
   meleeWeapons.forEach(w => {
-    const o = document.createElement("option");
-    o.value = w.name;
-    o.textContent = w.name;
-    o.className = "rarity-" + w.rarity.toLowerCase();
+    const o = document.createElement("option"); o.value = w.name; o.textContent = w.name; o.className = "rarity-"+w.rarity.toLowerCase();
     msel.appendChild(o);
   });
 
+  const armor = document.getElementById("armorSlots");
   slots.forEach(slot => {
-    const sel = document.getElementById(slot);
-    Object.keys(sets).forEach(setName => {
-      const piece = sets[setName].pieces.find(p => p.toLowerCase().includes(slotLabels[slot].toLowerCase().slice(0,3)) || p.toLowerCase().includes(slot));
+    const card = document.createElement("div"); card.className = "slot-card";
+    card.innerHTML = `<h3>${slotLabels[slot]}</h3>
+      <div class="field"><label>Piece</label><select id="${slot}" onchange="updateBuild()"><option value="">None</option></select></div>
+      <div class="pair">
+        <div class="field"><label>Tier</label><select id="${slot}Tier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
+        <div class="field"><label>Enhancement Level</label><select id="${slot}Enh" onchange="updateBuild()"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option></select></div>
+      </div>
+      <div class="pair">
+        <div class="field"><label>Mod</label><select id="${slot}Mod" onchange="showModPreview('${slot}')"><option value="">None</option></select><div class="desc" id="${slot}ModDesc"></div></div>
+        <div class="field"><label>Hide</label><select id="${slot}Hide" onchange="showHidePreview('${slot}')"><option value="">None</option></select><div class="desc" id="${slot}HideDesc"></div></div>
+      </div>`;
+    armor.appendChild(card);
+  });
+
+  Object.keys(sets).forEach(setName => {
+    const s = sets[setName];
+    slots.forEach((slot, i) => {
+      const piece = s.pieces[i];
       if (piece) {
-        const o = document.createElement("option");
-        o.value = piece; o.textContent = piece; o.dataset.set = setName;
-        const r = sets[setName].rarity.toLowerCase();
-        o.className = "rarity-" + r;
+        const sel = document.getElementById(slot);
+        const o = document.createElement("option"); o.value = piece; o.textContent = piece; o.dataset.set = setName;
+        o.className = "rarity-" + s.rarity.toLowerCase();
         sel.appendChild(o);
       }
     });
+  });
+
+  slots.forEach(slot => {
     const msel = document.getElementById(slot+"Mod");
     mods.forEach(m => {
-      const o = document.createElement("option");
-      o.value = m.name; o.textContent = m.name + " (" + m.tier + ")";
-      o.className = "rarity-" + m.rarity.toLowerCase();
+      const o = document.createElement("option"); o.value = m.name; o.textContent = m.name; o.className = "rarity-"+m.rarity.toLowerCase();
       msel.appendChild(o);
     });
     const hsel = document.getElementById(slot+"Hide");
     hides.forEach(h => {
-      const o = document.createElement("option"); o.value = h.name; o.textContent = h.name; hsel.appendChild(o);
+      const o = document.createElement("option"); o.value = h.name; o.textContent = h.name; o.className = "rarity-"+h.rarity.toLowerCase();
+      hsel.appendChild(o);
     });
   });
 
   const dlist = document.getElementById("devList");
   deviations.forEach(d => {
-    const div = document.createElement("div");
-    div.className = "dev-card";
-    div.innerHTML = `<div style="display:flex;gap:10px;align-items:flex-start;"><img src="${d.icon||''}" style="width:48px;height:48px;object-fit:contain;background:#080c12;border-radius:6px;" onerror="this.style.display='none'" /><div><strong class="rarity-${d.rarity.toLowerCase()}">${d.name}</strong><div class="desc">${d.desc}</div></div></div>`;
+    const div = document.createElement("div"); div.className = "dev-card";
+    div.innerHTML = `<img src="${d.icon||''}" onerror="this.style.display='none'" /><div><strong class="rarity-${d.rarity.toLowerCase()}">${d.name}</strong><div class="desc">${d.desc}</div></div>`;
     dlist.appendChild(div);
   });
 
   const slist = document.getElementById("setList");
   Object.keys(sets).forEach(name => {
     const s = sets[name];
-    const div = document.createElement("div");
-    div.className = "slot-card";
-    div.innerHTML = `<h3 class="rarity-${s.rarity.toLowerCase()}">${name}</h3>` +
-      `<div style="font-size:0.75rem;margin:6px 0;color:#9ab;">Pieces: ${s.pieces.map(p=>`<span class="rarity-${s.rarity.toLowerCase()}">${p}</span>`).join(" · ")}</div>` +
-      s.bonuses.map(b=>`<div class="set-bonus">${b}</div>`).join("") +
-      `<button class="equip" onclick="equipSetPieces('${name}')">Equip Pieces</button>`;
+    const div = document.createElement("div"); div.className = "slot-card";
+    const row = slots.map((slot,i) => `<button class="slot-btn" onclick="equipOne('${name}','${slot}',${i})">${slotLabels[slot]}</button>`).join("");
+    div.innerHTML = `<h3 class="rarity-${s.rarity.toLowerCase()}">${name}</h3>
+      <div style="font-size:0.72rem;margin:4px 0;">Tap a slot to equip only that piece:</div>
+      <div class="slot-row">${row}</div>` + s.bonuses.map(b=>`<div class="set-bonus">${b}</div>`).join("");
     slist.appendChild(div);
   });
 }
 
-function equipSetPieces(setName) {
+function equipOne(setName, slot, idx) {
   const s = sets[setName];
-  slots.forEach((slot, i) => {
-    const sel = document.getElementById(slot);
-    const piece = s.pieces[i] || s.pieces.find(p => p.toLowerCase().includes(slotLabels[slot].toLowerCase().slice(0,4)));
-    if (piece) {
-      for (let j=0; j<sel.options.length; j++) {
-        if (sel.options[j].value === piece) { sel.selectedIndex = j; break; }
-      }
-    }
-  });
+  const piece = s.pieces[idx];
+  const sel = document.getElementById(slot);
+  for (let j=0; j<sel.options.length; j++) {
+    if (sel.options[j].value === piece) { sel.selectedIndex = j; break; }
+  }
+  openModPopup(slot, piece);
   updateBuild();
-  switchTab("Build");
 }
+
+function openModPopup(slot, piece) {
+  const box = document.getElementById("modalBox");
+  box.innerHTML = `<h2>Select Mod for ${piece}</h2><div class="sub">Choose a mod. Description shows before confirm.</div>
+    <div id="modChoices"></div><button class="equip" onclick="closeModal()">Done</button>`;
+  const choices = document.getElementById("modChoices");
+  mods.filter(m => m.name !== "None").forEach(m => {
+    const btn = document.createElement("div"); btn.style.cssText = "background:#0e141c;padding:10px;border-radius:8px;margin:6px 0;cursor:pointer;";
+    btn.innerHTML = `<strong class="rarity-${m.rarity.toLowerCase()}">${m.name}</strong><div class="desc">${m.core}</div>`;
+    btn.onclick = () => { document.getElementById(slot+"Mod").value = m.name; showModPreview(slot); closeModal(); updateBuild(); };
+    choices.appendChild(btn);
+  });
+  document.getElementById("modal").classList.add("show");
+}
+
+function showModPreview(slot) {
+  const name = document.getElementById(slot+"Mod").value;
+  const m = mods.find(x => x.name === name);
+  const el = document.getElementById(slot+"ModDesc");
+  if (m && m.core) {
+    el.innerHTML = m.core + (m.suffixes.length ? " <span style='color:#e8b86d'>[tap for full]</span>" : "");
+    el.onclick = () => showModFull(m);
+  } else el.textContent = "";
+}
+
+function showHidePreview(slot) {
+  const name = document.getElementById(slot+"Hide").value;
+  const h = hides.find(x => x.name === name);
+  document.getElementById(slot+"HideDesc").textContent = h ? h.desc : "";
+}
+
+function showModFull(m) {
+  const box = document.getElementById("modalBox");
+  let suffixes = m.suffixes.map(s => `<div class="suffix"><strong>${s.name}</strong><div style="font-size:0.8rem;margin-top:4px;">${s.attrs.join("<br>")}</div></div>`).join("");
+  box.innerHTML = `<h2>${m.name}</h2><div class="sub">${m.category}</div><div class="locked">Locked</div>
+    <div class="core">${m.core}</div>${suffixes}
+    <div class="note">Mod Level determines the number of active attributes, with all unlocked at Level 4 and above</div>
+    <button class="equip" onclick="closeModal()">Close</button>`;
+  document.getElementById("modal").classList.add("show");
+}
+
+function closeModal() { document.getElementById("modal").classList.remove("show"); }
 
 function getSetCounts() {
   const counts = {};
@@ -348,91 +313,34 @@ function getSetCounts() {
 }
 
 function updateBuild() {
-slots.forEach(slot => {
-    const m = document.getElementById(slot+"Mod");
-    const md = document.getElementById(slot+"ModDesc");
-    const mod = mods.find(x => x.name === m.value);
-    md.textContent = mod ? mod.desc : "";
-    const h = document.getElementById(slot+"Hide");
-    const hd = document.getElementById(slot+"HideDesc");
-    const hide = hides.find(x => x.name === h.value);
-    hd.textContent = hide ? hide.desc : "";
-  });
-
-  const counts = getSetCounts();
-  const devOn = document.getElementById("devToggle")?.checked ?? true;
-
-  let base = 12000;
-  let critRate = 25;
-  let critDmg = 150;
-  let weak = 20;
-  let weapon = 15;
-
-  Object.entries(counts).forEach(([set, n]) => {
-    if (set === "Lonewolf") {
-      if (n>=1) weapon += 10;
-      if (n>=2) critRate += 5;
-      if (n>=3) critDmg += 48;
-      if (n>=4) { critDmg += 12; critRate += 8; }
-    }
-    if (set === "Shelterer") {
-      if (n>=2) weapon += 8;
-      if (n>=3) weapon += 20;
-      if (n>=4) weapon += 10;
-    }
-    if (set === "Renegade") {
-      if (n>=2) weak += 10;
-      if (n>=3) weak += 40;
-    }
-    if (set === "Falcon") {
-      if (n>=2) critDmg += 12;
-      if (n>=3) { critRate += 5; critDmg += 20; }
-    }
-  });
-
   slots.forEach(slot => {
-    const m = document.getElementById(slot+"Mod")?.value;
-    if (m === "Crit Amplifier") { critRate += 8; critDmg += 15; }
-    if (m === "Targeted Strike") weak += 12;
-    if (m === "Bullet Siphon") weapon += 8;
-    if (m === "Precise Strike") weak += 12;
-    if (m === "First-Move Advantage") { critRate += 10; critDmg += 20; }
+    showModPreview(slot);
+    showHidePreview(slot);
   });
-
-  if (devOn) { weapon += 15; critDmg += 10; }
-
-  const critMult = 1 + (critRate/100) * (critDmg/100);
-  const weakMult = 1 + weak/100;
-  const weapMult = 1 + weapon/100;
-  const dps = Math.round(base * critMult * weakMult * weapMult);
-  const dpsNoDev = Math.round(base * (1+((critRate-(devOn?10:0))/100)*((critDmg-(devOn?10:0))/100)) * weakMult * (1+((weapon-(devOn?15:0))/100)));
-
-  document.getElementById("dpsDisplay").innerHTML = `
-    <div class="stat-tile" style="grid-column:1/-1;">
-      <small>Estimated DPS</small>
-      <div class="dps-main">${dps.toLocaleString()}</div>
-      <small>Without deviation: ${dpsNoDev.toLocaleString()}</small><br><small style="color:#9ab;">Lonewolf stacks assumed at max when 3+ pieces equipped.</small>
-    </div>`;
-
-  const bonusDiv = document.getElementById("setBonuses");
-  bonusDiv.innerHTML = "";
-  Object.entries(counts).forEach(([set, n]) => {
-    if (n>0 && sets[set]) {
-      const active = sets[set].bonuses.filter((_,i) => i < n);
-      bonusDiv.innerHTML += `<div class="set-bonus"><strong>${set} (${n}pc)</strong><br>${active.join("<br>")}</div>`;
-    }
+  const counts = getSetCounts();
+  let dps = 1000;
+  let crit = 0, weak = 0, elem = 0;
+  Object.keys(counts).forEach(set => {
+    const n = counts[set];
+    if (set === "Lonewolf") { if (n>=2) crit += 5; if (n>=3) crit += 6*Math.min(n,8); if (n>=4) crit += 8; }
+    if (set === "Falcon") { if (n>=2) crit += 12; if (n>=3) crit += 5; }
+    if (set === "Renegade") { if (n>=1) weak += 8; if (n>=2) crit += 4; if (n>=3) weak += 15; }
   });
-
-  document.getElementById("statTiles").innerHTML = `
-    <div class="stat-tile"><strong>${critRate}%</strong><small>Crit Rate</small></div>
-    <div class="stat-tile"><strong>${critDmg}%</strong><small>Crit DMG</small></div>
-    <div class="stat-tile"><strong>${weak}%</strong><small>Weakspot DMG</small></div>
-    <div class="stat-tile"><strong>${weapon}%</strong><small>Weapon DMG</small></div>
-    <div class="stat-tile"><strong>${devOn ? "Active" : "Off"}</strong><small>Deviation</small></div>
-  `;
+  dps = Math.round(dps * (1 + crit/100) * (1 + weak/100) * (1 + elem/100));
+  const results = document.getElementById("results");
+  results.innerHTML = `
+    <div class="tile" oncontextmenu="event.preventDefault();showBreakdown('DPS',${dps},'Base 1000 × crit × weakspot')"><div class="v">${dps}</div><div class="l">DPS Total</div></div>
+    <div class="tile" oncontextmenu="event.preventDefault();showBreakdown('Crit',${crit},'From set bonuses')"><div class="v">${crit}%</div><div class="l">Crit</div></div>
+    <div class="tile" oncontextmenu="event.preventDefault();showBreakdown('Weakspot',${weak},'From Renegade / other')"><div class="v">${weak}%</div><div class="l">Weakspot</div></div>
+    <div class="tile"><div class="v">${elem}%</div><div class="l">Elemental</div></div>`;
+  const out = document.getElementById("setBonusOut");
+  out.innerHTML = Object.keys(counts).map(s => `<div class="set-bonus">${s}: ${counts[s]}pc</div>`).join("");
 }
 
-buildArmorUI();
+function showBreakdown(label, val, note) {
+  alert(label + ": " + val + "\n" + note);
+}
+
 populate();
 updateBuild();
 </script>
