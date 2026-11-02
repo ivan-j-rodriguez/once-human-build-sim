@@ -81,18 +81,21 @@ select { background:#080c12; color:var(--text); border:1px solid #243040; paddin
 
   <div class="slot-card">
     <h3 style="font-size:0.85rem;">Cradle Overrides</h3>
-    <div class="pair">
-      <div class="field"><label>Weapon DMG %</label><input type="number" id="cradleWeapon" value="0" step="0.1" onchange="updateBuild()" style="width:100%;background:#080c12;color:var(--text);border:1px solid #243040;padding:9px;border-radius:6px;"></div>
-      <div class="field"><label>Crit Rate %</label><input type="number" id="cradleCrit" value="0" step="0.1" onchange="updateBuild()" style="width:100%;background:#080c12;color:var(--text);border:1px solid #243040;padding:9px;border-radius:6px;"></div>
+    <div class="field"><label>Select Active Overrides (up to 8)</label>
+      <select id="cradleSelect" multiple size="8" onchange="updateBuild()" style="width:100%;background:#080c12;color:var(--text);border:1px solid #243040;padding:6px;border-radius:6px;height:180px;">
+        <option value="auto">Automatic Weapon Enhancement (+20% DMG SMG/Rifle/LMG)</option>
+        <option value="long">Long-Range Enhancement (+20% DMG Sniper/Crossbow)</option>
+        <option value="hand">Handgun Enhancement (+20% DMG Pistol/Shotgun)</option>
+        <option value="melee">Melee Enhancement (+20% DMG Melee)</option>
+        <option value="tactical">Tactical Combo (+25% Weapon DMG for 4s after switch/reload)</option>
+        <option value="steady">Steady Hand (+40% Weakspot DMG in Fast Gunner/Fortress)</option>
+        <option value="devmaster">Deviation Master (+50% vs Great Ones/Elites while Deviation present)</option>
+        <option value="status">Status Enhancement (+25% Status DMG for 3s after weakspot)</option>
+        <option value="first">First Round Blast (+25% Instant DMG for 4s after reload)</option>
+        <option value="bounty">Bounty Hunter (+25% Weapon / +35% Weakspot for 15s after marked kill)</option>
+      </select>
     </div>
-    <div class="pair">
-      <div class="field"><label>Crit DMG %</label><input type="number" id="cradleCritDmg" value="0" step="0.1" onchange="updateBuild()" style="width:100%;background:#080c12;color:var(--text);border:1px solid #243040;padding:9px;border-radius:6px;"></div>
-      <div class="field"><label>Weakspot DMG %</label><input type="number" id="cradleWeak" value="0" step="0.1" onchange="updateBuild()" style="width:100%;background:#080c12;color:var(--text);border:1px solid #243040;padding:9px;border-radius:6px;"></div>
-    </div>
-    <div class="pair">
-      <div class="field"><label>Elemental DMG %</label><input type="number" id="cradleElem" value="0" step="0.1" onchange="updateBuild()" style="width:100%;background:#080c12;color:var(--text);border:1px solid #243040;padding:9px;border-radius:6px;"></div>
-      <div class="field"><label>Status DMG %</label><input type="number" id="cradleStatus" value="0" step="0.1" onchange="updateBuild()" style="width:100%;background:#080c12;color:var(--text);border:1px solid #243040;padding:9px;border-radius:6px;"></div>
-    </div>
+    <div id="cradlePreview" class="desc" style="margin-top:6px;">Selected overrides apply their effects to the calculation.</div>
   </div>
 
   <div class="slot-card">
@@ -310,9 +313,9 @@ const keyArmor = [
 ];
 
 const deviations = [
-  {name:"Lonewolf's Whisper", rarity:"Rare", icon:"https://static.wikia.nocookie.net/once-human/images/8/8c/Lonewolf%27s_Whisper.png/revision/latest", desc:"A-grade Combat Deviation. Transforms into a black wolf. Pulls aggro and increases Weapon DMG received by its target.", skills:["Designated Target","Auto Attack","Lonewolf's Roar","Fang of Fear"]},
-  {name:"Dr. Teddy", rarity:"Rare", icon:"https://static.wikia.nocookie.net/once-human/images/b/b0/Dr._Teddy.png/revision/latest", desc:"A-grade Defender. Heals allies and can revive fallen Metas.", skills:["Remote Healing","Intime Healing","Panacea","Healer's Heart"]},
-  {name:"By-the-Wind", rarity:"Rare", icon:"https://static.wikia.nocookie.net/once-human/images/c/c8/By-The-Wind.png/revision/latest", desc:"Creates wind walls and provides lift/support.", skills:["Gravity Lift","Combat Assist","Wind Walk","Turbulence"]},
+  {name:"Lonewolf's Whisper", rarity:"Rare", icon:"", desc:"A-grade Combat Deviation. Transforms into a black wolf. Pulls aggro and increases Weapon DMG received by its target.", skills:["Designated Target","Auto Attack","Lonewolf's Roar","Fang of Fear"]},
+  {name:"Dr. Teddy", rarity:"Rare", icon:"", desc:"A-grade Defender. Heals allies and can revive fallen Metas.", skills:["Remote Healing","Intime Healing","Panacea","Healer's Heart"]},
+  {name:"By-the-Wind", rarity:"Rare", icon:"", desc:"Creates wind walls and provides lift/support.", skills:["Gravity Lift","Combat Assist","Wind Walk","Turbulence"]},
   {name:"Festering Gel", rarity:"Epic", icon:"", desc:"Defender that builds fortifications.", skills:["Flawless Fortification","Build Fortification","Gel Shield","Activate"]},
   {name:"Butterfly's Emissary", rarity:"Rare", icon:"", desc:"Attacker with designated targeting.", skills:["Auto Attack","Designated Target","Mitsuko Storm","Evasive Stance"]},
   {name:"Behemoth", rarity:"Legendary", icon:"", desc:"Heavy attacker with dragon abilities.", skills:["Soaring Dragon","Dragon Roaming the World","Enrage","Rage"]},
@@ -430,7 +433,8 @@ function populate() {
   deviations.forEach(d => {
     const div = document.createElement("div"); div.className = "dev-card";
     div.style.cursor = "pointer";
-    div.innerHTML = `<img src="${d.icon||''}" onerror="this.style.display='none'" /><div><strong class="rarity-${d.rarity.toLowerCase()}">${d.name}</strong><div class="desc">${d.desc}</div></div>`;
+    const imgHtml = d.icon ? `<img src="${d.icon}" onerror="this.style.display='none'" />` : '';
+    div.innerHTML = `${imgHtml}<div><strong class="rarity-${d.rarity.toLowerCase()}">${d.name}</strong><div class="desc">${d.desc}</div></div>`;
     let timer = null, startX = 0, startY = 0;
     div.oncontextmenu = (e) => { e.preventDefault(); showDevDetail(d); };
     div.addEventListener("touchstart", (e) => {
@@ -589,13 +593,22 @@ function updateBuild() {
   const skillMult = 1 + (skill - 1) * 0.12;
   const abilityMult = 1 + (ability - 1) * 0.08;
 
-  // Cradle overrides
-  const cWeapon = parseFloat(document.getElementById("cradleWeapon")?.value || 0);
-  const cCrit = parseFloat(document.getElementById("cradleCrit")?.value || 0);
-  const cCritDmg = parseFloat(document.getElementById("cradleCritDmg")?.value || 0);
-  const cWeak = parseFloat(document.getElementById("cradleWeak")?.value || 0);
-  const cElem = parseFloat(document.getElementById("cradleElem")?.value || 0);
-  const cStatus = parseFloat(document.getElementById("cradleStatus")?.value || 0);
+  // Cradle overrides (selectable)
+  let cWeapon = 0, cWeak = 0, cStatus = 0, cVsBoss = 0;
+  const cradleSel = document.getElementById("cradleSelect");
+  const selected = cradleSel ? Array.from(cradleSel.selectedOptions).map(o => o.value) : [];
+  selected.forEach(id => {
+    if (id === "auto" || id === "long" || id === "hand" || id === "melee") cWeapon += 20;
+    if (id === "tactical") cWeapon += 25;
+    if (id === "steady") cWeak += 40;
+    if (id === "devmaster") cVsBoss += 50;
+    if (id === "status") cStatus += 25;
+    if (id === "first") cStatus += 25;
+    if (id === "bounty") { cWeapon += 25; cWeak += 35; }
+  });
+  // Preview
+  const prev = document.getElementById("cradlePreview");
+  if (prev) prev.textContent = selected.length ? selected.length + " override(s) active" : "No overrides selected";
 
   let base = 1000;
   const primary = document.getElementById("weapon")?.value;
@@ -612,7 +625,7 @@ function updateBuild() {
   const enhMult = 1 + (enh - 1) * 0.06;
   base = base * tierMult * enhMult * (fireRate / 60);
 
-  let crit = 5 + cCrit, weak = 15 + cWeak, elem = 0 + cElem, weaponDmg = 0 + cWeapon, status = 0 + cStatus, critDmg = 0 + cCritDmg;
+  let crit = 5, weak = 15 + cWeak, elem = 0, weaponDmg = 0 + cWeapon, status = 0 + cStatus, critDmg = 0;
   Object.keys(counts).forEach(set => {
     const n = counts[set];
     if (set === "Lonewolf") { if (n>=1) crit += 3; if (n>=2) weaponDmg += 15; if (n>=3) crit += 6; if (n>=4) crit += 8; }
