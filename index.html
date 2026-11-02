@@ -541,7 +541,7 @@ function updateBuild() {
   dps = Math.round(dps * (1 + crit/100) * (1 + weak/100) * (1 + elem/100));
   const results = document.getElementById("results");
   results.innerHTML = `
-    <div class="tile" oncontextmenu="event.preventDefault();showBreakdown('DPS',${dps},'Base 1000 × crit × weakspot')"><div class="v">${dps}</div><div class="l">DPS Total</div></div>
+    <div class="tile" oncontextmenu="event.preventDefault();showBreakdown('DPS',${dps},'Base × weapon × crit × weakspot × rating')"><div class="v">${dps}</div><div class="l">DPS Total</div></div>
     <div class="tile" oncontextmenu="event.preventDefault();showBreakdown('Crit',${crit},'From set bonuses')"><div class="v">${crit}%</div><div class="l">Crit</div></div>
     <div class="tile" oncontextmenu="event.preventDefault();showBreakdown('Weakspot',${weak},'From Renegade / other')"><div class="v">${weak}%</div><div class="l">Weakspot</div></div>
     <div class="tile"><div class="v">${elem}%</div><div class="l">Elemental</div></div>`;
