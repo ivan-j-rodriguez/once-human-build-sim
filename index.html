@@ -312,7 +312,13 @@ const mods = [
     suffixes:[{name:"Precision", attrs:["Weakspot DMG +2%."]}]},
   {name:"Turret Enhancement", rarity:"Epic", category:"Gloves", core:"Increases the damage dealt by facilities you use.",
     suffixes:[{name:"General", attrs:["Facility DMG +3%."]}]},
-  {name:"None", rarity:"Common", category:"Any", core:"No mod.", suffixes:[]}
+  {name:"None", rarity:"Common", category:"Any", core:"No mod.", suffixes:[]},
+  {name:"Rapid Response", rarity:"Epic", category:"Top", core:"After taking damage, Movement Speed +10% for 3s.", suffixes:[]},
+  {name:"Fortified Plate", rarity:"Rare", category:"Top", core:"DMG Reduction +6% when HP >60%.", suffixes:[]},
+  {name:"Tactical Vest", rarity:"Epic", category:"Top", core:"Reload Speed +8%.", suffixes:[]},
+  {name:"Heavy Padding", rarity:"Rare", category:"Bottoms", core:"Fall DMG -20%.", suffixes:[]},
+  {name:"Agile Stride", rarity:"Epic", category:"Bottoms", core:"Sprint Speed +5%.", suffixes:[]},
+  {name:"Stable Base", rarity:"Rare", category:"Bottoms", core:"Weapon Stability +6%.", suffixes:[]}
 ];
 
 const hides = [
@@ -606,8 +612,13 @@ function renderSets() {
 }
 function equipPiece(setName, slot, piece) {
   window._userAction = true;
+  window._selectedSlots = window._selectedSlots || {};
+  window._selectedSlots[slot] = setName + "|" + piece;
   document.querySelectorAll(".slot-btn").forEach(b => b.style.borderColor = "");
-  document.querySelectorAll(`[onclick*="equipPiece('${setName}','${slot}'"]`).forEach(b => b.style.borderColor = "#6cf");
+  Object.keys(window._selectedSlots).forEach(s => {
+    const [sn, p] = window._selectedSlots[s].split("|");
+    document.querySelectorAll(`[onclick*="equipPiece('${sn}','${s}'"]`).forEach(b => b.style.borderColor = "#6cf");
+  });
   if (!piece) return;
   const sel = document.getElementById(slot);
   if (sel) {
@@ -662,9 +673,9 @@ function openModModal(slot) {
   none.textContent = "None";
   none.onclick = () => selectMod("");
   list.appendChild(none);
-  const slotCat = {helmet:["Helmet"],mask:["Mask","Mask/Shoes"],top:["Top"],bottom:["Bottoms"],gloves:["Gloves"],shoes:["Shoes","Mask/Shoes"],weapon:["Any"],weapon2:["Any"]};
+  const slotCat = {helmet:["Helmet","Any"],mask:["Mask","Mask/Shoes","Any"],top:["Top","Any"],bottom:["Bottoms","Any"],gloves:["Gloves","Any"],shoes:["Shoes","Mask/Shoes","Any"],weapon:["Any"],weapon2:["Any"]};
   const allowed = slotCat[slot] || ["Any"];
-  sortByRarity(mods.filter(m => m.name !== 'None' && (allowed.includes("Any") || allowed.some(c => (m.category||"").includes(c))))).forEach(m => {
+  sortByRarity(mods.filter(m => m.name !== 'None' && (m.category === "Any" || allowed.some(c => (m.category||"").toLowerCase().includes(c.toLowerCase()))))).forEach(m => {
     const el = document.createElement("div");
     el.className = "modal-item rarity-" + (m.rarity||"").toLowerCase();
     el.innerHTML = m.name + "<div style='font-size:0.65rem;color:#8aa;margin-top:2px;'>" + (m.core||"") + "</div>";
@@ -821,7 +832,6 @@ function populate() {
     const imgHtml = d.icon ? `<img src="${d.icon}" onerror="this.style.display='none'" />` : '';
     div.innerHTML = `${imgHtml}<div><strong class="rarity-${d.rarity.toLowerCase()}">${d.name}</strong><div class="desc">${d.desc}</div></div>`;
     let timer = null, startX = 0, startY = 0;
-    div.onclick = () => equipDeviation(d.name);
     div.onclick = () => equipDeviation(d.name);
     div.oncontextmenu = (e) => { e.preventDefault(); showDevDetail(d); };
     div.addEventListener("touchstart", (e) => {
@@ -1039,9 +1049,9 @@ function updateBuild() {
     weaponDmg: [], crit: [], critDmg: [], weak: [], status: [], elem: []
   };
   let weaponDmg = 0 + cWeapon, crit = 5, critDmg = 0, weak = 15 + cWeak, status = 0 + cStatus, elem = 0;
-  if (cWeapon) sources.weaponDmg.push("Cradle overrides: +" + cWeapon + "%");
-  if (cWeak) sources.weak.push("Cradle overrides: +" + cWeak + "%");
-  if (cStatus) sources.status.push("Cradle overrides: +" + cStatus + "%");
+  if (cWeapon) { sources.weaponDmg.push("Cradle: +" + cWeapon + "%"); weaponDmg += cWeapon; }
+  if (cWeak) { sources.weak.push("Cradle: +" + cWeak + "%"); weak += cWeak; }
+  if (cStatus) { sources.status.push("Cradle: +" + cStatus + "%"); status += cStatus; }
   sources.crit.push("Base: 5%");
   sources.weak.push("Base: 15%");
 
