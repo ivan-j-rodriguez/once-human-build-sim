@@ -959,7 +959,7 @@ function updateBuild() {
 
   function tile(cls, label, val, unit, srcKey) {
     const note = (sources[srcKey] || []).join("\n") || "Base value only";
-    return `<div class="tile ${cls}" oncontextmenu="event.preventDefault();event.stopPropagation();showBreakdown('${label}',${val},'${note.replace(/'/g,"\\'")}')" ontouchstart="longPressStart(event,'${label}',${val},'${note.replace(/'/g,"\\'")}')" ontouchend="longPressEnd()"><div class="v">${val}${unit}</div><div class="l">${label}</div></div>`;
+    return `<div class="tile ${cls}" data-label="${label}" data-val="${val}" data-note="${note.replace(/"/g,""")}"><div class="v">${val}${unit}</div><div class="l">${label}</div></div>`;
   }
 
   const results = document.getElementById("results");
@@ -971,16 +971,33 @@ function updateBuild() {
     tile("weak","Weakspot DMG",weak,"%","weak") +
     tile("status","Status DMG",status,"%","status") +
     tile("elem","Elemental DMG",elem,"%","elem");
+  document.querySelectorAll("#results .tile").forEach(tile => {
+  attachLongPress(tile, () => showBreakdown(tile.dataset.label, tile.dataset.val, tile.dataset.note || ""));
+});
   const out = document.getElementById("setBonusOut");
   out.innerHTML = Object.keys(counts).map(s => `<div class="set-bonus">${s}: ${counts[s]}pc</div>`).join("");
 }
 
 let lpTimer = null;
 function longPressStart(e, label, val, note) {
-  e.preventDefault();
-  lpTimer = setTimeout(() => showBreakdown(label, val, note), 600);
+  lpTimer = setTimeout(() => showBreakdown(label, val, note), 550);
 }
+document.addEventListener("touchmove", () => clearTimeout(lpTimer), {passive:true});
 function longPressEnd() { clearTimeout(lpTimer); }
+function attachLongPress(el, fn) {
+  let t = null, sx = 0, sy = 0;
+  el.addEventListener("touchstart", (e) => {
+    const p = e.touches[0]; sx = p.clientX; sy = p.clientY;
+    t = setTimeout(fn, 550);
+  }, {passive:true});
+  el.addEventListener("touchmove", (e) => {
+    const p = e.touches[0];
+    if (Math.abs(p.clientX - sx) > 12 || Math.abs(p.clientY - sy) > 12) clearTimeout(t);
+  }, {passive:true});
+  el.addEventListener("touchend", () => clearTimeout(t));
+  el.addEventListener("touchcancel", () => clearTimeout(t));
+  el.addEventListener("contextmenu", (e) => { e.preventDefault(); fn(); });
+}
 function showBreakdown(label, val, note) {
   alert(label + ": " + val + "\n\nSources:\n" + note.replace(/\\n/g, "\n"));
 }
