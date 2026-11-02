@@ -112,7 +112,17 @@ const sets = {
   "Falcon": { rarity:"Epic", pieces:["Falcon Cap","Falcon Mask","Falcon Top","Falcon Bottom","Falcon Gloves","Falcon Shoes"],
     bonuses:["1pc: Rolling Stamina Cost -20%","2pc: Crit DMG +12%","3pc: Above 90% Stamina: Crit Rate +5%, Crit DMG +20%","4pc: Kill restores 30 Stamina + 20% Movement Speed for 2s"] },
   "Renegade": { rarity:"Legendary", pieces:["Renegade Helmet","Renegade Mask","Renegade Top","Renegade Bottom","Renegade Gloves","Renegade Shoes"],
-    bonuses:["1pc: Weakspot DMG +8%","2pc: Crit Rate +4%","3pc: Weakspot Crit DMG +15%","4pc: After weakspot hit, next shot +12% DMG"] }
+    bonuses:["1pc: Weakspot DMG +8%","2pc: Crit Rate +4%","3pc: Weakspot Crit DMG +15%","4pc: After weakspot hit, next shot +12% DMG"] },
+  "Blackstone": { rarity:"Legendary", pieces:["Blackstone Helmet","Blackstone Mask","Blackstone Tops","Blackstone Pants","Blackstone Gloves","Blackstone Boots"],
+    bonuses:["1pc: Max HP +6%","2pc: Pollution Resist +10%","3pc: Elemental DMG +8%","4pc: DMG Reduction +5%"] },
+  "Heavy Duty": { rarity:"Epic", pieces:["Heavy Duty Helmet","Heavy Duty Mask","Heavy Duty Top","Heavy Duty Bottom","Heavy Duty Gloves","Heavy Duty Shoes"],
+    bonuses:["1pc: HP Bonus 10%","2pc: Reload Speed +15%","3pc: Within 5m each enemy grants 4% DMG Reduction (up to 4 stacks)","4pc: Elemental DMG +8%"] },
+  "Stormweaver": { rarity:"Epic", pieces:["Stormweaver Helmet","Stormweaver Mask","Stormweaver Top","Stormweaver Bottom","Stormweaver Gloves","Stormweaver Shoes"],
+    bonuses:["1pc: Status DMG +6%","2pc: Elemental DMG +8%","3pc: After status proc, next hit +12% DMG","4pc: Status Duration +10%"] },
+  "Blast": { rarity:"Rare", pieces:["Blast Helmet","Blast Mask","Blast Top","Blast Bottom","Blast Gloves","Blast Shoes"],
+    bonuses:["1pc: Heavy Melee DMG +20%","2pc: Torso DMG Reduction +12%","3pc: Next Melee DMG +20% after kill + 5 Prime Energy"] },
+  "Scout": { rarity:"Fine", pieces:["Scout Helmet","Scout Mask","Scout Top","Scout Bottom","Scout Gloves","Scout Shoes"],
+    bonuses:["1pc: Movement Speed +4%","2pc: Reload Speed +8%","3pc: Sprint Stamina Cost -10%"] }
 };
 
 const weapons = [
@@ -145,6 +155,16 @@ const mods = [
     suffixes:[{name:"Violent", attrs:["Elemental DMG +1.6%.","DMG against Great Ones +2.4%.","DMG against normal enemies +4.0%.","Reload Speed +2.4%."]}]},
   {name:"Targeted Strike", rarity:"Epic", category:"Armor Mods", core:"When attacking enemies with The Bull's Eye, Crit Rate +10%, Crit DMG +25%.",
     suffixes:[{name:"The Bull's Eye", attrs:["Weakspot DMG +6%."]},{name:"Violent", attrs:["Crit Rate +2%."]}]},
+  {name:"Healing Fortification", rarity:"Rare", category:"Armor Mods", core:"Status DMG Reduction +10%.",
+    suffixes:[{name:"Survival", attrs:["HP Regen +2% when below 50% HP."]}]},
+  {name:"Momentum Up", rarity:"Epic", category:"Armor Mods", core:"Reload Speed +12%.",
+    suffixes:[{name:"Violent", attrs:["Weapon DMG +2% after reload."]}]},
+  {name:"Precise Strike", rarity:"Epic", category:"Armor Mods", core:"Weakspot hits grant +12% Weakspot DMG for 3s (max 3 stacks).",
+    suffixes:[{name:"Precision", attrs:["Crit Rate +1.5% on weakspot."]}]},
+  {name:"First-Move Advantage", rarity:"Legendary", category:"Armor Mods", core:"After reload: Crit Rate +10%, Crit DMG +20% for 2s.",
+    suffixes:[{name:"Violent", attrs:["Crit DMG +5% on first shot."]}]},
+  {name:"Embers", rarity:"Epic", category:"Weapon Mods", core:"Burn stacks grant additional DMG.",
+    suffixes:[{name:"General", attrs:["Burn DMG +3%."]},{name:"Violent", attrs:["Crit Rate +1% while burning."]},{name:"Burn", attrs:["Burn duration +1s."]}]},
   {name:"None", rarity:"Common", category:"", core:"", suffixes:[]}
 ];
 
@@ -167,7 +187,10 @@ const keyArmor = [
   {name:"Fire Rune Boots", slot:"shoes", rarity:"Legendary", effect:"Key effect placeholder"},
   {name:"Snow Camo Gloves", slot:"gloves", rarity:"Legendary", effect:"Key effect placeholder"},
   {name:"Gas Mask Hood", slot:"helmet", rarity:"Legendary", effect:"Key effect placeholder"},
-  {name:"Cage Helmet", slot:"helmet", rarity:"Legendary", effect:"Key effect placeholder"}
+  {name:"Cage Helmet", slot:"helmet", rarity:"Legendary", effect:"Key effect placeholder"},
+  {name:"Gas-tight Helmet", slot:"helmet", rarity:"Legendary", effect:"Key effect placeholder"},
+  {name:"Gilded Gauntlets", slot:"gloves", rarity:"Legendary", effect:"Enables Burn to deal Crit DMG."},
+  {name:"Pivot-Step Boots", slot:"shoes", rarity:"Legendary", effect:"Resets Battle Skill cooldown after using Deviation Ultimate."}
 ];
 
 const deviations = [
@@ -351,6 +374,14 @@ function updateBuild() {
   });
   if (keyCount > 1) {
     alert("Only one Key Armor item can be equipped.");
+    // reset the last changed key slot
+    slots.forEach(slot => {
+      const sel = document.getElementById(slot);
+      if (sel && sel.value) {
+        const opt = sel.options[sel.selectedIndex];
+        if (opt?.dataset?.key === "1") { sel.value = ""; }
+      }
+    });
   }
   slots.forEach(slot => {
     showModPreview(slot);
