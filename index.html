@@ -27,7 +27,14 @@ select { background:#080c12; color:var(--text); border:1px solid #243040; paddin
 .rarity-common { color:var(--common); }
 .results { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
 .tile { background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:12px; text-align:center; }
-.tile .v { font-size:1.15rem; font-weight:700; color:var(--accent); }
+.tile .v { font-size:1.15rem; font-weight:700; }
+.tile.weapon { border-color:#4fc3f7; } .tile.weapon .v { color:#4fc3f7; }
+.tile.crit { border-color:#ffca28; } .tile.crit .v { color:#ffca28; }
+.tile.critdmg { border-color:#ffab40; } .tile.critdmg .v { color:#ffab40; }
+.tile.weak { border-color:#f48fb1; } .tile.weak .v { color:#f48fb1; }
+.tile.status { border-color:#ab47bc; } .tile.status .v { color:#ab47bc; }
+.tile.elem { border-color:#66bb6a; } .tile.elem .v { color:#66bb6a; }
+.tile.dps { border-color:#29b6f6; } .tile.dps .v { color:#29b6f6; }
 .tile .l { font-size:0.62rem; color:var(--dim); margin-top:2px; }
 .set-bonus { font-size:0.72rem; color:#b8c8d8; margin:3px 0; }
 .equip { background:var(--accent); color:#041016; border:none; padding:7px 12px; border-radius:6px; font-weight:700; cursor:pointer; font-size:0.75rem; margin-top:6px; }
@@ -671,44 +678,84 @@ function updateBuild() {
   const enhMult = 1 + (enh - 1) * 0.06;
   base = base * tierMult * enhMult * (fireRate / 60);
 
-  let crit = 5, weak = 15 + cWeak, elem = 0, weaponDmg = 0 + cWeapon, status = 0 + cStatus, critDmg = 0;
+  // Track sources for breakdowns
+  const sources = {
+    weaponDmg: [], crit: [], critDmg: [], weak: [], status: [], elem: []
+  };
+  let weaponDmg = 0 + cWeapon, crit = 5, critDmg = 0, weak = 15 + cWeak, status = 0 + cStatus, elem = 0;
+  if (cWeapon) sources.weaponDmg.push("Cradle: +" + cWeapon + "%");
+  if (cWeak) sources.weak.push("Cradle: +" + cWeak + "%");
+  if (cStatus) sources.status.push("Cradle: +" + cStatus + "%");
+  sources.crit.push("Base: 5%");
+  sources.weak.push("Base: 15%");
+
   Object.keys(counts).forEach(set => {
     const n = counts[set];
-    if (set === "Lonewolf") { if (n>=1) crit += 3; if (n>=2) weaponDmg += 15; if (n>=3) crit += 6; if (n>=4) crit += 8; }
-    if (set === "Falcon") { if (n>=2) critDmg += 12; if (n>=3) crit += 5; }
-    if (set === "Renegade") { if (n>=1) weak += 8; if (n>=2) crit += 4; if (n>=3) weak += 15; }
-    if (set === "Shelterer") { if (n>=2) elem += 8; if (n>=3) elem += 18; }
+    if (set === "Lonewolf") {
+      if (n>=1) { crit += 3; sources.crit.push("Lonewolf 1pc: +3%"); }
+      if (n>=2) { weaponDmg += 15; sources.weaponDmg.push("Lonewolf 2pc: +15%"); }
+      if (n>=3) { crit += 6; sources.crit.push("Lonewolf 3pc: +6%"); }
+      if (n>=4) { crit += 8; sources.crit.push("Lonewolf 4pc: +8%"); }
+    }
+    if (set === "Falcon") {
+      if (n>=2) { critDmg += 12; sources.critDmg.push("Falcon 2pc: +12%"); }
+      if (n>=3) { crit += 5; sources.crit.push("Falcon 3pc: +5%"); }
+    }
+    if (set === "Renegade") {
+      if (n>=1) { weak += 8; sources.weak.push("Renegade 1pc: +8%"); }
+      if (n>=2) { crit += 4; sources.crit.push("Renegade 2pc: +4%"); }
+      if (n>=3) { weak += 15; sources.weak.push("Renegade 3pc: +15%"); }
+    }
+    if (set === "Shelterer") {
+      if (n>=2) { elem += 8; sources.elem.push("Shelterer 2pc: +8%"); }
+      if (n>=3) { elem += 18; sources.elem.push("Shelterer 3pc: +18%"); }
+    }
   });
 
-  // Selected mods (core effects where we can parse simple bonuses)
   slots.forEach(slot => {
     const modName = document.getElementById(slot + "Mod")?.value;
     if (!modName) return;
     const m = mods.find(x => x.name === modName);
     if (!m) return;
-    if (m.name === "Bullet Siphon") weaponDmg += 5;
-    if (m.name === "Crit Amplifier") critDmg += 30;
-    if (m.name === "Power of Striving") weaponDmg += 10;
+    if (m.name === "Bullet Siphon") { weaponDmg += 5; sources.weaponDmg.push(modName + ": +5%"); }
+    if (m.name === "Crit Amplifier") { critDmg += 30; sources.critDmg.push(modName + ": +30%"); }
+    if (m.name === "Power of Striving") { weaponDmg += 10; sources.weaponDmg.push(modName + ": +10%"); }
   });
 
   const dev = document.getElementById("deviation")?.value;
   if (dev === "Lonewolf's Whisper") {
-    weaponDmg += 21.6 * skillMult * abilityMult;
+    const bonus = 21.6 * skillMult * abilityMult;
+    weaponDmg += bonus;
+    sources.weaponDmg.push(dev + " (skill/ability): +" + bonus.toFixed(1) + "%");
   }
 
   const dps = Math.round(base * (1 + weaponDmg/100) * (1 + crit/100) * (1 + weak/100) * (1 + elem/100) * (1 + status/100) * skillMult * abilityMult);
+
+  function tile(cls, label, val, unit, srcKey) {
+    const note = (sources[srcKey] || []).join("\n") || "No additional sources";
+    return `<div class="tile ${cls}" oncontextmenu="event.preventDefault();showBreakdown('${label}',${val},'${note.replace(/'/g,"\\'")}')" ontouchstart="longPressStart(event,'${label}',${val},'${note.replace(/'/g,"\\'")}')" ontouchend="longPressEnd()"><div class="v">${val}${unit}</div><div class="l">${label}</div></div>`;
+  }
+
   const results = document.getElementById("results");
-  results.innerHTML = `
-    <div class="tile" oncontextmenu="event.preventDefault();showBreakdown('DPS',${dps},'Base × tier/enh × sets × mods × cradle × skill × ability')"><div class="v">${dps}</div><div class="l">DPS Total</div></div>
-    <div class="tile" oncontextmenu="event.preventDefault();showBreakdown('Crit',${crit},'From set bonuses')"><div class="v">${crit}%</div><div class="l">Crit</div></div>
-    <div class="tile" oncontextmenu="event.preventDefault();showBreakdown('Weakspot',${weak},'From Renegade / other')"><div class="v">${weak}%</div><div class="l">Weakspot</div></div>
-    <div class="tile"><div class="v">${elem}%</div><div class="l">Elemental</div></div>`;
+  results.innerHTML = 
+    tile("dps","DPS Total",dps,"","") +
+    tile("weapon","Weapon DMG",weaponDmg,"%","weaponDmg") +
+    tile("crit","Crit Rate",crit,"%","crit") +
+    tile("critdmg","Crit DMG",critDmg,"%","critDmg") +
+    tile("weak","Weakspot DMG",weak,"%","weak") +
+    tile("status","Status DMG",status,"%","status") +
+    tile("elem","Elemental DMG",elem,"%","elem");
   const out = document.getElementById("setBonusOut");
   out.innerHTML = Object.keys(counts).map(s => `<div class="set-bonus">${s}: ${counts[s]}pc</div>`).join("");
 }
 
+let lpTimer = null;
+function longPressStart(e, label, val, note) {
+  lpTimer = setTimeout(() => showBreakdown(label, val, note), 600);
+}
+function longPressEnd() { clearTimeout(lpTimer); }
 function showBreakdown(label, val, note) {
-  alert(label + ": " + val + "\n" + note);
+  alert(label + ": " + val + "\n\nSources:\n" + note.replace(/\\n/g, "\n"));
 }
 
 populate();
