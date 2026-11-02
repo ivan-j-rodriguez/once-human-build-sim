@@ -679,7 +679,17 @@ function openAccessoryModal(slot) {
     const el = document.createElement("div");
     el.className = "modal-item rarity-" + a.rarity.toLowerCase();
     el.textContent = a.name;
-    el.onclick = () => { closeSlotModal(); updateBuild(); };
+    el.onclick = () => {
+      const accSel = document.getElementById(currentModalSlot);
+      if (accSel) {
+        let opt = Array.from(accSel.options).find(o => o.value === a.name);
+        if (!opt) { opt = document.createElement("option"); opt.value = a.name; opt.textContent = a.name; accSel.appendChild(opt); }
+        accSel.value = a.name;
+      }
+      const ind = document.getElementById(currentModalSlot.replace("Acc","") + "AccInd");
+      if (ind) ind.classList.toggle("on", a.name !== "None");
+      closeSlotModal(); updateBuild();
+    };
     list.appendChild(el);
   });
   document.getElementById("slotModal").classList.add("open");
@@ -694,7 +704,7 @@ function openModModal(slot) {
   none.textContent = "None";
   none.onclick = () => selectMod("");
   list.appendChild(none);
-  const slotCat = {helmet:["Helmet","Any"],mask:["Mask","Mask/Shoes","Any"],top:["Top","Any"],bottom:["Bottoms","Any"],gloves:["Gloves","Any"],shoes:["Shoes","Mask/Shoes","Any"],weapon:["Any"],weapon2:["Any"]};
+  const slotCat = {helmet:["Helmet","Any"],mask:["Mask","Mask/Shoes","Any"],top:["Top","Any"],bottom:["Bottoms","Any"],gloves:["Gloves","Any"],shoes:["Shoes","Mask/Shoes","Any"],weapon:["Any","Bottoms","Gloves"],weapon2:["Any","Bottoms","Gloves"]};
   const allowed = slotCat[slot] || ["Any"];
   sortByRarity(mods.filter(m => m.name !== 'None' && (m.category === "Any" || allowed.some(c => (m.category||"").toLowerCase().includes(c.toLowerCase()))))).forEach(m => {
     const el = document.createElement("div");
