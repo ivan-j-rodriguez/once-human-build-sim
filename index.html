@@ -236,9 +236,9 @@ const hides = [
 ];
 
 const deviations = [
-  {name:"Lonewolf's Whisper", rarity:"Rare", desc:"Pulls aggro, deals damage, increases Weapon DMG received by its target. Strong synergy with Shrapnel builds."},
-  {name:"Dr. Teddy", rarity:"Rare", desc:"Healer deviation. Provides healing support in combat."},
-  {name:"By-the-Wind", rarity:"Rare", desc:"Creates wind walls that block bullets."}
+  {name:"Lonewolf's Whisper", rarity:"Rare", icon:"https://static.wikia.nocookie.net/once-human/images/8/8c/Lonewolf%27s_Whisper.png/revision/latest", desc:"Pulls aggro, deals damage, increases Weapon DMG received by its target. Strong synergy with Shrapnel builds."},
+  {name:"Dr. Teddy", rarity:"Rare", icon:"https://static.wikia.nocookie.net/once-human/images/b/b0/Dr._Teddy.png/revision/latest", desc:"Healer deviation. Provides healing support in combat."},
+  {name:"By-the-Wind", rarity:"Rare", icon:"https://static.wikia.nocookie.net/once-human/images/c/c8/By-The-Wind.png/revision/latest", desc:"Creates wind walls that block bullets."}
 ];
 
 function switchTab(name) {
@@ -295,6 +295,8 @@ function populate() {
       if (piece) {
         const o = document.createElement("option");
         o.value = piece; o.textContent = piece; o.dataset.set = setName;
+        const r = sets[setName].rarity.toLowerCase();
+        o.className = "rarity-" + r;
         sel.appendChild(o);
       }
     });
@@ -315,7 +317,7 @@ function populate() {
   deviations.forEach(d => {
     const div = document.createElement("div");
     div.className = "dev-card";
-    div.innerHTML = `<strong class="rarity-${d.rarity.toLowerCase()}">${d.name}</strong><div class="desc">${d.desc}</div>`;
+    div.innerHTML = `<div style="display:flex;gap:10px;align-items:flex-start;"><img src="${d.icon||''}" style="width:48px;height:48px;object-fit:contain;background:#080c12;border-radius:6px;" onerror="this.style.display='none'" /><div><strong class="rarity-${d.rarity.toLowerCase()}">${d.name}</strong><div class="desc">${d.desc}</div></div></div>`;
     dlist.appendChild(div);
   });
 
@@ -324,7 +326,9 @@ function populate() {
     const s = sets[name];
     const div = document.createElement("div");
     div.className = "slot-card";
-    div.innerHTML = `<h3 class="rarity-${s.rarity.toLowerCase()}">${name}</h3>` + s.bonuses.map(b=>`<div class="set-bonus">${b}</div>`).join("") +
+    div.innerHTML = `<h3 class="rarity-${s.rarity.toLowerCase()}">${name}</h3>` +
+      `<div style="font-size:0.75rem;margin:6px 0;color:#9ab;">Pieces: ${s.pieces.map(p=>`<span class="rarity-${s.rarity.toLowerCase()}">${p}</span>`).join(" · ")}</div>` +
+      s.bonuses.map(b=>`<div class="set-bonus">${b}</div>`).join("") +
       `<button class="equip" onclick="equipSetPieces('${name}')">Equip Pieces</button>`;
     slist.appendChild(div);
   });
