@@ -753,7 +753,8 @@ function openModModal(slot) {
   list.appendChild(none);
   const slotCat = {helmet:["Helmet","Any"],mask:["Mask","Mask/Shoes","Any"],top:["Top","Any"],bottom:["Bottoms","Any"],gloves:["Gloves","Any"],shoes:["Shoes","Mask/Shoes","Any"],weapon:["Any","Weapon","Bottoms","Gloves"],weapon2:["Any","Weapon","Bottoms","Gloves"]};
   const allowed = slotCat[slot] || ["Any"];
-  sortByRarity(mods.filter(m => m.name !== 'None' && (m.category === "Any" || allowed.some(c => (m.category||"").toLowerCase().includes(c.toLowerCase()))))).forEach(m => {
+  const seen = new Set();
+  sortByRarity(mods.filter(m => m.name !== 'None' && !seen.has(m.name) && seen.add(m.name) && (m.category === "Any" || allowed.some(c => (m.category||"").toLowerCase().includes(c.toLowerCase()))))).forEach(m => {
     const el = document.createElement("div");
     el.className = "modal-item rarity-" + (m.rarity||"").toLowerCase();
     el.innerHTML = m.name + "<div style='font-size:0.65rem;color:#8aa;margin-top:2px;'>" + (m.core||"") + "</div>";
@@ -1189,15 +1190,16 @@ function updateBuild() {
   }
 
   const dps = Math.round(base * (1 + weaponDmg/100) * (1 + crit/100) * (1 + weak/100) * (1 + elem/100) * (1 + status/100) * skillMult * abilityMult);
+  const dpsSources = [].concat(sources.weaponDmg||[], sources.crit||[], sources.critDmg||[], sources.weak||[], sources.status||[], sources.elem||[]);
 
   function tile(cls, label, val, unit, srcKey) {
-    const note = (sources[srcKey] || []).join("\n") || "Base / no additional sources";
+    const note = Array.isArray(srcKey) ? srcKey.join("\n") : ((sources[srcKey] || []).join("\n") || "Base / no additional sources");
     return `<div class="tile ${cls}" data-label="${label}" data-val="${val}" data-note="${(note||'').replace(/\"/g,'"')}"><div class="v">${val}${unit}</div><div class="l">${label}</div></div>`;
   }
 
   const results = document.getElementById("results");
   if (results) results.innerHTML = 
-    tile("dps","DPS Total",dps,"","") +
+    tile("dps","DPS Total",dps,"",dpsSources.join("\n")) +
     tile("weapon","Weapon DMG",weaponDmg,"%","weaponDmg") +
     tile("crit","Crit Rate",crit,"%","crit") +
     tile("critdmg","Crit DMG",critDmg,"%","critDmg") +
