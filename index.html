@@ -601,6 +601,20 @@ function selectMod(name) {
   updateBuild();
 }
 
+
+function fillCradle() {
+  const sel = document.getElementById("cradleSelect");
+  if (!sel) return;
+  if (sel.options.length > 1) return;
+  sel.innerHTML = "";
+  cradleOverrides.forEach(c => {
+    const o = document.createElement("option");
+    o.value = c.name;
+    o.textContent = c.name;
+    sel.appendChild(o);
+  });
+}
+
 function populate() {
   const wsel = document.getElementById("weapon");
   const w2sel = document.getElementById("weapon2");
@@ -968,6 +982,7 @@ function showBreakdown(label, val, note) {
 }
 
 try {
+  fillCradle();
   populate();
   renderSets();
   updateBuild();
