@@ -87,11 +87,21 @@ button.equip {
   <div class="slot-card">
     <h3>Weapons</h3>
     <div class="row">
-      <div class="field"><label>Primary</label><select id="weapon" onchange="updateBuild()"></select></div>
+      <div class="field"><label>Primary</label>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <img id="weaponIcon" style="width:36px;height:36px;object-fit:contain;background:#080c12;border-radius:4px;display:none;" />
+        <select id="weapon" onchange="updateBuild()" style="flex:1;"></select>
+      </div>
+    </div>
       <div class="field" style="max-width:85px;"><label>Tier</label><select id="wTier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
     </div>
     <div class="row">
-      <div class="field"><label>Secondary</label><select id="weapon2" onchange="updateBuild()"></select></div>
+      <div class="field"><label>Secondary</label>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <img id="weapon2Icon" style="width:36px;height:36px;object-fit:contain;background:#080c12;border-radius:4px;display:none;" />
+        <select id="weapon2" onchange="updateBuild()" style="flex:1;"></select>
+      </div>
+    </div>
       <div class="field" style="max-width:85px;"><label>Tier</label><select id="w2Tier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
     </div>
     <div class="row">
@@ -185,7 +195,8 @@ const weapons = ["SOCR - The Last Valor","KVD - Boom! Boom!","DE.50 - Jaws","ACS
 const icons = {
   "Stun Baton": "https://static.wikia.nocookie.net/once-human/images/4/4a/Stun_baton.png/revision/latest",
   "Long Axe": "https://static.wikia.nocookie.net/once-human/images/5/57/LongAxeBP.png/revision/latest",
-  "Baseball Bat": "https://static.wikia.nocookie.net/once-human/images/a/a9/Baseball_bat1.png/revision/latest"
+  "Baseball Bat": "https://static.wikia.nocookie.net/once-human/images/a/a9/Baseball_bat1.png/revision/latest",
+  "Military Dagger": "https://static.wikia.nocookie.net/once-human/images/placeholder/Military_Dagger.png"
 };
 
 const meleeWeapons = [
@@ -207,11 +218,11 @@ const meleeWeapons = [
 ];
 
 const mods = [
-  {name:"Crit Amplifier", rarity:"Epic", desc:"Crit Rate +8% / Crit DMG +15%. Higher tiers unlock additional Crit DMG.", tier:"IV+"},
+  {name:"Crit Amplifier", rarity:"Epic", desc:"Crit Rate +10%. Crit DMG +15%. Higher tiers unlock additional Crit DMG.", tier:"IV+"},
   {name:"Targeted Strike", rarity:"Epic", desc:"Weakspot DMG +12%", tier:"IV+"},
   {name:"Healing Fortification", rarity:"Rare", desc:"Status DMG Reduction +10%", tier:"III+"},
   {name:"Momentum Up", rarity:"Epic", desc:"Reload Speed +12%", tier:"IV+"},
-  {name:"Bullet Siphon", rarity:"Legendary", desc:"Magazine Capacity +8%. Every 5 bullets consumed → +4% Weapon DMG (cap 20%). Tier V unlocks the full stack cap.", tier:"V"},
+  {name:"Bullet Siphon", rarity:"Legendary", desc:"Weapon DMG +5%. Every 5 bullets consumed → +4% Weapon DMG (cap 20%). Tier unlocks: Elemental DMG, Great Ones DMG, normal enemy DMG, Reload Speed.", tier:"V"},
   {name:"Precise Strike", rarity:"Epic", desc:"Weakspot hits grant +12% Weakspot DMG for 3s (max 3 stacks)", tier:"IV+"},
   {name:"First-Move Advantage", rarity:"Legendary", desc:"After reload: Crit Rate +10%, Crit DMG +20% for 2s", tier:"V"}
 ];
