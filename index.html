@@ -116,12 +116,13 @@ const sets = {
 };
 
 const weapons = [
-  {name:"SOCR - The Last Valor", rarity:"Legendary"},
-  {name:"KVD - Boom Boom", rarity:"Legendary"},
-  {name:"DE.50 - Jaws", rarity:"Legendary"},
-  {name:"ACS12 - Corrosion", rarity:"Legendary"},
-  {name:"MPS7 - Outer Space", rarity:"Legendary"},
-  {name:"AWS.338 - Bingo", rarity:"Legendary"},
+  {name:"SOCR - The Last Valor", rarity:"Legendary"},{name:"SOCR - Outsider", rarity:"Epic"},{name:"KAM - Pioneer", rarity:"Legendary"},
+  {name:"KVD - Boom Boom", rarity:"Legendary"},{name:"KVD - The Last Valor", rarity:"Epic"},
+  {name:"DE.50 - Jaws", rarity:"Legendary"},{name:"DE.50 - Wildfire", rarity:"Epic"},{name:"R500 - Memento", rarity:"Legendary"},{name:"R500 - Hammerhead Shark", rarity:"Epic"},{name:"G17 - Hazardous Object", rarity:"Legendary"},
+  {name:"ACS12 - Corrosion", rarity:"Legendary"},{name:"ACS12 - Netherworld", rarity:"Epic"},{name:"DBSG - Doombringer", rarity:"Legendary"},{name:"S870 - Sandstorm", rarity:"Fine"},
+  {name:"MPS7 - Outer Space", rarity:"Legendary"},{name:"MPS7 - Div-Evo", rarity:"Epic"},{name:"MPS5 - Kumawink", rarity:"Legendary"},{name:"KV-SBR - Little Jaws", rarity:"Legendary"},
+  {name:"AWS.338 - Bingo", rarity:"Legendary"},{name:"AWS.338 - Black Panther", rarity:"Epic"},{name:"SN700", rarity:"Epic"},
+  {name:"MG4 - Mr Squid", rarity:"Legendary"},{name:"HAMR - Brahminy", rarity:"Legendary"},
   {name:"None", rarity:"Common"}
 ];
 
@@ -130,7 +131,7 @@ const meleeWeapons = [
   {name:"Frozen Northern Pike", rarity:"Epic"},{name:"Crowbar", rarity:"Epic"},{name:"Warning Sign", rarity:"Epic"},
   {name:"Baseball Bat", rarity:"Fine"},{name:"Wrench", rarity:"Fine"},{name:"Camping Knife", rarity:"Fine"},
   {name:"Northern Pike", rarity:"Fine"},{name:"Military Shovel", rarity:"Fine"},{name:"Military Dagger", rarity:"Fine"},
-  {name:"Torch", rarity:"Common"},{name:"Broken Bottle", rarity:"Common"},{name:"Steel Pipe", rarity:"Common"},{name:"None", rarity:"Common"}
+  {name:"Torch", rarity:"Common"},{name:"Broken Bottle", rarity:"Common"},{name:"Steel Pipe", rarity:"Common"},{name:"Kukri", rarity:"Epic"},{name:"Scourge", rarity:"Legendary"},{name:"None", rarity:"Common"}
 ];
 
 const mods = [
@@ -155,7 +156,18 @@ const hides = [
   {name:"Lunar Wolf Skin", rarity:"Legendary", desc:"Weakspot DMG Reduction +6%. Effect doubles if HP is below 30%."},
   {name:"Deer Hide", rarity:"Fine", desc:"Max Stamina +10"},
   {name:"Bear Skin", rarity:"Epic", desc:"Max HP +5%"},
+  {name:"Crocodile Hide", rarity:"Rare", desc:"Poison Resist +8"},
+  {name:"Fox Skin", rarity:"Fine", desc:"Movement Speed +3%"},
+  {name:"Rabbit Fur", rarity:"Common", desc:"Max Stamina +5"},
+  {name:"Dreamfused Wolf Skin", rarity:"Legendary", desc:"Crit Rate +3% when HP below 40%"},
   {name:"None", rarity:"Common", desc:""}
+];
+
+const keyArmor = [
+  {name:"Fire Rune Boots", slot:"shoes", rarity:"Legendary", effect:"Key effect placeholder"},
+  {name:"Snow Camo Gloves", slot:"gloves", rarity:"Legendary", effect:"Key effect placeholder"},
+  {name:"Gas Mask Hood", slot:"helmet", rarity:"Legendary", effect:"Key effect placeholder"},
+  {name:"Cage Helmet", slot:"helmet", rarity:"Legendary", effect:"Key effect placeholder"}
 ];
 
 const deviations = [
@@ -164,7 +176,11 @@ const deviations = [
   {name:"By-the-Wind", rarity:"Rare", icon:"https://static.wikia.nocookie.net/once-human/images/c/c8/By-The-Wind.png/revision/latest", desc:"Creates wind walls that block bullets."},
   {name:"Festering Gel", rarity:"Epic", icon:"", desc:"Applies corrosion and slows enemies."},
   {name:"Zeno-Purifier", rarity:"Legendary", icon:"", desc:"High damage support deviation with cleansing effects."},
-  {name:"Mini Wonder", rarity:"Epic", icon:"", desc:"Provides utility and minor damage boosts."}
+  {name:"Mini Wonder", rarity:"Epic", icon:"", desc:"Provides utility and minor damage boosts."},
+  {name:"Arachsiam", rarity:"Legendary", icon:"", desc:"High damage combat deviation."},
+  {name:"Shadow Hound", rarity:"Epic", icon:"", desc:"Aggressive melee deviation."},
+  {name:"Forsaken Giant", rarity:"Legendary", icon:"", desc:"Heavy hitting deviation."},
+  {name:"Butterfly's Emissary", rarity:"Rare", icon:"", desc:"Support deviation with status effects."}
 ];
 
 function switchTab(id) {
@@ -201,6 +217,15 @@ function populate() {
         <div class="field"><label>Hide</label><select id="${slot}Hide" onchange="showHidePreview('${slot}')"><option value="">None</option></select><div class="desc" id="${slot}HideDesc"></div></div>
       </div>`;
     armor.appendChild(card);
+  });
+
+  keyArmor.forEach(k => {
+    const sel = document.getElementById(k.slot);
+    if (sel) {
+      const o = document.createElement("option"); o.value = k.name; o.textContent = k.name + " (Key)"; o.dataset.key = "1";
+      o.className = "rarity-legendary";
+      sel.appendChild(o);
+    }
   });
 
   Object.keys(sets).forEach(setName => {
@@ -315,6 +340,18 @@ function getSetCounts() {
 }
 
 function updateBuild() {
+  // one key armor rule
+  let keyCount = 0;
+  slots.forEach(slot => {
+    const sel = document.getElementById(slot);
+    if (sel && sel.value) {
+      const opt = sel.options[sel.selectedIndex];
+      if (opt?.dataset?.key === "1") keyCount++;
+    }
+  });
+  if (keyCount > 1) {
+    alert("Only one Key Armor item can be equipped.");
+  }
   slots.forEach(slot => {
     showModPreview(slot);
     showHidePreview(slot);
