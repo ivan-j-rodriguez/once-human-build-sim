@@ -685,8 +685,8 @@ function toggleCradle(name) {
   if (!sel) return;
   let opt = Array.from(sel.options).find(o => o.value === name);
   if (!opt) { opt = document.createElement("option"); opt.value = name; opt.textContent = name; sel.appendChild(opt); }
-  const selected = Array.from(sel.selectedOptions);
-  if (!opt.selected && selected.length >= 8) { alert("Maximum 8 cradle overrides."); return; }
+  const current = Array.from(sel.selectedOptions);
+  if (!opt.selected && current.length >= 8) { alert("Maximum 8 cradle overrides."); return; }
   opt.selected = !opt.selected;
   const selected = Array.from(sel.selectedOptions).map(o => o.value);
   document.getElementById("cradleBox").innerHTML = selected.length ? selected.join("<br>") : "None selected";
