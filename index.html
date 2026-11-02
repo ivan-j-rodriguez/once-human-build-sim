@@ -31,8 +31,8 @@ select { background:#080c12; color:var(--text); border:1px solid #243040; paddin
 .tile .l { font-size:0.62rem; color:var(--dim); margin-top:2px; }
 .set-bonus { font-size:0.72rem; color:#b8c8d8; margin:3px 0; }
 .equip { background:var(--accent); color:#041016; border:none; padding:7px 12px; border-radius:6px; font-weight:700; cursor:pointer; font-size:0.75rem; margin-top:6px; }
-.slot-row { display:flex; gap:6px; flex-wrap:wrap; margin:10px 0; }
-.slot-btn { flex:1; min-width:70px; background:#0c1218; border:1px solid #2a3a4a; color:var(--text); padding:8px 4px; border-radius:6px; font-size:0.68rem; cursor:pointer; text-align:center; }
+.slot-row { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin:10px 0; }
+.slot-btn { background:#0c1218; border:1px solid #2a3a4a; color:var(--text); padding:8px 4px; border-radius:6px; font-size:0.68rem; cursor:pointer; text-align:center; }
 .slot-btn:hover { border-color:var(--accent); }
 .pair { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
 .pair .field { margin:0; }
@@ -61,30 +61,32 @@ select { background:#080c12; color:var(--text); border:1px solid #243040; paddin
 
 <div id="Build" class="tabcontent" style="display:block;">
   <div class="slot-card">
-    <h3>Weapons</h3>
-    <div class="field"><label>Primary</label><select id="weapon" onchange="updateBuild()"></select></div>
+    <h3 style="font-size:0.85rem;">Primary Weapon</h3>
+    <div class="field"><label>Weapon</label><select id="weapon" onchange="updateBuild()"></select></div>
     <div class="pair">
       <div class="field"><label>Tier</label><select id="wTier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
       <div class="field"><label>Enhancement Level</label><select id="wEnh" onchange="updateBuild()"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option></select></div>
     </div>
-    <div class="field"><label>Secondary</label><select id="weapon2" onchange="updateBuild()"></select></div>
+    <div class="field"><label>Sight / Scope</label><select id="accSight" onchange="updateBuild()"><option value="">None</option><option>Red Dot</option><option>Holographic Sight</option><option>4x Scope</option><option>6x Scope</option><option>Advanced Sniper Sight</option></select></div>
+    <div class="field"><label>Magazine</label><select id="accMag" onchange="updateBuild()"><option value="">None</option><option>Extended Mag</option><option>Amended Rifle Mag</option><option>Light Mag</option></select></div>
+    <div class="field"><label>Muzzle</label><select id="accMuzzle" onchange="updateBuild()"><option value="">None</option><option>Short Suppressor</option><option>Long Suppressor</option><option>Tactical Suppressor</option><option>Compensator</option></select></div>
+    <h3 style="font-size:0.85rem;margin-top:14px;">Secondary Weapon</h3>
+    <div class="field"><label>Weapon</label><select id="weapon2" onchange="updateBuild()"></select></div>
     <div class="pair">
       <div class="field"><label>Tier</label><select id="w2Tier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
       <div class="field"><label>Enhancement Level</label><select id="w2Enh" onchange="updateBuild()"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option></select></div>
     </div>
-    <div class="field"><label>Melee</label><select id="melee" onchange="updateBuild()"></select></div>
+    <div class="field"><label>Sight / Scope</label><select id="acc2Sight" onchange="updateBuild()"><option value="">None</option><option>Red Dot</option><option>Holographic Sight</option><option>4x Scope</option><option>6x Scope</option></select></div>
+    <div class="field"><label>Magazine</label><select id="acc2Mag" onchange="updateBuild()"><option value="">None</option><option>Extended Mag</option><option>Amended Rifle Mag</option></select></div>
+    <div class="field"><label>Muzzle</label><select id="acc2Muzzle" onchange="updateBuild()"><option value="">None</option><option>Short Suppressor</option><option>Long Suppressor</option><option>Tactical Suppressor</option></select></div>
+    <h3 style="font-size:0.85rem;margin-top:14px;">Melee Weapon</h3>
+    <div class="field"><label>Weapon</label><select id="melee" onchange="updateBuild()"></select></div>
     <div class="pair">
       <div class="field"><label>Tier</label><select id="mTier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
       <div class="field"><label>Enhancement Level</label><select id="mEnh" onchange="updateBuild()"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option></select></div>
     </div>
   </div>
   <div id="armorSlots"></div>
-  <div class="slot-card">
-    <h3>Accessories</h3>
-    <div class="field"><label>Sight / Scope</label><select id="accSight" onchange="updateBuild()"><option value="">None</option><option>Red Dot</option><option>Holographic Sight</option><option>4x Scope</option><option>6x Scope</option></select></div>
-    <div class="field"><label>Magazine</label><select id="accMag" onchange="updateBuild()"><option value="">None</option><option>Extended Mag</option><option>Amended Rifle Mag</option></select></div>
-    <div class="field"><label>Muzzle</label><select id="accMuzzle" onchange="updateBuild()"><option value="">None</option><option>Short Suppressor</option><option>Long Suppressor</option></select></div>
-  </div>
 </div>
 
 <div id="Deviations" class="tabcontent"><div id="devList"></div></div>
