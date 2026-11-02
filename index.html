@@ -146,13 +146,29 @@ const sets = {
 };
 
 const weapons = [
-  {name:"SOCR - The Last Valor", rarity:"Legendary"},{name:"SOCR - Outsider", rarity:"Epic"},{name:"KAM - Pioneer", rarity:"Legendary"},
-  {name:"KVD - Boom Boom", rarity:"Legendary"},{name:"KVD - The Last Valor", rarity:"Epic"},
-  {name:"DE.50 - Jaws", rarity:"Legendary"},{name:"DE.50 - Wildfire", rarity:"Epic"},{name:"R500 - Memento", rarity:"Legendary"},{name:"R500 - Hammerhead Shark", rarity:"Epic"},{name:"G17 - Hazardous Object", rarity:"Legendary"},
-  {name:"ACS12 - Corrosion", rarity:"Legendary"},{name:"ACS12 - Netherworld", rarity:"Epic"},{name:"DBSG - Doombringer", rarity:"Legendary"},{name:"S870 - Sandstorm", rarity:"Fine"},
-  {name:"MPS7 - Outer Space", rarity:"Legendary"},{name:"MPS7 - Div-Evo", rarity:"Epic"},{name:"MPS5 - Kumawink", rarity:"Legendary"},{name:"KV-SBR - Little Jaws", rarity:"Legendary"},
-  {name:"AWS.338 - Bingo", rarity:"Legendary"},{name:"AWS.338 - Black Panther", rarity:"Epic"},{name:"SN700", rarity:"Epic"},
-  {name:"MG4 - Mr Squid", rarity:"Legendary"},{name:"HAMR - Brahminy", rarity:"Legendary"},
+  {name:"ACS12 - Corrosion", rarity:"Legendary"},{name:"ACS12 - Netherworld", rarity:"Epic"},{name:"ACS12 - Pyroclasm Starter", rarity:"Fine"},
+  {name:"AUG - Electron Cloud", rarity:"Legendary"},
+  {name:"AWS.338 - Bingo", rarity:"Legendary"},{name:"AWS.338 - Black Panther", rarity:"Epic"},
+  {name:"DB12 - Backfire", rarity:"Epic"},{name:"DB12 - Raining Cash", rarity:"Legendary"},
+  {name:"DBSG - Doombringer", rarity:"Legendary"},{name:"DBSG - Dual Fury", rarity:"Epic"},
+  {name:"DE.50", rarity:"Fine"},{name:"DE.50 - Jaws", rarity:"Legendary"},{name:"DE.50 - Wildfire", rarity:"Epic"},
+  {name:"EBR-14 - Octopus! Grilled Rings!", rarity:"Legendary"},
+  {name:"KAM - Abyss Glance", rarity:"Legendary"},{name:"KAM - Burning Rage", rarity:"Epic"},{name:"KAM - Pioneer", rarity:"Legendary"},
+  {name:"KV-SBR - Icy Rain", rarity:"Epic"},{name:"KV-SBR - Little Jaws", rarity:"Legendary"},
+  {name:"KVD - Boom! Boom!", rarity:"Legendary"},
+  {name:"M416 - Autumn Equinox", rarity:"Epic"},{name:"M416 - Scorched Earth", rarity:"Legendary"},{name:"M416 - Silent Anabasis", rarity:"Legendary"},
+  {name:"MG4 - Conflicting Memories", rarity:"Epic"},{name:"MG4 - Mr Squid", rarity:"Legendary"},{name:"MG4 - Predator", rarity:"Epic"},{name:"MG4 - Wrath Of Hades", rarity:"Legendary"},
+  {name:"MGL", rarity:"Epic"},
+  {name:"MPS5 - Blue Tiger", rarity:"Epic"},{name:"MPS5 - Kumawink", rarity:"Legendary"},{name:"MPS5 - Primal Rage", rarity:"Epic"},
+  {name:"MPS7 - Div-Evo", rarity:"Epic"},{name:"MPS7 - Outer Space", rarity:"Legendary"},
+  {name:"PDW90 - Holographic Resonance", rarity:"Legendary"},
+  {name:"QBJ97 - Fiery Trees and Silver Flowers", rarity:"Legendary"},
+  {name:"R500 - Hammerhead Shark", rarity:"Epic"},{name:"R500 - Hunter", rarity:"Fine"},{name:"R500 - Hunter 500", rarity:"Rare"},{name:"R500 - Memento", rarity:"Legendary"},
+  {name:"RPG7 Rocket Launcher", rarity:"Epic"},
+  {name:"S870 - SANDSTORM B.P.", rarity:"Fine"},
+  {name:"SKS - Pathfinder", rarity:"Epic"},
+  {name:"SN700 - Finale", rarity:"Legendary"},{name:"SN700 - Gulped Lore", rarity:"Epic"},
+  {name:"SOCR - OUTSIDER", rarity:"Epic"},{name:"SOCR - The Last Valor", rarity:"Legendary"},
   {name:"None", rarity:"Common"}
 ];
 
@@ -334,8 +350,12 @@ function populate() {
 
 const weaponDetails = {
   "AWS.338 - Bingo": {type:"Sniper Rifle", dmg:2125, fire:40, mag:5, crit:2, critDmg:26, weak:95, features:["[The Bull's Eye] Marks the target and inflicts Vulnerability.","70% chance to apply The Bull's Eye on weakspot hit.","After switching weapons, first hit applies The Bull's Eye.","After hitting non-Meta-Human, Weakspot DMG +25% for 10s (up to 4 stacks).","After defeating non-Meta-Human with weakspot, Attack +15% for 20s."]},
-  "SOCR - The Last Valor": {type:"Assault Rifle", dmg:0, fire:0, mag:0, crit:0, critDmg:0, weak:0, features:["Weapon features vary by blueprint and calibration."]},
-  "DE.50 - Jaws": {type:"Pistol", dmg:0, fire:0, mag:0, crit:0, critDmg:0, weak:0, features:["Status DMG can crit under certain conditions."]}
+  "SOCR - The Last Valor": {type:"Assault Rifle", dmg:264, fire:0, mag:0, crit:0, critDmg:0, weak:60, features:["Legendary Beyonder-styled assault rifle.","Tier V DMG (standard scenario, 1-star): 264.","Weakspot DMG: 60%."]},
+  "KVD - Boom! Boom!": {type:"Light Machine Gun", dmg:255, fire:0, mag:0, crit:0, critDmg:0, weak:40, features:["Legendary Juggernaut-styled LMG.","Tier V DMG (standard scenario): 255.","Weakspot DMG: 40%."]},
+  "DE.50 - Jaws": {type:"Pistol", dmg:0, fire:0, mag:0, crit:0, critDmg:0, weak:0, features:["Legendary pistol. Features vary by calibration and mods."]},
+  "ACS12 - Corrosion": {type:"Shotgun", dmg:0, fire:0, mag:0, crit:0, critDmg:0, weak:0, features:["Legendary shotgun with status synergy."]},
+  "MPS7 - Outer Space": {type:"SMG", dmg:0, fire:0, mag:0, crit:0, critDmg:0, weak:0, features:["Legendary SMG."]},
+  "MG4 - Mr Squid": {type:"LMG", dmg:0, fire:0, mag:0, crit:0, critDmg:0, weak:0, features:["Legendary LMG."]}
 };
 
 function showWeaponDetail(name) {
