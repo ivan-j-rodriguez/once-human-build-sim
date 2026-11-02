@@ -516,8 +516,12 @@ function selectSlotItem(name) {
       tile.classList.add("rarity-" + rarity);
     }
   }
+  const slot = currentModalSlot;
   closeSlotModal();
   updateBuild();
+  if (["helmet","mask","top","bottom","gloves","shoes"].includes(slot) && name) {
+    setTimeout(() => openModModal(slot), 80);
+  }
 }
 function closeSlotModal() {
   document.getElementById("slotModal").classList.remove("open");
@@ -684,7 +688,7 @@ function populate() {
   });
 
   const devSel = document.getElementById("deviation");
-  if (devSel) {
+  if (devSel && devSel.options.length <= 1) {
     sortByRarity(deviations).forEach(d => {
       const opt = document.createElement("option");
       opt.value = d.name;
@@ -877,7 +881,7 @@ function updateBuild() {
   });
   // Preview
   const prev = document.getElementById("cradlePreview");
-  if (prev) prev.textContent = selected.length ? selected.length + " override(s) active" : "No overrides selected";
+  if (prev) prev.textContent = selected.length ? selected.length + " override(s) active: " + selected.slice(0,3).join(", ") : "No overrides selected";
 
   let base = 1000;
   const primary = document.getElementById("weapon")?.value;
@@ -972,7 +976,7 @@ function updateBuild() {
   attachLongPress(tile, () => showBreakdown(tile.dataset.label, tile.dataset.val, tile.dataset.note || ""));
 });
   const out = document.getElementById("setBonusOut");
-  out.innerHTML = Object.keys(counts).map(s => `<div class="set-bonus">${s}: ${counts[s]}pc</div>`).join("");
+  if (out) out.innerHTML = Object.keys(counts).map(s => `<div class="set-bonus">${s}: ${counts[s]}pc</div>`).join("");
 }
 
 let lpTimer = null;
