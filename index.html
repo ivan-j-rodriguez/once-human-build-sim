@@ -313,6 +313,23 @@ const mods = [
   {name:"Turret Enhancement", rarity:"Epic", category:"Gloves", core:"Increases the damage dealt by facilities you use.",
     suffixes:[{name:"General", attrs:["Facility DMG +3%."]}]},
   {name:"None", rarity:"Common", category:"Any", core:"No mod.", suffixes:[]},
+  {name:"Blaze Blessing", rarity:"Epic", category:"Weapon", core:"When defeating an enemy affected by Burn, recover 5% HP.", suffixes:[]},
+  {name:"Burning Wrath", rarity:"Epic", category:"Weapon", core:"Triggering Burn has a 25% chance to grant +1 Burn stacks.", suffixes:[]},
+  {name:"Embers", rarity:"Legendary", category:"Weapon", core:"When Burn is removed, stacks only -50%.", suffixes:[]},
+  {name:"Flame Resonance", rarity:"Epic", category:"Weapon", core:"Max Burn stack +2, Burn duration -20%.", suffixes:[]},
+  {name:"Frosty Blessing", rarity:"Epic", category:"Weapon", core:"When Frost Vortex disappears restore 10% of HP.", suffixes:[]},
+  {name:"Cryo Blast", rarity:"Epic", category:"Weapon", core:"Frost Vortex applies Frostbite. Vulnerability +4% and Movement Speed -10%.", suffixes:[]},
+  {name:"Shock Rampage", rarity:"Epic", category:"Weapon", core:"Dealing Power Surge DMG increases Power Surge trigger chance (stacks).", suffixes:[]},
+  {name:"Surge Amplifier", rarity:"Epic", category:"Weapon", core:"Dealing Power Surge DMG grants stacking Power Surge DMG.", suffixes:[]},
+  {name:"Static Shock", rarity:"Epic", category:"Weapon", core:"Power Surge duration –50%, Power Surge DMG +20%.", suffixes:[]},
+  {name:"Super Charged", rarity:"Epic", category:"Weapon", core:"Triggering Unstable Bomber grants stacking Unstable Bomber DMG.", suffixes:[]},
+  {name:"Bombardier Souvenir", rarity:"Legendary", category:"Weapon", core:"When triggering Unstable Bomber, automatically refill 10% of your magazine.", suffixes:[]},
+  {name:"Bounce Rampage", rarity:"Epic", category:"Weapon", core:"Bounce deals more DMG as more targets are hit, up to DMG +45%.", suffixes:[]},
+  {name:"Shatter Them All", rarity:"Epic", category:"Weapon", core:"The more parts Shrapnel hits, the higher the Shrapnel DMG. Each part +15%.", suffixes:[]},
+  {name:"Precision Rush", rarity:"Epic", category:"Weapon", core:"When Fast Gunner is active, increase Weakspot DMG while continuously shooting for 3s, up to 45%.", suffixes:[]},
+  {name:"Durable Territory", rarity:"Epic", category:"Weapon", core:"Every enemy defeated while in Fortress Warfare extends the effect by 5s (up to 5 times).", suffixes:[]},
+  {name:"Recover Mark", rarity:"Epic", category:"Weapon", core:"When defeating marked enemies, recover 15% HP and 25% Stamina.", suffixes:[]},
+  {name:"Vulnerability Amplifier", rarity:"Epic", category:"Weapon", core:"The Bull’s Eye adds Vulnerability.", suffixes:[]},
   {name:"Rapid Response", rarity:"Epic", category:"Top", core:"After taking damage, Movement Speed +10% for 3s.", suffixes:[]},
   {name:"Fortified Plate", rarity:"Rare", category:"Top", core:"DMG Reduction +6% when HP >60%.", suffixes:[]},
   {name:"Tactical Vest", rarity:"Epic", category:"Top", core:"Reload Speed +8%.", suffixes:[]},
@@ -734,7 +751,7 @@ function openModModal(slot) {
   none.textContent = "None";
   none.onclick = () => selectMod("");
   list.appendChild(none);
-  const slotCat = {helmet:["Helmet","Any"],mask:["Mask","Mask/Shoes","Any"],top:["Top","Any"],bottom:["Bottoms","Any"],gloves:["Gloves","Any"],shoes:["Shoes","Mask/Shoes","Any"],weapon:["Any","Bottoms","Gloves"],weapon2:["Any","Bottoms","Gloves"]};
+  const slotCat = {helmet:["Helmet","Any"],mask:["Mask","Mask/Shoes","Any"],top:["Top","Any"],bottom:["Bottoms","Any"],gloves:["Gloves","Any"],shoes:["Shoes","Mask/Shoes","Any"],weapon:["Any","Weapon","Bottoms","Gloves"],weapon2:["Any","Weapon","Bottoms","Gloves"]};
   const allowed = slotCat[slot] || ["Any"];
   sortByRarity(mods.filter(m => m.name !== 'None' && (m.category === "Any" || allowed.some(c => (m.category||"").toLowerCase().includes(c.toLowerCase()))))).forEach(m => {
     const el = document.createElement("div");
