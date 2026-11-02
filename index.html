@@ -7,8 +7,8 @@
 <style>
 :root {
   --bg: #07090d;
-  --panel: #0f1620;
-  --border: #1c2a3a;
+  --panel: #101820;
+  --border: #1e2a38;
   --accent: #24C2C2;
   --gold: #e8b86d;
   --epic: #b07cff;
@@ -20,58 +20,56 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: radial-gradient(ellipse at top, #0e1a24 0%, #07090d 70%);
+  background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(36,194,194,0.08), transparent 60%), #07090d;
   color: var(--text);
-  padding: 20px 16px 40px;
+  padding: 18px 14px 40px;
   min-height: 100vh;
 }
-.header { text-align: center; margin-bottom: 24px; }
-.logo { font-size: 1.6rem; font-weight: 900; letter-spacing: 3px; color: var(--accent); text-shadow: 0 0 20px rgba(36,194,194,0.4); }
-.tabs { display: flex; gap: 2px; margin-bottom: 18px; border-bottom: 1px solid #1a2530; }
+.header { text-align: center; margin-bottom: 22px; }
+.logo { font-size: 1.55rem; font-weight: 900; letter-spacing: 3px; color: var(--accent); text-shadow: 0 0 18px rgba(36,194,194,0.45); }
+.tabs { display: flex; gap: 2px; margin-bottom: 16px; border-bottom: 1px solid #1a2530; }
 .tablinks {
   background: transparent; border: none; color: var(--dim);
-  padding: 12px 18px; cursor: pointer; font-size: 0.78rem;
-  letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600;
-  border-bottom: 2px solid transparent; transition: color 0.15s;
+  padding: 11px 16px; cursor: pointer; font-size: 0.76rem;
+  letter-spacing: 1.4px; text-transform: uppercase; font-weight: 600;
+  border-bottom: 2px solid transparent;
 }
 .tablinks.active { color: var(--accent); border-bottom-color: var(--accent); }
 .tabcontent { display: none; }
 .slot-card {
   background: var(--panel); border: 1px solid var(--border);
-  border-radius: 10px; padding: 16px; margin: 12px 0;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  border-radius: 10px; padding: 14px 16px; margin: 10px 0;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.35);
 }
-.slot-card h3 { font-size: 0.7rem; color: var(--accent); letter-spacing: 2px; margin-bottom: 10px; text-transform: uppercase; font-weight: 600; }
-.row { display: flex; gap: 10px; flex-wrap: wrap; margin: 8px 0; align-items: flex-end; }
-.field { flex: 1; min-width: 140px; }
-label { font-size: 0.62rem; color: var(--dim); display: block; margin-bottom: 4px; letter-spacing: 0.5px; text-transform: uppercase; }
+.slot-card h3 { font-size: 0.68rem; color: var(--accent); letter-spacing: 2px; margin-bottom: 8px; text-transform: uppercase; font-weight: 600; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; margin: 6px 0; align-items: flex-end; }
+.field { flex: 1; min-width: 130px; }
+label { font-size: 0.6rem; color: var(--dim); display: block; margin-bottom: 3px; letter-spacing: 0.6px; text-transform: uppercase; }
 select {
   background: #080c12; color: var(--text); border: 1px solid #243040;
-  padding: 9px 10px; border-radius: 6px; font-size: 0.85rem; width: 100%;
-  transition: border-color 0.15s;
+  padding: 8px 10px; border-radius: 6px; font-size: 0.84rem; width: 100%;
 }
 select:focus { outline: none; border-color: var(--accent); }
-.desc { font-size: 0.72rem; color: #9ab4c8; margin-top: 5px; line-height: 1.4; }
+.desc { font-size: 0.7rem; color: #9ab4c8; margin-top: 4px; line-height: 1.35; }
 .rarity-legendary { color: var(--gold); font-weight: 600; }
 .rarity-epic { color: var(--epic); font-weight: 600; }
 .rarity-rare { color: var(--rare); font-weight: 600; }
 .rarity-fine { color: #7ec8e3; }
 .rarity-common { color: var(--common); }
-.results { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-top: 14px; }
+.results { display: grid; grid-template-columns: repeat(auto-fit, minmax(125px, 1fr)); gap: 8px; margin-top: 12px; }
 .stat-tile {
   background: linear-gradient(180deg, #121a24 0%, #0c1218 100%);
-  border: 1px solid #1c2a3a; border-radius: 8px; padding: 14px 10px; text-align: center;
+  border: 1px solid #1c2a3a; border-radius: 8px; padding: 12px 8px; text-align: center;
 }
-.stat-tile strong { display: block; font-size: 1.25rem; color: var(--accent); margin-bottom: 2px; }
-.stat-tile small { color: var(--dim); font-size: 0.65rem; letter-spacing: 0.5px; }
-.dps-main { font-size: 1.8rem; color: var(--gold); font-weight: 700; }
-.set-bonus { background: #0a1018; border-left: 3px solid var(--accent); padding: 8px 12px; margin: 6px 0; font-size: 0.8rem; border-radius: 0 6px 6px 0; }
-.dev-card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin: 10px 0; }
+.stat-tile strong { display: block; font-size: 1.2rem; color: var(--accent); }
+.stat-tile small { color: var(--dim); font-size: 0.62rem; letter-spacing: 0.4px; }
+.dps-main { font-size: 1.7rem; color: var(--gold); font-weight: 700; }
+.set-bonus { background: #0a1018; border-left: 3px solid var(--accent); padding: 7px 10px; margin: 5px 0; font-size: 0.78rem; border-radius: 0 5px 5px 0; }
+.dev-card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin: 8px 0; }
 button.equip {
-  background: var(--accent); color: #07090d; border: none; padding: 8px 14px;
-  border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.8rem; margin-top: 8px;
+  background: var(--accent); color: #07090d; border: none; padding: 7px 12px;
+  border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.78rem; margin-top: 6px;
 }
-button.equip:hover { filter: brightness(1.1); }
 </style>
 </head>
 <body>
@@ -90,15 +88,15 @@ button.equip:hover { filter: brightness(1.1); }
     <h3>Weapons</h3>
     <div class="row">
       <div class="field"><label>Primary</label><select id="weapon" onchange="updateBuild()"></select></div>
-      <div class="field" style="max-width:90px;"><label>Tier</label><select id="wTier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
+      <div class="field" style="max-width:85px;"><label>Tier</label><select id="wTier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
     </div>
     <div class="row">
       <div class="field"><label>Secondary</label><select id="weapon2" onchange="updateBuild()"></select></div>
-      <div class="field" style="max-width:90px;"><label>Tier</label><select id="w2Tier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
+      <div class="field" style="max-width:85px;"><label>Tier</label><select id="w2Tier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
     </div>
     <div class="row">
       <div class="field"><label>Melee</label><select id="melee" onchange="updateBuild()"></select></div>
-      <div class="field" style="max-width:90px;"><label>Tier</label><select id="mTier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
+      <div class="field" style="max-width:85px;"><label>Tier</label><select id="mTier" onchange="updateBuild()"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option></select></div>
     </div>
   </div>
   <div id="armorSlots"></div>
@@ -113,7 +111,7 @@ button.equip:hover { filter: brightness(1.1); }
 </div>
 
 <div id="Results" class="tabcontent">
-  <div style="margin-bottom:14px;">
+  <div style="margin-bottom:12px;">
     <label style="font-size:0.8rem;"><input type="checkbox" id="devToggle" onchange="updateBuild()" checked> Deviation Summoned</label>
   </div>
   <div id="dpsDisplay"></div>
@@ -229,8 +227,8 @@ function buildArmorUI() {
       <h3>${slotLabels[slot]}</h3>
       <div class="row">
         <div class="field"><label>Piece</label><select id="${slot}" onchange="updateBuild()"><option value="">None</option></select></div>
-        <div class="field" style="max-width:80px;"><label>Tier</label><select id="${slot}Tier" onchange="updateBuild()">${roman.slice(1).map(r=>`<option>${r}</option>`).join("")}</select></div>
-        <div class="field" style="max-width:80px;"><label>Stars</label><select id="${slot}Stars" onchange="updateBuild()"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option></select></div>
+        <div class="field" style="max-width:75px;"><label>Tier</label><select id="${slot}Tier" onchange="updateBuild()">${roman.slice(1).map(r=>`<option>${r}</option>`).join("")}</select></div>
+        <div class="field" style="max-width:75px;"><label>Stars</label><select id="${slot}Stars" onchange="updateBuild()"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option></select></div>
       </div>
       <div class="row">
         <div class="field"><label>Mod</label><select id="${slot}Mod" onchange="updateBuild()"><option value="">None</option></select><div class="desc" id="${slot}ModDesc"></div></div>
