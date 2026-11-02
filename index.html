@@ -268,6 +268,18 @@ const mods = [
   {name:"None", rarity:"Common", category:"Any", core:"No mod.", suffixes:[]}
 ];
 
+const hides = [
+  {name:"None", rarity:"Common", effect:"No hide effect."},
+  {name:"Wolf Hide", rarity:"Rare", effect:"Weapon DMG +5% when HP >70%."},
+  {name:"Bear Hide", rarity:"Rare", effect:"Max HP +8%."},
+  {name:"Crocodile Hide", rarity:"Epic", effect:"DMG Reduction +6% when wet."},
+  {name:"Deer Hide", rarity:"Rare", effect:"Move Speed +5%."},
+  {name:"Fox Hide", rarity:"Epic", effect:"Crit Rate +4%."},
+  {name:"Shark Hide", rarity:"Legendary", effect:"Weapon DMG +7% in water."},
+  {name:"Gene Fabric", rarity:"Epic", effect:"Gear Durability +20%."},
+  {name:"Bastille Gene Fabric", rarity:"Legendary", effect:"Auto-repair while in Coherence."}
+];
+
 const keyArmor = [
   {name:"Ankh Mask", slot:"mask", rarity:"Legendary", effect:"When magazine emptied, 40% chance to refill 20% bullets from reserve."},
   {name:"BBQ Gloves", slot:"gloves", rarity:"Legendary", effect:"Burn frequency increases based on Burn stacks, up to 100%."},
@@ -292,6 +304,19 @@ const keyArmor = [
   {name:"Viper Mask", slot:"mask", rarity:"Legendary", effect:"Unstable Bomber range +50%; DMG scales with range bonus."},
   {name:"Yellow Paint Mask", slot:"helmet", rarity:"Legendary", effect:"Defeating enemies generates EMP that applies Power Surge."},
   {name:"Wind Interpreter Cap", slot:"helmet", rarity:"Legendary", effect:"Unstable Bomber trigger: auto-load 1 bullet; DMG +25%."}
+];
+
+const cradleOverrides = [
+  {name:"None", effect:"No cradle override."},
+  {name:"Automatic Weapon Enhancement", effect:"+15% Weapon DMG for 15s after reload. Stacks with other sources."},
+  {name:"Long-Range Enhancement", effect:"+20% Weakspot DMG when targeting enemies beyond 30m."},
+  {name:"Tactical Combo", effect:"+20% Weakspot DMG for 8s after using a tactical item."},
+  {name:"Rapid Response", effect:"+10% Fire Rate for 10s after taking damage."},
+  {name:"Critical Focus", effect:"+12% Crit Rate for 6s after scoring a crit."},
+  {name:"Status Amplification", effect:"+15% Status DMG for 12s after applying a status effect."},
+  {name:"Melee Surge", effect:"+25% Melee DMG for 5s after a melee hit."},
+  {name:"Deviation Sync", effect:"+10% Weapon DMG while your Deviation is active."},
+  {name:"Emergency Protocol", effect:"+20% DMG Reduction and +15% Weapon DMG for 8s when HP drops below 30%."}
 ];
 
 const deviations = [
@@ -570,6 +595,14 @@ function updateBuild() {
   // Cradle overrides (selectable)
   let cWeapon = 0, cWeak = 0, cStatus = 0, cVsBoss = 0;
   const cradleSel = document.getElementById("cradleSelect");
+  if (cradleSel && cradleSel.options.length === 0) {
+    cradleOverrides.forEach(c => {
+      const o = document.createElement("option");
+      o.value = c.name;
+      o.textContent = c.name;
+      cradleSel.appendChild(o);
+    });
+  }
   const selected = cradleSel ? Array.from(cradleSel.selectedOptions).map(o => o.value) : [];
   selected.forEach(id => {
     if (id === "auto" || id === "long" || id === "hand" || id === "melee") cWeapon += 20;
