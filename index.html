@@ -339,7 +339,37 @@ const mods = [
   {name:"Status Infusion", rarity:"Epic", category:"Mask", core:"Status DMG +10%.", suffixes:[]},
   {name:"Clean Air", rarity:"Rare", category:"Mask", core:"Status resistance +8%.", suffixes:[]},
   {name:"Silent Step", rarity:"Epic", category:"Shoes", core:"Noise from movement -15%.", suffixes:[]},
-  {name:"Shock Absorber", rarity:"Rare", category:"Shoes", core:"Fall DMG -25%.", suffixes:[]}
+  {name:"Shock Absorber", rarity:"Rare", category:"Shoes", core:"Fall DMG -25%.", suffixes:[]},
+  {name:"Adrenaline Boost", rarity:"Epic", category:"Top", core:"After taking damage, Weapon DMG +8% for 4s.", suffixes:[]},
+  {name:"Armored Core", rarity:"Rare", category:"Top", core:"DMG Reduction +5%.", suffixes:[]},
+  {name:"Battle Vest", rarity:"Epic", category:"Top", core:"Reload Speed +6%.", suffixes:[]},
+  {name:"Coolant Layer", rarity:"Rare", category:"Top", core:"Burn duration -20%.", suffixes:[]},
+  {name:"Heavy Frame", rarity:"Epic", category:"Top", core:"Max HP +8%.", suffixes:[]},
+  {name:"Light Frame", rarity:"Rare", category:"Top", core:"Move Speed +4%.", suffixes:[]},
+  {name:"Reactive Plate", rarity:"Legendary", category:"Top", core:"On hit, DMG Reduction +10% for 2s.", suffixes:[]},
+  {name:"Ammo Reserve", rarity:"Epic", category:"Bottoms", core:"Reserve ammo +15%.", suffixes:[]},
+  {name:"Cover Fire", rarity:"Rare", category:"Bottoms", core:"While behind cover, Crit Rate +4%.", suffixes:[]},
+  {name:"Deep Mag", rarity:"Epic", category:"Bottoms", core:"Magazine capacity +10%.", suffixes:[]},
+  {name:"Long Shot", rarity:"Legendary", category:"Bottoms", core:"Weakspot DMG +12% at long range.", suffixes:[]},
+  {name:"Rapid Mag", rarity:"Rare", category:"Bottoms", core:"Reload Speed +5%.", suffixes:[]},
+  {name:"Steady Aim", rarity:"Epic", category:"Bottoms", core:"Weapon Stability +7%.", suffixes:[]},
+  {name:"Tactical Mag", rarity:"Epic", category:"Bottoms", core:"After reload, Weapon DMG +6% for 3s.", suffixes:[]},
+  {name:"Weakpoint Focus", rarity:"Legendary", category:"Bottoms", core:"Weakspot Crit Rate +8%.", suffixes:[]},
+  {name:"Clear Visor", rarity:"Rare", category:"Helmet", core:"Status resistance +5%.", suffixes:[]},
+  {name:"Focus Lens", rarity:"Epic", category:"Helmet", core:"Weakspot DMG +6%.", suffixes:[]},
+  {name:"Hard Hat", rarity:"Rare", category:"Helmet", core:"Headshot DMG taken -10%.", suffixes:[]},
+  {name:"Sensor Array", rarity:"Epic", category:"Helmet", core:"Detection range +8%.", suffixes:[]},
+  {name:"Tactical Visor", rarity:"Legendary", category:"Helmet", core:"Crit Rate +4%.", suffixes:[]},
+  {name:"Firm Grip", rarity:"Rare", category:"Gloves", core:"Weapon Stability +5%.", suffixes:[]},
+  {name:"Quick Hands", rarity:"Epic", category:"Gloves", core:"Reload Speed +5%.", suffixes:[]},
+  {name:"Steady Hands", rarity:"Epic", category:"Gloves", core:"Recoil -6%.", suffixes:[]},
+  {name:"Tactical Gloves", rarity:"Rare", category:"Gloves", core:"Weapon swap speed +6%.", suffixes:[]},
+  {name:"Breath Filter", rarity:"Rare", category:"Mask", core:"Pollution resistance +10%.", suffixes:[]},
+  {name:"Status Mask", rarity:"Epic", category:"Mask", core:"Status DMG +6%.", suffixes:[]},
+  {name:"Tactical Mask", rarity:"Epic", category:"Mask", core:"Status resistance +6%.", suffixes:[]},
+  {name:"Light Tread", rarity:"Rare", category:"Shoes", core:"Move Speed +3%.", suffixes:[]},
+  {name:"Quiet Step", rarity:"Epic", category:"Shoes", core:"Movement noise -10%.", suffixes:[]},
+  {name:"Shock Boots", rarity:"Epic", category:"Shoes", core:"Fall DMG -15%.", suffixes:[]}
 ];
 
 const hides = [
@@ -610,7 +640,7 @@ function renderSets() {
   // Key armor section
   const keyCard = document.createElement("div");
   keyCard.className = "slot-card";
-  keyCard.innerHTML = `<h3 class="rarity-legendary">Key Armor Items</h3><div style="font-size:0.72rem;margin:6px 0;">Tap to equip:</div>`;
+  keyCard.innerHTML = `<h3 class="rarity-key">Key Armor Items</h3><div style="font-size:0.72rem;margin:6px 0;">Tap to equip:</div>`;
   const keyBtns = keyArmor.map(k => `<button class="slot-btn" onclick="equipPiece('Key','${k.slot}','${k.name.replace(/'/g,"\\'")}')">${k.name}</button>`).join("");
   keyCard.innerHTML += `<div class="slot-row">${keyBtns}</div>`;
   list.appendChild(keyCard);
@@ -1159,8 +1189,9 @@ function updateBuild() {
     tile("elem","Elemental DMG",elem,"%","elem");
   document.querySelectorAll("#results .tile").forEach(tile => {
   const note = tile.dataset.note || "Base value";
-  tile.ontouchstart = () => { window.rtp = setTimeout(() => alert(tile.dataset.label + ": " + tile.dataset.val + "\n\n" + note), 550); };
+  tile.ontouchstart = (e) => { e.preventDefault(); window.rtp = setTimeout(() => alert(tile.dataset.label + ": " + tile.dataset.val + "\n\n" + note), 500); };
   tile.ontouchend = () => clearTimeout(window.rtp);
+  tile.ontouchcancel = () => clearTimeout(window.rtp);
   tile.oncontextmenu = (e) => { e.preventDefault(); alert(tile.dataset.label + ": " + tile.dataset.val + "\n\n" + note); };
 });
   const out = document.getElementById("setBonusOut");
