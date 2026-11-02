@@ -525,15 +525,79 @@ function renderSets() {
   const list = document.getElementById("setsList");
   if (!list) return;
   list.innerHTML = "";
+  const slotLabels = {helmet:"Helmet", mask:"Mask", top:"Top", bottom:"Bottom", gloves:"Gloves", shoes:"Shoes"};
+  const slotOrder = ["helmet","mask","top","bottom","gloves","shoes"];
   Object.keys(sets).sort((a,b) => (rarityOrder[sets[a].rarity]??99) - (rarityOrder[sets[b].rarity]??99) || a.localeCompare(b)).forEach(setName => {
     const s = sets[setName];
     const card = document.createElement("div");
     card.className = "slot-card";
+    const buttons = slotOrder.map((slot, i) => {
+      const piece = s.pieces[i] || "";
+      return `<button class="slot-btn" onclick="equipPiece('${setName}','${slot}','${piece.replace(/'/g,"\\'")}')">${slotLabels[slot]}</button>`;
+    }).join("");
     card.innerHTML = `<h3 class="rarity-${s.rarity.toLowerCase()}">${setName}</h3>
-      <div class="desc">${s.bonuses ? s.bonuses.join("<br>") : ""}</div>
-      <div style="font-size:0.65rem;color:#668;margin-top:4px;">${s.pieces.filter(Boolean).join(" · ")}</div>`;
+      <div style="font-size:0.72rem;margin:6px 0 4px;">Tap a slot to equip only that piece:</div>
+      <div class="slot-row">${buttons}</div>
+      <div class="desc" style="margin-top:8px;">${(s.bonuses||[]).join("<br>")}</div>`;
     list.appendChild(card);
   });
+}
+function equipPiece(setName, slot, piece) {
+  if (!piece) return;
+  const sel = document.getElementById(slot);
+  if (sel) {
+    let opt = Array.from(sel.options).find(o => o.value === piece);
+    if (!opt) {
+      opt = document.createElement("option");
+      opt.value = piece; opt.textContent = piece;
+      sel.appendChild(opt);
+    }
+    sel.value = piece;
+  }
+  const disp = document.getElementById(slot + "Display");
+  if (disp) disp.textContent = piece;
+  const tile = document.querySelector(`.slot-tile[onclick*="${slot}"]`);
+  if (tile) {
+    tile.classList.remove("empty","rarity-common","rarity-fine","rarity-rare","rarity-epic","rarity-legendary");
+    const r = (sets[setName]?.rarity || "common").toLowerCase();
+    tile.classList.add("rarity-" + r);
+  }
+  // Open mod selection for that slot
+  openModModal(slot);
+  updateBuild();
+}
+function openModModal(slot) {
+  currentModalSlot = slot + "Mod";
+  document.getElementById("modalTitle").textContent = slot.charAt(0).toUpperCase() + slot.slice(1) + " Mod";
+  const list = document.getElementById("modalList");
+  list.innerHTML = "";
+  const none = document.createElement("div");
+  none.className = "modal-item";
+  none.textContent = "None";
+  none.onclick = () => selectMod("");
+  list.appendChild(none);
+  sortByRarity(mods).forEach(m => {
+    const el = document.createElement("div");
+    el.className = "modal-item rarity-" + (m.rarity||"").toLowerCase();
+    el.textContent = m.name;
+    el.onclick = () => selectMod(m.name);
+    list.appendChild(el);
+  });
+  document.getElementById("slotModal").classList.add("open");
+}
+function selectMod(name) {
+  const sel = document.getElementById(currentModalSlot);
+  if (sel) {
+    let opt = Array.from(sel.options).find(o => o.value === name);
+    if (!opt && name) {
+      opt = document.createElement("option");
+      opt.value = name; opt.textContent = name;
+      sel.appendChild(opt);
+    }
+    sel.value = name || "";
+  }
+  closeSlotModal();
+  updateBuild();
 }
 
 function populate() {
