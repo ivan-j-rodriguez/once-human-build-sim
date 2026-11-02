@@ -179,7 +179,7 @@ const weapons = [
   {name:"S870 - SANDSTORM B.P.", rarity:"Fine"},{name:"Scourge", rarity:"Legendary"},
   {name:"SKS - Pathfinder", rarity:"Epic"},
   {name:"SN700 B.P.", rarity:"Fine"},{name:"SN700 - Finale", rarity:"Legendary"},{name:"SN700 - Gulped Lore", rarity:"Epic"},
-  {name:"SOCR - OUTSIDER", rarity:"Epic"},{name:"SOCR - The Last Valor", rarity:"Legendary"},
+  {name:"SOCR - OUTSIDER", rarity:"Epic"},{name:"SOCR - The Last Valor", rarity:"Legendary"},{name:"SOCR - Cosmic Visitor", rarity:"Legendary"},
   {name:"Steel Pipe", rarity:"Common"},{name:"Stun Baton", rarity:"Epic"},
   {name:"None", rarity:"Common"}
 ];
@@ -223,6 +223,8 @@ const mods = [
     suffixes:[{name:"Shrapnel", attrs:["Shrapnel DMG +3%."]},{name:"Violent", attrs:["Crit Rate +1% on shrapnel."]}]},
   {name:"Bounce Rampage", rarity:"Epic", category:"Weapon", core:"Bounce deals more DMG as more targets are hit, up to +45%.",
     suffixes:[{name:"Bounce", attrs:["Bounce DMG +3%."]}]},
+  {name:"Precision Load", rarity:"Legendary", category:"Bottoms", core:"After hitting a weakspot at long range, gain bullet recovery.", suffixes:[{name:"Precision", attrs:["Weakspot DMG +2%."]}]},
+  {name:"Turret Enhancement", rarity:"Epic", category:"Gloves", core:"Increases the damage dealt by facilities you use.", suffixes:[{name:"General", attrs:["Facility DMG +3%."]}]},
   {name:"Melee Momentum", rarity:"Epic", category:"Bottoms", core:"Killing with melee restores 30% Max Stamina and grants +20% Melee DMG for 8s.",
     suffixes:[{name:"Violent", attrs:["Melee DMG +2%."]}]},
   {name:"None", rarity:"Common", category:"", core:"", suffixes:[]}
@@ -295,7 +297,8 @@ const deviations = [
   {name:"Arachsiam", rarity:"Legendary", icon:"", desc:"High damage combat deviation.", skills:["Designated Target","Auto Attack"]},
   {name:"Shadow Hound", rarity:"Epic", icon:"", desc:"Aggressive melee deviation.", skills:["Designated Target","Auto Attack"]},
   {name:"Forsaken Giant", rarity:"Legendary", icon:"", desc:"Heavy hitting deviation.", skills:["Designated Target","Auto Attack"]},
-  {name:"H37", rarity:"Rare", icon:"", desc:"Explorer deviation that scavenges materials.", skills:["Scavenge"]}
+  {name:"H37", rarity:"Rare", icon:"", desc:"Explorer deviation that scavenges materials.", skills:["Scavenge"]},
+  {name:"Duet", rarity:"Legendary", icon:"", desc:"New Isles of Abyss deviation. Modifies weather effects within the Territory in real-time. Obtained from The Sunken Lord.", skills:["Weather Control"]}
 ];
 
 function switchTab(id) {
