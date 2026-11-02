@@ -1255,6 +1255,17 @@ try {
     if (cur) ds.value = cur;
   }
 } catch(e) { console.error(e); }
+setTimeout(() => {
+  const ds = document.getElementById("deviation");
+  if (ds && typeof deviations !== "undefined" && ds.options.length <= 1) {
+    const cur = ds.value;
+    ds.innerHTML = '<option value="">None</option>';
+    sortByRarity(deviations).forEach(d => {
+      const o = document.createElement("option"); o.value = d.name; o.textContent = d.name; ds.appendChild(o);
+    });
+    if (cur) ds.value = cur;
+  }
+}, 100);
 // Force-fill visible lists in case populate failed partway
 (function forceLists(){
   const dlist = document.getElementById("deviationList");
