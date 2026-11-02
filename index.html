@@ -51,7 +51,7 @@ select { background:#080c12; color:var(--text); border:1px solid #243040; paddin
 </style>
 </head>
 <body>
-<div class="header"><div class="logo">ONCE HUMAN</div></div>
+<div class="header"><img src="logo.png" alt="Once Human" style="height:64px;max-width:100%;object-fit:contain;"></div>
 <div class="tabs">
   <button class="tablinks active" onclick="switchTab('Build')">Build</button>
   <button class="tablinks" onclick="switchTab('Deviations')">Deviations</button>
@@ -149,26 +149,38 @@ const weapons = [
   {name:"ACS12 - Corrosion", rarity:"Legendary"},{name:"ACS12 - Netherworld", rarity:"Epic"},{name:"ACS12 - Pyroclasm Starter", rarity:"Fine"},
   {name:"AUG - Electron Cloud", rarity:"Legendary"},
   {name:"AWS.338 - Bingo", rarity:"Legendary"},{name:"AWS.338 - Black Panther", rarity:"Epic"},
+  {name:"Baseball Bat", rarity:"Fine"},{name:"Broken Bottle", rarity:"Common"},
+  {name:"Camping Knife", rarity:"Fine"},{name:"Compound Bow", rarity:"Epic"},{name:"Compound Bow - The Burden of Betrayal", rarity:"Legendary"},
+  {name:"Critical Pulse", rarity:"Epic"},{name:"Crowbar", rarity:"Epic"},
   {name:"DB12 - Backfire", rarity:"Epic"},{name:"DB12 - Raining Cash", rarity:"Legendary"},
-  {name:"DBSG - Doombringer", rarity:"Legendary"},{name:"DBSG - Dual Fury", rarity:"Epic"},
+  {name:"DBSG B.P.", rarity:"Fine"},{name:"DBSG - Doombringer", rarity:"Legendary"},{name:"DBSG - Dual Fury", rarity:"Epic"},
+  {name:"OLD HUNTSMAN B.P.", rarity:"Fine"},
   {name:"DE.50", rarity:"Fine"},{name:"DE.50 - Jaws", rarity:"Legendary"},{name:"DE.50 - Wildfire", rarity:"Epic"},
   {name:"EBR-14 - Octopus! Grilled Rings!", rarity:"Legendary"},
-  {name:"KAM - Abyss Glance", rarity:"Legendary"},{name:"KAM - Burning Rage", rarity:"Epic"},{name:"KAM - Pioneer", rarity:"Legendary"},
+  {name:"FP9 - Additional Rules", rarity:"Epic"},{name:"Frozen Northern Pike", rarity:"Epic"},
+  {name:"G17 - Dusty", rarity:"Fine"},{name:"G17 - Hazardous Object", rarity:"Legendary"},
+  {name:"HAMR - Brahminy", rarity:"Legendary"},{name:"HAMR - CRUMBLE B.P.", rarity:"Fine"},
+  {name:"KAM B.P", rarity:"Fine"},{name:"KAM - Abyss Glance", rarity:"Legendary"},{name:"KAM - Burning Rage", rarity:"Epic"},{name:"KAM - Pioneer", rarity:"Legendary"},
+  {name:"Kukri", rarity:"Epic"},
   {name:"KV-SBR - Icy Rain", rarity:"Epic"},{name:"KV-SBR - Little Jaws", rarity:"Legendary"},
-  {name:"KVD - Boom! Boom!", rarity:"Legendary"},
+  {name:"KVD - Boom! Boom!", rarity:"Legendary"},{name:"KVD - ICEBREAKER B.P.", rarity:"Fine"},
+  {name:"Long Axe", rarity:"Epic"},
   {name:"M416 - Autumn Equinox", rarity:"Epic"},{name:"M416 - Scorched Earth", rarity:"Legendary"},{name:"M416 - Silent Anabasis", rarity:"Legendary"},
   {name:"MG4 - Conflicting Memories", rarity:"Epic"},{name:"MG4 - Mr Squid", rarity:"Legendary"},{name:"MG4 - Predator", rarity:"Epic"},{name:"MG4 - Wrath Of Hades", rarity:"Legendary"},
-  {name:"MGL", rarity:"Epic"},
+  {name:"MG4 B.P.", rarity:"Fine"},{name:"MGL", rarity:"Epic"},
+  {name:"Military Dagger", rarity:"Fine"},{name:"Military Shovel", rarity:"Fine"},
   {name:"MPS5 - Blue Tiger", rarity:"Epic"},{name:"MPS5 - Kumawink", rarity:"Legendary"},{name:"MPS5 - Primal Rage", rarity:"Epic"},
-  {name:"MPS7 - Div-Evo", rarity:"Epic"},{name:"MPS7 - Outer Space", rarity:"Legendary"},
+  {name:"MPS7 B.P.", rarity:"Fine"},{name:"MPS7 - Div-Evo", rarity:"Epic"},{name:"MPS7 - Outer Space", rarity:"Legendary"},
   {name:"PDW90 - Holographic Resonance", rarity:"Legendary"},
   {name:"QBJ97 - Fiery Trees and Silver Flowers", rarity:"Legendary"},
   {name:"R500 - Hammerhead Shark", rarity:"Epic"},{name:"R500 - Hunter", rarity:"Fine"},{name:"R500 - Hunter 500", rarity:"Rare"},{name:"R500 - Memento", rarity:"Legendary"},
-  {name:"RPG7 Rocket Launcher", rarity:"Epic"},
-  {name:"S870 - SANDSTORM B.P.", rarity:"Fine"},
+  {name:"Recurve Bow", rarity:"Fine"},{name:"Recurve Crossbow", rarity:"Fine"},{name:"RPG7 Rocket Launcher", rarity:"Epic"},
+  {name:"Rusted Blade", rarity:"Common"},{name:"Rustic Crossbow", rarity:"Fine"},
+  {name:"S870 - SANDSTORM B.P.", rarity:"Fine"},{name:"Scourge", rarity:"Legendary"},
   {name:"SKS - Pathfinder", rarity:"Epic"},
-  {name:"SN700 - Finale", rarity:"Legendary"},{name:"SN700 - Gulped Lore", rarity:"Epic"},
+  {name:"SN700 B.P.", rarity:"Fine"},{name:"SN700 - Finale", rarity:"Legendary"},{name:"SN700 - Gulped Lore", rarity:"Epic"},
   {name:"SOCR - OUTSIDER", rarity:"Epic"},{name:"SOCR - The Last Valor", rarity:"Legendary"},
+  {name:"Steel Pipe", rarity:"Common"},{name:"Stun Baton", rarity:"Epic"},
   {name:"None", rarity:"Common"}
 ];
 
