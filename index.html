@@ -475,7 +475,28 @@ function openSlotModal(slot) {
   const list = document.getElementById("modalList");
   list.innerHTML = "";
   let items = [];
-  if (slot === "weapon" || slot === "weapon2") items = sortByRarity(weapons.filter(w => !["Baseball Bat","Broken Bottle","Camping Knife","Crowbar","Frozen Northern Pike","Kukri","Long Axe","Military Dagger","Military Shovel","Rusted Blade","Steel Pipe","Stun Baton","Scourge","The Fabled Masamune","Warning Sign","Wrench","Northern Pike","Torch"].includes(w.name)));
+  if (slot === "weapon" || slot === "weapon2") {
+    const ranged = weapons.filter(w => !["Baseball Bat","Broken Bottle","Camping Knife","Crowbar","Frozen Northern Pike","Kukri","Long Axe","Military Dagger","Military Shovel","Rusted Blade","Steel Pipe","Stun Baton","Scourge","The Fabled Masamune","Warning Sign","Wrench","Northern Pike","Torch"].includes(w.name));
+    const types = {Pistol:[],Shotgun:[],"Assault Rifle":[],SMG:[],LMG:[],Sniper:[],Bow:[],Other:[]};
+    ranged.forEach(w => {
+      const n = w.name.toLowerCase();
+      if (n.includes("de.50") || n.includes("g17") || n.includes("fp9")) types.Pistol.push(w);
+      else if (n.includes("acs12") || n.includes("db12") || n.includes("dbsg") || n.includes("s870") || n.includes("r500")) types.Shotgun.push(w);
+      else if (n.includes("m416") || n.includes("kam") || n.includes("socr") || n.includes("ebr") || n.includes("sks") || n.includes("aug")) types["Assault Rifle"].push(w);
+      else if (n.includes("mps") || n.includes("pdw") || n.includes("qbj")) types.SMG.push(w);
+      else if (n.includes("mg4") || n.includes("kvd") || n.includes("hamr") || n.includes("mgl")) types.LMG.push(w);
+      else if (n.includes("aws") || n.includes("sn700")) types.Sniper.push(w);
+      else if (n.includes("bow") || n.includes("crossbow")) types.Bow.push(w);
+      else types.Other.push(w);
+    });
+    items = [];
+    Object.keys(types).forEach(t => {
+      if (types[t].length) {
+        items.push({name:"— " + t + " —", rarity:"", header:true});
+        sortByRarity(types[t]).forEach(w => items.push(w));
+      }
+    });
+  }
   else if (slot === "melee") items = sortByRarity(meleeWeapons);
   else {
     // armor pieces for that slot from all sets + key armor
@@ -559,6 +580,13 @@ function renderSets() {
   const list = document.getElementById("setsList");
   if (!list) return;
   list.innerHTML = "";
+  // Key armor section
+  const keyCard = document.createElement("div");
+  keyCard.className = "slot-card";
+  keyCard.innerHTML = `<h3 class="rarity-legendary">Key Armor Items</h3><div style="font-size:0.72rem;margin:6px 0;">Tap to equip:</div>`;
+  const keyBtns = keyArmor.map(k => `<button class="slot-btn" onclick="equipPiece('Key','${k.slot}','${k.name.replace(/'/g,"\\'")}')">${k.name}</button>`).join("");
+  keyCard.innerHTML += `<div class="slot-row">${keyBtns}</div>`;
+  list.appendChild(keyCard);
   const slotLabels = {helmet:"Helmet", mask:"Mask", top:"Top", bottom:"Bottom", gloves:"Gloves", shoes:"Shoes"};
   const slotOrder = ["helmet","mask","top","bottom","gloves","shoes"];
   Object.keys(sets).sort((a,b) => (rarityOrder[sets[a].rarity]??99) - (rarityOrder[sets[b].rarity]??99) || a.localeCompare(b)).forEach(setName => {
@@ -634,10 +662,12 @@ function openModModal(slot) {
   none.textContent = "None";
   none.onclick = () => selectMod("");
   list.appendChild(none);
-  sortByRarity(mods.filter(m => m.name !== 'None')).forEach(m => {
+  const slotCat = {helmet:["Helmet"],mask:["Mask","Mask/Shoes"],top:["Top"],bottom:["Bottoms"],gloves:["Gloves"],shoes:["Shoes","Mask/Shoes"],weapon:["Any"],weapon2:["Any"]};
+  const allowed = slotCat[slot] || ["Any"];
+  sortByRarity(mods.filter(m => m.name !== 'None' && (allowed.includes("Any") || allowed.some(c => (m.category||"").includes(c))))).forEach(m => {
     const el = document.createElement("div");
     el.className = "modal-item rarity-" + (m.rarity||"").toLowerCase();
-    el.textContent = m.name;
+    el.innerHTML = m.name + "<div style='font-size:0.65rem;color:#8aa;margin-top:2px;'>" + (m.core||"") + "</div>";
     el.onclick = () => selectMod(m.name);
     list.appendChild(el);
   });
@@ -791,6 +821,7 @@ function populate() {
     const imgHtml = d.icon ? `<img src="${d.icon}" onerror="this.style.display='none'" />` : '';
     div.innerHTML = `${imgHtml}<div><strong class="rarity-${d.rarity.toLowerCase()}">${d.name}</strong><div class="desc">${d.desc}</div></div>`;
     let timer = null, startX = 0, startY = 0;
+    div.onclick = () => equipDeviation(d.name);
     div.onclick = () => equipDeviation(d.name);
     div.oncontextmenu = (e) => { e.preventDefault(); showDevDetail(d); };
     div.addEventListener("touchstart", (e) => {
@@ -1008,9 +1039,9 @@ function updateBuild() {
     weaponDmg: [], crit: [], critDmg: [], weak: [], status: [], elem: []
   };
   let weaponDmg = 0 + cWeapon, crit = 5, critDmg = 0, weak = 15 + cWeak, status = 0 + cStatus, elem = 0;
-  if (cWeapon) sources.weaponDmg.push("Cradle: +" + cWeapon + "%");
-  if (cWeak) sources.weak.push("Cradle: +" + cWeak + "%");
-  if (cStatus) sources.status.push("Cradle: +" + cStatus + "%");
+  if (cWeapon) sources.weaponDmg.push("Cradle overrides: +" + cWeapon + "%");
+  if (cWeak) sources.weak.push("Cradle overrides: +" + cWeak + "%");
+  if (cStatus) sources.status.push("Cradle overrides: +" + cStatus + "%");
   sources.crit.push("Base: 5%");
   sources.weak.push("Base: 15%");
 
@@ -1072,7 +1103,7 @@ function updateBuild() {
   const dps = Math.round(base * (1 + weaponDmg/100) * (1 + crit/100) * (1 + weak/100) * (1 + elem/100) * (1 + status/100) * skillMult * abilityMult);
 
   function tile(cls, label, val, unit, srcKey) {
-    const note = (sources[srcKey] || []).join("\n") || "Base value only";
+    const note = (sources[srcKey] || []).join("\n") || "Base / no additional sources";
     return `<div class="tile ${cls}" data-label="${label}" data-val="${val}" data-note="${(note||'').replace(/\"/g,'"')}"><div class="v">${val}${unit}</div><div class="l">${label}</div></div>`;
   }
 
@@ -1124,13 +1155,15 @@ try {
   populate();
   renderSets();
   updateBuild();
-  // Force deviation dropdown
+  // Force deviation dropdown always
   const ds = document.getElementById("deviation");
-  if (ds && ds.options.length <= 1 && typeof deviations !== "undefined") {
+  if (ds && typeof deviations !== "undefined") {
+    const cur = ds.value;
     ds.innerHTML = '<option value="">None</option>';
     sortByRarity(deviations).forEach(d => {
       const o = document.createElement("option"); o.value = d.name; o.textContent = d.name; ds.appendChild(o);
     });
+    if (cur) ds.value = cur;
   }
 } catch(e) { console.error(e); }
 // Force-fill visible lists in case populate failed partway
