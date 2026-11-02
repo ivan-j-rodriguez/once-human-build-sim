@@ -42,6 +42,7 @@ select { background:#080c12; color:var(--text); border:1px solid #243040; paddin
 .section-header::before { content:""; width:3px; height:14px; background:#6cf; border-radius:1px; }
 .weapon-row { display:grid; grid-template-columns:1fr 1fr 0.7fr; gap:8px; }
 .gear-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.slot-tile, .tile, .dev-card, .modal-item { -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
 .slot-tile { background:#121820; border:1px solid #2a3a50; border-radius:6px; padding:8px 4px; text-align:center; cursor:pointer; min-height:88px; display:flex; flex-direction:column; justify-content:flex-end; position:relative; }
 .slot-tile:active { filter:brightness(1.15); }
 .slot-tile .slot-num { position:absolute; top:4px; left:6px; font-size:0.7rem; color:#aaa; font-weight:600; }
@@ -477,12 +478,15 @@ function openSlotModal(slot) {
   if (slot === "weapon" || slot === "weapon2") items = sortByRarity(weapons.filter(w => !["Baseball Bat","Broken Bottle","Camping Knife","Crowbar","Frozen Northern Pike","Kukri","Long Axe","Military Dagger","Military Shovel","Rusted Blade","Steel Pipe","Stun Baton","Scourge","The Fabled Masamune","Warning Sign","Wrench","Northern Pike","Torch"].includes(w.name)));
   else if (slot === "melee") items = sortByRarity(meleeWeapons);
   else {
-    // armor pieces for that slot from all sets
+    // armor pieces for that slot from all sets + key armor
     items = [];
     Object.keys(sets).forEach(setName => {
       const s = sets[setName];
       const idx = ["helmet","mask","top","bottom","gloves","shoes"].indexOf(slot);
       if (idx >= 0 && s.pieces[idx]) items.push({name: s.pieces[idx], rarity: s.rarity, set: setName});
+    });
+    keyArmor.forEach(k => {
+      if (k.slot === slot) items.push({name: k.name, rarity: k.rarity, set: "Key"});
     });
     items = sortByRarity(items);
   }
@@ -670,7 +674,7 @@ function openCradlePicker() {
   cradleOverrides.forEach(c => {
     const el = document.createElement("div");
     el.className = "modal-item";
-    el.textContent = (selected.includes(c.name) ? "✓ " : "") + c.name;
+    el.innerHTML = (selected.includes(c.name) ? "✓ " : "") + c.name + "<div style='font-size:0.65rem;color:#8aa;margin-top:2px;'>" + (c.effect||"") + "</div>";
     el.onclick = () => toggleCradle(c.name);
     list.appendChild(el);
   });
@@ -681,6 +685,8 @@ function toggleCradle(name) {
   if (!sel) return;
   let opt = Array.from(sel.options).find(o => o.value === name);
   if (!opt) { opt = document.createElement("option"); opt.value = name; opt.textContent = name; sel.appendChild(opt); }
+  const selected = Array.from(sel.selectedOptions);
+  if (!opt.selected && selected.length >= 8) { alert("Maximum 8 cradle overrides."); return; }
   opt.selected = !opt.selected;
   const selected = Array.from(sel.selectedOptions).map(o => o.value);
   document.getElementById("cradleBox").innerHTML = selected.length ? selected.join("<br>") : "None selected";
@@ -785,6 +791,7 @@ function populate() {
     const imgHtml = d.icon ? `<img src="${d.icon}" onerror="this.style.display='none'" />` : '';
     div.innerHTML = `${imgHtml}<div><strong class="rarity-${d.rarity.toLowerCase()}">${d.name}</strong><div class="desc">${d.desc}</div></div>`;
     let timer = null, startX = 0, startY = 0;
+    div.onclick = () => equipDeviation(d.name);
     div.oncontextmenu = (e) => { e.preventDefault(); showDevDetail(d); };
     div.addEventListener("touchstart", (e) => {
       const t = e.touches[0];
@@ -1053,6 +1060,14 @@ function updateBuild() {
     weaponDmg += bonus;
     sources.weaponDmg.push(dev + " (skill/ability): +" + bonus.toFixed(1) + "%");
   }
+  if (dev === "Zapamander") {
+    elem += 15 * skillMult;
+    sources.elem.push(dev + ": +" + (15*skillMult).toFixed(1) + "% Elemental");
+  }
+  if (dev === "Snowsprite") {
+    elem += 10 * skillMult;
+    sources.elem.push(dev + ": +" + (10*skillMult).toFixed(1) + "% Frost");
+  }
 
   const dps = Math.round(base * (1 + weaponDmg/100) * (1 + crit/100) * (1 + weak/100) * (1 + elem/100) * (1 + status/100) * skillMult * abilityMult);
 
@@ -1109,6 +1124,14 @@ try {
   populate();
   renderSets();
   updateBuild();
+  // Force deviation dropdown
+  const ds = document.getElementById("deviation");
+  if (ds && ds.options.length <= 1 && typeof deviations !== "undefined") {
+    ds.innerHTML = '<option value="">None</option>';
+    sortByRarity(deviations).forEach(d => {
+      const o = document.createElement("option"); o.value = d.name; o.textContent = d.name; ds.appendChild(o);
+    });
+  }
 } catch(e) { console.error(e); }
 // Force-fill visible lists in case populate failed partway
 (function forceLists(){
