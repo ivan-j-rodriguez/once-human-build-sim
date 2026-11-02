@@ -246,16 +246,19 @@ const keyArmor = [
 ];
 
 const deviations = [
-  {name:"Lonewolf's Whisper", rarity:"Rare", icon:"https://static.wikia.nocookie.net/once-human/images/8/8c/Lonewolf%27s_Whisper.png/revision/latest", desc:"Pulls aggro, deals damage, increases Weapon DMG received by its target. Strong synergy with Shrapnel builds."},
-  {name:"Dr. Teddy", rarity:"Rare", icon:"https://static.wikia.nocookie.net/once-human/images/b/b0/Dr._Teddy.png/revision/latest", desc:"Healer deviation. Provides healing support in combat."},
-  {name:"By-the-Wind", rarity:"Rare", icon:"https://static.wikia.nocookie.net/once-human/images/c/c8/By-The-Wind.png/revision/latest", desc:"Creates wind walls that block bullets."},
-  {name:"Festering Gel", rarity:"Epic", icon:"", desc:"Applies corrosion and slows enemies."},
-  {name:"Zeno-Purifier", rarity:"Legendary", icon:"", desc:"High damage support deviation with cleansing effects."},
-  {name:"Mini Wonder", rarity:"Epic", icon:"", desc:"Provides utility and minor damage boosts."},
-  {name:"Arachsiam", rarity:"Legendary", icon:"", desc:"High damage combat deviation."},
-  {name:"Shadow Hound", rarity:"Epic", icon:"", desc:"Aggressive melee deviation."},
-  {name:"Forsaken Giant", rarity:"Legendary", icon:"", desc:"Heavy hitting deviation."},
-  {name:"Butterfly's Emissary", rarity:"Rare", icon:"", desc:"Support deviation with status effects."}
+  {name:"Lonewolf's Whisper", rarity:"Rare", icon:"https://static.wikia.nocookie.net/once-human/images/8/8c/Lonewolf%27s_Whisper.png/revision/latest", desc:"A-grade Combat Deviation. Transforms into a black wolf. Pulls aggro and increases Weapon DMG received by its target.", skills:["Designated Target: Designate a target to attack. Prioritizes direction faced.","Auto Attack: Autonomously attacks and attracts aggro. On kill, spawns a clone. Increases Weapon DMG received by target by 21.6%.","Lonewolf's Roar (technique): Transforms into Elite Shadow Wolf, Attack +130%, shield = 5.6% Max HP.","Fang of Fear (talent): 20% chance to knock back on damage."]},
+  {name:"Dr. Teddy", rarity:"Rare", icon:"https://static.wikia.nocookie.net/once-human/images/b/b0/Dr._Teddy.png/revision/latest", desc:"A-grade Defender. Heals allies and can revive fallen Metas.", skills:["Remote Healing: Instant 50% Max HP heal or revive on throw.","Intime Healing: 8% Max HP heal per second.","Panacea (technique): Transforms into giant bear, heals surrounding allies.","Healer's Heart (talent): When healing others, restores 20% of healing amount to self."]},
+  {name:"By-the-Wind", rarity:"Rare", icon:"https://static.wikia.nocookie.net/once-human/images/c/c8/By-The-Wind.png/revision/latest", desc:"Creates wind walls and provides lift/support.", skills:["Gravity Lift","Combat Assist","Wind Walk (technique)","Turbulence (technique)"]},
+  {name:"Festering Gel", rarity:"Epic", icon:"", desc:"Defender that builds fortifications and applies status.", skills:["Flawless Fortification","Build Fortification","Gel Shield (technique)","Activate (technique)"]},
+  {name:"Butterfly's Emissary", rarity:"Rare", icon:"", desc:"Attacker with designated targeting and storm abilities.", skills:["Auto Attack","Designated Target","Mitsuko Storm (technique)","Evasive Stance (technique)"]},
+  {name:"Behemoth", rarity:"Legendary", icon:"", desc:"Heavy attacker with dragon-themed abilities.", skills:["Soaring Dragon","Dragon Roaming the World","Enrage (technique)","Rage (technique)"]},
+  {name:"Brave George", rarity:"Epic", icon:"", desc:"Attacker with combat assist and gravity lift.", skills:["Combat Assist","Gravity Lift","Heroic Burst (technique)","Crowned Power (technique)"]},
+  {name:"Mini Wonder", rarity:"Epic", icon:"", desc:"Defender with bullet absorption and blackhole abilities.", skills:["Designated Target","Bullet Absorption","Blackhole Jet (technique)","Gravitas (technique)"]},
+  {name:"Zeno-Purifier", rarity:"Legendary", icon:"", desc:"Attacker with designated targeting.", skills:["Designated Target","Auto Attack"]},
+  {name:"Polar Jelly", rarity:"Rare", icon:"", desc:"Frost-based attacker.", skills:["Frostlash","Auto Attack","Low-temperature Smoke (technique)","Frozen Heart (technique)"]},
+  {name:"Invincible Sun", rarity:"Legendary", icon:"", desc:"AoE Blaze damage attacker.", skills:["AoE Blaze DMG","Falling Starcore (technique)","Blazing Fury (technique)"]},
+  {name:"Shattered Maiden", rarity:"Rare", icon:"", desc:"Attacker with dissociation abilities.", skills:["Designated Target","Auto Attack","Dissociation (technique)","Shy (technique)"]},
+  {name:"Voodoo Doll", rarity:"Rare", icon:"", desc:"Defender with doppelganger and curse abilities.", skills:["Designated Target","Doppelgänger","Doom Curse (technique)","Rusty Nail (technique)"]}
 ];
 
 function switchTab(id) {
@@ -332,7 +335,10 @@ function populate() {
   const dlist = document.getElementById("devList");
   deviations.forEach(d => {
     const div = document.createElement("div"); div.className = "dev-card";
+    div.style.cursor = "pointer";
     div.innerHTML = `<img src="${d.icon||''}" onerror="this.style.display='none'" /><div><strong class="rarity-${d.rarity.toLowerCase()}">${d.name}</strong><div class="desc">${d.desc}</div></div>`;
+    div.oncontextmenu = (e) => { e.preventDefault(); showDevDetail(d); };
+    div.ontouchstart = () => { setTimeout(() => showDevDetail(d), 500); };
     dlist.appendChild(div);
   });
 
@@ -365,6 +371,16 @@ function showWeaponDetail(name) {
   box.innerHTML = `<h2>${name}</h2><div class="sub">${d.type}</div>
     <div class="core"><strong>Basic Stats</strong><br>DMG: ${d.dmg||"TBA"} | Fire Rate: ${d.fire||"TBA"} | MAG: ${d.mag||"TBA"}<br>Crit Rate: ${d.crit}% | Crit DMG: ${d.critDmg}% | Weakspot DMG: ${d.weak}%</div>
     <div class="suffix"><strong>Weapon Features</strong><div style="font-size:0.8rem;margin-top:6px;">${d.features.map(f=>"• "+f).join("<br>")}</div></div>
+    <button class="equip" onclick="closeModal()">Close</button>`;
+  document.getElementById("modal").classList.add("show");
+}
+
+function showDevDetail(d) {
+  const box = document.getElementById("modalBox");
+  box.innerHTML = `<h2 class="rarity-${d.rarity.toLowerCase()}">${d.name}</h2>
+    <div class="sub">${d.rarity}</div>
+    <div class="core">${d.desc}</div>
+    <div class="suffix"><strong>Skills / Abilities</strong><div style="font-size:0.8rem;margin-top:6px;">${(d.skills||[]).map(s=>"• "+s).join("<br>")}</div></div>
     <button class="equip" onclick="closeModal()">Close</button>`;
   document.getElementById("modal").classList.add("show");
 }
