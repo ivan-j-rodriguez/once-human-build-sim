@@ -535,7 +535,7 @@ function renderSets() {
       const piece = s.pieces[i] || "";
       return `<button class="slot-btn" onclick="equipPiece('${setName}','${slot}','${piece.replace(/'/g,"\\'")}')">${slotLabels[slot]}</button>`;
     }).join("");
-    card.innerHTML = `<h3 class="rarity-${s.rarity.toLowerCase()}">${setName}</h3>
+    card.innerHTML = `<h3 class="rarity-${s.rarity.toLowerCase()}">${setName} <span style="font-size:0.65rem;opacity:0.8;">(${s.rarity})</span></h3>
       <div style="font-size:0.72rem;margin:6px 0 4px;">Tap a slot to equip only that piece:</div>
       <div class="slot-row">${buttons}</div>
       <div class="desc" style="margin-top:8px;">${(s.bonuses||[]).join("<br>")}</div>`;
@@ -543,6 +543,7 @@ function renderSets() {
   });
 }
 function equipPiece(setName, slot, piece) {
+  window._userAction = true;
   if (!piece) return;
   const sel = document.getElementById(slot);
   if (sel) {
@@ -818,9 +819,8 @@ function updateBuild() {
       if (opt?.dataset?.key === "1") keyCount++;
     }
   });
-  if (keyCount > 1) {
+  if (keyCount > 1 && window._userAction) {
     alert("Only one Key Armor item can be equipped.");
-    // reset the last changed key slot
     slots.forEach(slot => {
       const sel = document.getElementById(slot);
       if (sel && sel.value) {
