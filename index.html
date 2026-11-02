@@ -393,14 +393,6 @@ function populate() {
   });
 
   const devSel = document.getElementById("deviation");
-  deviations.forEach(d => {
-    const opt = document.createElement("option");
-    opt.value = d.name;
-    opt.textContent = d.name;
-    devSel.appendChild(opt);
-  });
-
-  const devSel = document.getElementById("deviation");
   if (devSel) {
     deviations.forEach(d => {
       const opt = document.createElement("option");
