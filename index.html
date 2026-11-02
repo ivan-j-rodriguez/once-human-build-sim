@@ -1003,10 +1003,19 @@ try {
   }
   const slist = document.getElementById("setsList");
   if (slist && slist.children.length === 0 && typeof sets !== "undefined") {
+    const slotLabels = {helmet:"Helmet", mask:"Mask", top:"Top", bottom:"Bottom", gloves:"Gloves", shoes:"Shoes"};
+    const slotOrder = ["helmet","mask","top","bottom","gloves","shoes"];
     Object.keys(sets).sort((a,b)=>(rarityOrder[sets[a].rarity]??99)-(rarityOrder[sets[b].rarity]??99)||a.localeCompare(b)).forEach(name => {
       const s = sets[name];
       const div = document.createElement("div"); div.className = "slot-card";
-      div.innerHTML = `<h3 class="rarity-${s.rarity.toLowerCase()}">${name}</h3><div class="desc">${(s.bonuses||[]).join("<br>")}</div>`;
+      const buttons = slotOrder.map((slot, i) => {
+        const piece = s.pieces[i] || "";
+        return `<button class="slot-btn" onclick="equipPiece('${name}','${slot}','${piece.replace(/'/g,"\\'")}')">${slotLabels[slot]}</button>`;
+      }).join("");
+      div.innerHTML = `<h3 class="rarity-${s.rarity.toLowerCase()}">${name} <span style="font-size:0.65rem;opacity:0.8;">(${s.rarity})</span></h3>
+        <div style="font-size:0.72rem;margin:6px 0 4px;">Tap a slot to equip only that piece:</div>
+        <div class="slot-row">${buttons}</div>
+        <div class="desc" style="margin-top:8px;">${(s.bonuses||[]).join("<br>")}</div>`;
       slist.appendChild(div);
     });
   }
